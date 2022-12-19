@@ -58,11 +58,11 @@ public final class ClientPlayerBaseSorter {
                 }
 
                 if (hasInferiors) {
-                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, (Map<String, Set<String>>)null, inferiorNames);
+                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
                 }
 
                 if (hasSuperiors) {
-                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, (Map<String, Set<String>>)null, this.directInferiorsMap, superiorNames);
+                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
                 }
             }
 
@@ -114,7 +114,7 @@ public final class ClientPlayerBaseSorter {
                 }
 
                 for(offset = 0; offset < this.list.size(); ++offset) {
-                    this.build(this.list.get(offset), (String)null);
+                    this.build(this.list.get(offset), null);
                 }
             }
 
@@ -177,7 +177,7 @@ public final class ClientPlayerBaseSorter {
     private Set<String> build(String type, String startType) {
         Set<String> inferiors = this.allInferiors.get(type);
         if (inferiors == null) {
-            inferiors = this.build(type, (Set<String>)null, startType != null ? startType : type);
+            inferiors = this.build(type, null, startType != null ? startType : type);
             if (inferiors == null) {
                 inferiors = Empty;
             }
@@ -200,13 +200,13 @@ public final class ClientPlayerBaseSorter {
             Iterator<String> iter = directInferiors.iterator();
 
             while(iter.hasNext()) {
-                String inferiorType = (String)iter.next();
+                String inferiorType = iter.next();
                 if (inferiorType == startType) {
                     throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + startType + "'");
                 }
 
                 if (this.list.contains(inferiorType)) {
-                    ((Set<String>)inferiors).add(inferiorType);
+                    inferiors.add(inferiorType);
                 }
 
                 Set<String> inferiorSet;
@@ -217,7 +217,7 @@ public final class ClientPlayerBaseSorter {
                 }
 
                 if (inferiorSet != Empty) {
-                    ((Set<String>)inferiors).addAll(inferiorSet);
+                    inferiors.addAll(inferiorSet);
                 }
             }
 
@@ -246,11 +246,11 @@ public final class ClientPlayerBaseSorter {
             Iterator<String> iter = types.iterator();
 
             while(iter.hasNext()) {
-                getOrCreateSet(otherDirectMap, (String)iter.next()).add(baseId);
+                getOrCreateSet(otherDirectMap, iter.next()).add(baseId);
             }
         }
 
-        ((Map<String, Set<String>>)map).put(baseId, types);
+        map.put(baseId, types);
         return map;
     }
 

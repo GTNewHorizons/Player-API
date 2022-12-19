@@ -45,8 +45,7 @@ public final class ServerPlayerBaseSorter {
                 this.allInferiors.clear();
             }
 
-            for(int i = 0; i < this.list.size(); ++i) {
-                String baseId = this.list.get(i);
+            for (String baseId : this.list) {
                 String[] inferiorNames = this.allBaseInferiors.get(baseId);
                 boolean hasInferiors = inferiorNames != null && inferiorNames.length > 0;
                 String[] superiorNames = this.allBaseSuperiors.get(baseId);
@@ -56,11 +55,11 @@ public final class ServerPlayerBaseSorter {
                 }
 
                 if (hasInferiors) {
-                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, (Map<String, Set<String>>)null, inferiorNames);
+                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
                 }
 
                 if (hasSuperiors) {
-                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, (Map<String, Set<String>>)null, this.directInferiorsMap, superiorNames);
+                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
                 }
             }
 
@@ -110,8 +109,8 @@ public final class ServerPlayerBaseSorter {
                     this.allInferiors = new Hashtable<>();
                 }
 
-                for(int i = 0; i < this.list.size(); ++i) {
-                    this.build(this.list.get(i), (String)null);
+                for (String element : this.list) {
+                    this.build(element, null);
                 }
             }
 
@@ -173,7 +172,7 @@ public final class ServerPlayerBaseSorter {
     private Set<String> build(String type, String startType) {
         Set<String> inferiors = this.allInferiors.get(type);
         if (inferiors == null) {
-            inferiors = this.build(type, (Set<String>)null, startType != null ? startType : type);
+            inferiors = this.build(type, null, startType != null ? startType : type);
             if (inferiors == null) {
                 inferiors = Empty;
             }
@@ -196,13 +195,13 @@ public final class ServerPlayerBaseSorter {
             Iterator<String> iter = directInferiors.iterator();
 
             while(iter.hasNext()) {
-                String inferiorType = (String)iter.next();
+                String inferiorType = iter.next();
                 if (inferiorType == startType) {
                     throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + startType + "'");
                 }
 
                 if (this.list.contains(inferiorType)) {
-                    ((Set<String>)inferiors).add(inferiorType);
+                    inferiors.add(inferiorType);
                 }
 
                 Set<String> inferiorSet;
@@ -213,7 +212,7 @@ public final class ServerPlayerBaseSorter {
                 }
 
                 if (inferiorSet != Empty) {
-                    ((Set<String>)inferiors).addAll(inferiorSet);
+                    inferiors.addAll(inferiorSet);
                 }
             }
 
@@ -242,11 +241,11 @@ public final class ServerPlayerBaseSorter {
             Iterator<String> iter = types.iterator();
 
             while(iter.hasNext()) {
-                getOrCreateSet(otherDirectMap, (String)iter.next()).add(baseId);
+                getOrCreateSet(otherDirectMap, iter.next()).add(baseId);
             }
         }
 
-        ((Map<String, Set<String>>)map).put(baseId, types);
+        map.put(baseId, types);
         return map;
     }
 

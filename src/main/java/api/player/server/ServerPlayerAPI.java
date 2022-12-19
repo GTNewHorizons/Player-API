@@ -808,7 +808,7 @@ public final class ServerPlayerAPI {
     }
 
     public static void register(String id, Class<?> baseClass) {
-        register(id, baseClass, (ServerPlayerBaseSorting)null);
+        register(id, baseClass, null);
     }
 
     public static void register(String id, Class<?> baseClass, ServerPlayerBaseSorting baseSorting) {
@@ -1949,7 +1949,7 @@ public final class ServerPlayerAPI {
 
                 Iterator<String> iterator = keysToVirtualIds.keySet().iterator();
                 while(iterator.hasNext()) {
-                    String key = (String)iterator.next();
+                    String key = iterator.next();
                     if (keysToVirtualIds.get(key).equals(id)) {
                         keysToVirtualIds.remove(key);
                     }
@@ -1960,8 +1960,8 @@ public final class ServerPlayerAPI {
                 iterator = allBaseConstructors.keySet().iterator();
 
                 while(iterator.hasNext()) {
-                    String otherId = (String)iterator.next();
-                    Class<?> otherType = ((Constructor<?>)allBaseConstructors.get(otherId)).getDeclaringClass();
+                    String otherId = iterator.next();
+                    Class<?> otherType = allBaseConstructors.get(otherId).getDeclaringClass();
                     if (!otherId.equals(id) && otherType.equals(type)) {
                         otherFound = true;
                         break;
@@ -1998,7 +1998,7 @@ public final class ServerPlayerAPI {
         Iterator<String> keys = map.keySet().iterator();
 
         while(keys.hasNext()) {
-            ((List<String>)map.get(keys.next())).remove(id);
+            map.get(keys.next()).remove(id);
         }
 
     }
@@ -2125,8 +2125,8 @@ public final class ServerPlayerAPI {
         Map<String, Method> methods = dynamicHookMethods.get(baseClass);
         if (methods != null && methods.size() != 0) {
             String key;
-            for(Iterator<String> keys = methods.keySet().iterator(); keys.hasNext(); ((List<String>)dynamicHookTypes.get(key)).add(id)) {
-                key = (String)keys.next();
+            for(Iterator<String> keys = methods.keySet().iterator(); keys.hasNext(); dynamicHookTypes.get(key).add(id)) {
+                key = keys.next();
                 if (!dynamicHookTypes.containsKey(key)) {
                     dynamicHookTypes.put(key, new ArrayList<>(1));
                 }
@@ -2140,10 +2140,10 @@ public final class ServerPlayerAPI {
             methods = new HashMap<>();
         }
 
-        if (((Map<String, Method>)methods).containsKey(key)) {
+        if (methods.containsKey(key)) {
             throw new RuntimeException("method with key '" + key + "' allready exists");
         } else {
-            ((Map<String, Method>)methods).put(key, method);
+            methods.put(key, method);
             return methods;
         }
     }
@@ -2162,7 +2162,7 @@ public final class ServerPlayerAPI {
         Iterator<String> keyIterator = keys.iterator();
 
         while(keyIterator.hasNext()) {
-            String key = (String)keyIterator.next();
+            String key = keyIterator.next();
             sortDynamicBases(beforeDynamicHookTypes, allBaseBeforeDynamicSuperiors, allBaseBeforeDynamicInferiors, key);
             sortDynamicBases(overrideDynamicHookTypes, allBaseOverrideDynamicSuperiors, allBaseOverrideDynamicInferiors, key);
             sortDynamicBases(afterDynamicHookTypes, allBaseAfterDynamicSuperiors, allBaseAfterDynamicInferiors, key);
@@ -2344,12 +2344,12 @@ public final class ServerPlayerAPI {
 
         Object entityPlayerList;
         try {
-            Object minecraftServer = MinecraftServer.class.getMethod("func_71276_C").invoke((Object)null);
+            Object minecraftServer = MinecraftServer.class.getMethod("func_71276_C").invoke(null);
             Object serverConfigurationManager = minecraftServer != null ? MinecraftServer.class.getMethod("func_71203_ab").invoke(minecraftServer) : null;
             entityPlayerList = serverConfigurationManager != null ? serverConfigurationManager.getClass().getField("field_72404_b").get(serverConfigurationManager) : null;
         } catch (Exception obfuscatedException) {
             try {
-                Object minecraftServer = MinecraftServer.class.getMethod("getServer").invoke((Object)null);
+                Object minecraftServer = MinecraftServer.class.getMethod("getServer").invoke(null);
                 Object serverConfigurationManager = minecraftServer != null ? MinecraftServer.class.getMethod("getConfigurationManager").invoke(minecraftServer) : null;
                 entityPlayerList = serverConfigurationManager != null ? serverConfigurationManager.getClass().getField("playerEntityList").get(serverConfigurationManager) : null;
             } catch (Exception deobfuscatedException) {
@@ -2368,7 +2368,7 @@ public final class ServerPlayerAPI {
 
     public static EntityPlayerMP[] getAllInstances() {
         List<IServerPlayerAPI> allInstances = getAllInstancesList();
-        return (EntityPlayerMP[])allInstances.toArray(new EntityPlayerMP[allInstances.size()]);
+        return allInstances.toArray(new EntityPlayerMP[allInstances.size()]);
     }
 
     public static void beforeLocalConstructing(IServerPlayerAPI serverPlayer, MinecraftServer var1, WorldServer var2, GameProfile var3, ItemInWorldManager var4) {
@@ -2430,10 +2430,10 @@ public final class ServerPlayerAPI {
         Iterator<String> ids = var1.iterator();
 
         while(ids.hasNext()) {
-            String id = (String)ids.next();
+            String id = ids.next();
             Map<String, String[]> idSuperiors = allBaseValues.get(id);
             if (idSuperiors != null) {
-                String[] keySuperiorIds = (String[])idSuperiors.get(key);
+                String[] keySuperiorIds = idSuperiors.get(key);
                 if (keySuperiorIds != null && keySuperiorIds.length > 0) {
                     if (superiors == null) {
                         superiors = new HashMap<>(1);
@@ -2456,7 +2456,7 @@ public final class ServerPlayerAPI {
         Iterator<String> iterator = allBaseConstructors.keySet().iterator();
 
         while(iterator.hasNext()) {
-            String id = (String)iterator.next();
+            String id = iterator.next();
             ServerPlayerBase toAttach = this.createServerPlayerBase(id);
             toAttach.beforeBaseAttach(false);
             this.allBaseObjects.put(id, toAttach);
@@ -2778,7 +2778,7 @@ public final class ServerPlayerAPI {
     public Object dynamic(String key, Object[] parameters) {
         key = key.replace('.', '_').replace(' ', '_');
         this.executeAll(key, parameters, beforeDynamicHookTypes, beforeDynamicHookMethods, true);
-        Object result = this.dynamicOverwritten(key, parameters, (ServerPlayerBase)null);
+        Object result = this.dynamicOverwritten(key, parameters, null);
         this.executeAll(key, parameters, afterDynamicHookTypes, afterDynamicHookMethods, false);
         return result;
     }
@@ -2791,12 +2791,12 @@ public final class ServerPlayerAPI {
                 id = this.baseObjectsToId.get(overwriter);
                 int var6 = overrideIds.indexOf(id);
                 if (var6 > 0) {
-                    id = (String)overrideIds.get(var6 - 1);
+                    id = overrideIds.get(var6 - 1);
                 } else {
                     id = null;
                 }
             } else if (overrideIds.size() > 0) {
-                id = (String)overrideIds.get(overrideIds.size() - 1);
+                id = overrideIds.get(overrideIds.size() - 1);
             }
         }
 
@@ -2812,11 +2812,11 @@ public final class ServerPlayerAPI {
             methodMap = overrideDynamicHookMethods;
         }
 
-        Map<String, Method> methods = (Map<String, Method>)methodMap.get(((Constructor<?>)allBaseConstructors.get(id)).getDeclaringClass());
+        Map<String, Method> methods = methodMap.get(allBaseConstructors.get(id).getDeclaringClass());
         if (methods == null) {
             return null;
         } else {
-            Method method = (Method)methods.get(key);
+            Method method = methods.get(key);
             return method == null ? null : this.execute(this.getServerPlayerBase(id), method, parameters);
         }
     }
@@ -2835,12 +2835,12 @@ public final class ServerPlayerAPI {
                     break;
                 }
 
-                String id = (String)beforeIds.get(var7);
+                String id = beforeIds.get(var7);
                 ServerPlayerBase base = this.getServerPlayerBase(id);
                 Class<?> type = base.getClass();
                 Map<String, Method> methods = dynamicHookMethods.get(type);
                 if (methods != null) {
-                    Method method = (Method)methods.get(key);
+                    Method method = methods.get(key);
                     if (method != null) {
                         this.execute(base, method, parameters);
                     }

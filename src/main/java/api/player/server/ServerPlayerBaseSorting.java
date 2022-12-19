@@ -436,7 +436,7 @@ public final class ServerPlayerBaseSorting {
             throw new IllegalArgumentException("Parameter 'name' may not be null");
         } else if (names == null) {
             if (map != null) {
-                ((Map<String, String[]>)map).remove(name);
+                map.remove(name);
             }
 
             return map;
@@ -445,7 +445,7 @@ public final class ServerPlayerBaseSorting {
                 map = new HashMap<>();
             }
 
-            ((Map<String, String[]>)map).put(name, names);
+            map.put(name, names);
             return map;
         }
     }

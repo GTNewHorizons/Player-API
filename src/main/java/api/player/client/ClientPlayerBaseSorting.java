@@ -521,7 +521,7 @@ public final class ClientPlayerBaseSorting {
             throw new IllegalArgumentException("Parameter 'name' may not be null");
         } else if (var2 == null) {
             if (var3 != null) {
-                ((Map<String, String[]>)var3).remove(value);
+                var3.remove(value);
             }
 
             return var3;
@@ -530,7 +530,7 @@ public final class ClientPlayerBaseSorting {
                 var3 = new HashMap<>();
             }
 
-            ((Map<String, String[]>)var3).put(value, var2);
+            var3.put(value, var2);
             return var3;
         }
     }
