@@ -192,11 +192,8 @@ public final class ServerPlayerBaseSorter {
                 inferiors = new HashSet<>();
             }
 
-            Iterator<String> iter = directInferiors.iterator();
-
-            while(iter.hasNext()) {
-                String inferiorType = iter.next();
-                if (inferiorType == startType) {
+            for (String inferiorType : directInferiors) {
+                if (inferiorType.equals(startType)) {
                     throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + startType + "'");
                 }
 
@@ -238,10 +235,9 @@ public final class ServerPlayerBaseSorter {
         }
 
         if (otherDirectMap != null) {
-            Iterator<String> iter = types.iterator();
 
-            while(iter.hasNext()) {
-                getOrCreateSet(otherDirectMap, iter.next()).add(baseId);
+            for (String type : types) {
+                getOrCreateSet(otherDirectMap, type).add(baseId);
             }
         }
 

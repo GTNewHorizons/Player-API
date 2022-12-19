@@ -92,9 +92,7 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         String[] newInterfaces = new String[interfaces.length + 1];
 
-        for(int i = 0; i < interfaces.length; ++i) {
-            newInterfaces[i] = interfaces[i];
-        }
+        System.arraycopy(interfaces, 0, newInterfaces, 0, interfaces.length);
 
         newInterfaces[interfaces.length] = "api/player/server/IServerPlayerAPI";
         super.visit(version, access, name, signature, superName, newInterfaces);

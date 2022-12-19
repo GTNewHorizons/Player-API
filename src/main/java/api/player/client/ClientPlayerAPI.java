@@ -2431,10 +2431,9 @@ public final class ClientPlayerAPI {
     }
 
     public static void removeDynamicHookTypes(String id, Map<String, List<String>> map) {
-        Iterator<String> keys = map.keySet().iterator();
 
-        while(keys.hasNext()) {
-            map.get(keys.next()).remove(id);
+        for (String s : map.keySet()) {
+            map.get(s).remove(id);
         }
 
     }
@@ -2485,8 +2484,6 @@ public final class ClientPlayerAPI {
                     if (!Modifier.isAbstract(modifiers) && !Modifier.isStatic(modifiers)) {
                         String name = method.getName();
                         if (name.length() >= 7 && name.substring(0, 7).equalsIgnoreCase("dynamic")) {
-                            for(name = name.substring(7); name.charAt(0) == '_'; name = name.substring(1)) {
-                            }
 
                             boolean before = false;
                             boolean virtual = false;
@@ -2498,10 +2495,10 @@ public final class ClientPlayerAPI {
                             } else if (name.length() >= 8 && name.substring(0, 8).equalsIgnoreCase("override")) {
                                 name = name.substring(8);
                                 override = true;
-                            } else if (name.length() >= 6 && name.substring(0, 6).equalsIgnoreCase("before")) {
+                            } else if (name.substring(0, 6).equalsIgnoreCase("before")) {
                                 before = true;
                                 name = name.substring(6);
-                            } else if (name.length() >= 5 && name.substring(0, 5).equalsIgnoreCase("after")) {
+                            } else if (name.substring(0, 5).equalsIgnoreCase("after")) {
                                 after = true;
                                 name = name.substring(5);
                             }
@@ -2512,10 +2509,6 @@ public final class ClientPlayerAPI {
 
                             while(name.charAt(0) == '_') {
                                 name = name.substring(1);
-                            }
-
-                            if (name.length() == 0) {
-                                throw new RuntimeException("Can not process dynamic hook method with no key");
                             }
 
                             keys.add(name);
@@ -2595,10 +2588,8 @@ public final class ClientPlayerAPI {
     private static void initialize() {
         sortBases(beforeLocalConstructingHookTypes, allBaseBeforeLocalConstructingSuperiors, allBaseBeforeLocalConstructingInferiors, "beforeLocalConstructing");
         sortBases(afterLocalConstructingHookTypes, allBaseAfterLocalConstructingSuperiors, allBaseAfterLocalConstructingInferiors, "afterLocalConstructing");
-        Iterator<String> keyIterator = keys.iterator();
 
-        while(keyIterator.hasNext()) {
-            String key = keyIterator.next();
+        for (String key : keys) {
             sortDynamicBases(beforeDynamicHookTypes, allBaseBeforeDynamicSuperiors, allBaseBeforeDynamicInferiors, key);
             sortDynamicBases(overrideDynamicHookTypes, allBaseOverrideDynamicSuperiors, allBaseOverrideDynamicInferiors, key);
             sortDynamicBases(afterDynamicHookTypes, allBaseAfterDynamicSuperiors, allBaseAfterDynamicInferiors, key);
@@ -2901,10 +2892,8 @@ public final class ClientPlayerAPI {
 
     private static Map<String, String[]> getDynamicSorters(String key, List<String> toSort, Map<String, Map<String, String[]>> allBaseValues) {
         HashMap<String, String[]> superiors = null;
-        Iterator<String> ids = toSort.iterator();
 
-        while(ids.hasNext()) {
-            String id = ids.next();
+        for (String id : toSort) {
             Map<String, String[]> idSuperiors = allBaseValues.get(id);
             if (idSuperiors != null) {
                 String[] keySuperiorIds = idSuperiors.get(key);
@@ -3423,10 +3412,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenAddExhaustion(ClientPlayerBase overWriter) {
-        if (this.overrideAddExhaustionHooks == null) {
-            return overWriter;
-        } else {
-            for(int i = 0; i < this.overrideAddExhaustionHooks.length; ++i) {
+        if (this.overrideAddExhaustionHooks != null) {
+            for (int i = 0; i < this.overrideAddExhaustionHooks.length; ++i) {
                 if (this.overrideAddExhaustionHooks[i] == overWriter) {
                     if (i == 0) {
                         return null;
@@ -3436,8 +3423,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return overWriter;
         }
+        return overWriter;
     }
 
     public static void addMovementStat(IClientPlayerAPI var0, double var1, double var3, double var5) {
@@ -3473,10 +3460,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenAddMovementStat(ClientPlayerBase var1) {
-        if (this.overrideAddMovementStatHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideAddMovementStatHooks.length; ++var2) {
+        if (this.overrideAddMovementStatHooks != null) {
+            for (int var2 = 0; var2 < this.overrideAddMovementStatHooks.length; ++var2) {
                 if (this.overrideAddMovementStatHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3486,8 +3471,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void addStat(IClientPlayerAPI var0, StatBase var1, int var2) {
@@ -3523,10 +3508,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenAddStat(ClientPlayerBase var1) {
-        if (this.overrideAddStatHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideAddStatHooks.length; ++var2) {
+        if (this.overrideAddStatHooks != null) {
+            for (int var2 = 0; var2 < this.overrideAddStatHooks.length; ++var2) {
                 if (this.overrideAddStatHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3536,8 +3519,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean attackEntityFrom(IClientPlayerAPI var0, DamageSource var1, float var2) {
@@ -3576,10 +3559,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenAttackEntityFrom(ClientPlayerBase var1) {
-        if (this.overrideAttackEntityFromHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideAttackEntityFromHooks.length; ++var2) {
+        if (this.overrideAttackEntityFromHooks != null) {
+            for (int var2 = 0; var2 < this.overrideAttackEntityFromHooks.length; ++var2) {
                 if (this.overrideAttackEntityFromHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3589,8 +3570,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void attackTargetEntityWithCurrentItem(IClientPlayerAPI var0, Entity var1) {
@@ -3626,10 +3607,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenAttackTargetEntityWithCurrentItem(ClientPlayerBase var1) {
-        if (this.overrideAttackTargetEntityWithCurrentItemHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideAttackTargetEntityWithCurrentItemHooks.length; ++var2) {
+        if (this.overrideAttackTargetEntityWithCurrentItemHooks != null) {
+            for (int var2 = 0; var2 < this.overrideAttackTargetEntityWithCurrentItemHooks.length; ++var2) {
                 if (this.overrideAttackTargetEntityWithCurrentItemHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3639,8 +3618,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean canBreatheUnderwater(IClientPlayerAPI var0) {
@@ -3679,10 +3658,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenCanBreatheUnderwater(ClientPlayerBase var1) {
-        if (this.overrideCanBreatheUnderwaterHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideCanBreatheUnderwaterHooks.length; ++var2) {
+        if (this.overrideCanBreatheUnderwaterHooks != null) {
+            for (int var2 = 0; var2 < this.overrideCanBreatheUnderwaterHooks.length; ++var2) {
                 if (this.overrideCanBreatheUnderwaterHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3692,8 +3669,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean canHarvestBlock(IClientPlayerAPI var0, Block var1) {
@@ -3732,10 +3709,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenCanHarvestBlock(ClientPlayerBase var1) {
-        if (this.overrideCanHarvestBlockHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideCanHarvestBlockHooks.length; ++var2) {
+        if (this.overrideCanHarvestBlockHooks != null) {
+            for (int var2 = 0; var2 < this.overrideCanHarvestBlockHooks.length; ++var2) {
                 if (this.overrideCanHarvestBlockHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3745,8 +3720,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean canPlayerEdit(IClientPlayerAPI var0, int var1, int var2, int var3, int var4, ItemStack var5) {
@@ -3785,10 +3760,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenCanPlayerEdit(ClientPlayerBase var1) {
-        if (this.overrideCanPlayerEditHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideCanPlayerEditHooks.length; ++var2) {
+        if (this.overrideCanPlayerEditHooks != null) {
+            for (int var2 = 0; var2 < this.overrideCanPlayerEditHooks.length; ++var2) {
                 if (this.overrideCanPlayerEditHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3798,8 +3771,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean canTriggerWalking(IClientPlayerAPI var0) {
@@ -3838,10 +3811,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenCanTriggerWalking(ClientPlayerBase var1) {
-        if (this.overrideCanTriggerWalkingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideCanTriggerWalkingHooks.length; ++var2) {
+        if (this.overrideCanTriggerWalkingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideCanTriggerWalkingHooks.length; ++var2) {
                 if (this.overrideCanTriggerWalkingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3851,8 +3822,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void closeScreen(IClientPlayerAPI var0) {
@@ -3888,10 +3859,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenCloseScreen(ClientPlayerBase var1) {
-        if (this.overrideCloseScreenHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideCloseScreenHooks.length; ++var2) {
+        if (this.overrideCloseScreenHooks != null) {
+            for (int var2 = 0; var2 < this.overrideCloseScreenHooks.length; ++var2) {
                 if (this.overrideCloseScreenHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3901,8 +3870,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void damageEntity(IClientPlayerAPI var0, DamageSource var1, float var2) {
@@ -3938,10 +3907,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDamageEntity(ClientPlayerBase var1) {
-        if (this.overrideDamageEntityHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDamageEntityHooks.length; ++var2) {
+        if (this.overrideDamageEntityHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDamageEntityHooks.length; ++var2) {
                 if (this.overrideDamageEntityHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -3951,8 +3918,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIBrewingStand(IClientPlayerAPI var0, TileEntityBrewingStand var1) {
@@ -3988,10 +3955,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIBrewingStand(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIBrewingStandHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIBrewingStandHooks.length; ++var2) {
+        if (this.overrideDisplayGUIBrewingStandHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIBrewingStandHooks.length; ++var2) {
                 if (this.overrideDisplayGUIBrewingStandHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4001,8 +3966,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIChest(IClientPlayerAPI var0, IInventory var1) {
@@ -4038,10 +4003,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIChest(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIChestHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIChestHooks.length; ++var2) {
+        if (this.overrideDisplayGUIChestHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIChestHooks.length; ++var2) {
                 if (this.overrideDisplayGUIChestHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4051,8 +4014,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIDispenser(IClientPlayerAPI var0, TileEntityDispenser var1) {
@@ -4088,10 +4051,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIDispenser(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIDispenserHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIDispenserHooks.length; ++var2) {
+        if (this.overrideDisplayGUIDispenserHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIDispenserHooks.length; ++var2) {
                 if (this.overrideDisplayGUIDispenserHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4101,8 +4062,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIEditSign(IClientPlayerAPI var0, TileEntity var1) {
@@ -4138,10 +4099,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEditSign(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIEditSignHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIEditSignHooks.length; ++var2) {
+        if (this.overrideDisplayGUIEditSignHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIEditSignHooks.length; ++var2) {
                 if (this.overrideDisplayGUIEditSignHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4151,8 +4110,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIEnchantment(IClientPlayerAPI var0, int var1, int var2, int var3, String var4) {
@@ -4188,10 +4147,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEnchantment(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIEnchantmentHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIEnchantmentHooks.length; ++var2) {
+        if (this.overrideDisplayGUIEnchantmentHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIEnchantmentHooks.length; ++var2) {
                 if (this.overrideDisplayGUIEnchantmentHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4201,8 +4158,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIFurnace(IClientPlayerAPI var0, TileEntityFurnace var1) {
@@ -4238,10 +4195,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIFurnace(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIFurnaceHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIFurnaceHooks.length; ++var2) {
+        if (this.overrideDisplayGUIFurnaceHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIFurnaceHooks.length; ++var2) {
                 if (this.overrideDisplayGUIFurnaceHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4251,8 +4206,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void displayGUIWorkbench(IClientPlayerAPI var0, int var1, int var2, int var3) {
@@ -4288,10 +4243,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIWorkbench(ClientPlayerBase var1) {
-        if (this.overrideDisplayGUIWorkbenchHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDisplayGUIWorkbenchHooks.length; ++var2) {
+        if (this.overrideDisplayGUIWorkbenchHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDisplayGUIWorkbenchHooks.length; ++var2) {
                 if (this.overrideDisplayGUIWorkbenchHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4301,8 +4254,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static EntityItem dropOneItem(IClientPlayerAPI var0, boolean var1) {
@@ -4341,10 +4294,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDropOneItem(ClientPlayerBase var1) {
-        if (this.overrideDropOneItemHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDropOneItemHooks.length; ++var2) {
+        if (this.overrideDropOneItemHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDropOneItemHooks.length; ++var2) {
                 if (this.overrideDropOneItemHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4354,8 +4305,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static EntityItem dropPlayerItem(IClientPlayerAPI var0, ItemStack var1, boolean var2) {
@@ -4394,10 +4345,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDropPlayerItem(ClientPlayerBase var1) {
-        if (this.overrideDropPlayerItemHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDropPlayerItemHooks.length; ++var2) {
+        if (this.overrideDropPlayerItemHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDropPlayerItemHooks.length; ++var2) {
                 if (this.overrideDropPlayerItemHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4407,8 +4356,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static EntityItem dropPlayerItemWithRandomChoice(IClientPlayerAPI var0, ItemStack var1, boolean var2, boolean var3) {
@@ -4447,10 +4396,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenDropPlayerItemWithRandomChoice(ClientPlayerBase var1) {
-        if (this.overrideDropPlayerItemWithRandomChoiceHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideDropPlayerItemWithRandomChoiceHooks.length; ++var2) {
+        if (this.overrideDropPlayerItemWithRandomChoiceHooks != null) {
+            for (int var2 = 0; var2 < this.overrideDropPlayerItemWithRandomChoiceHooks.length; ++var2) {
                 if (this.overrideDropPlayerItemWithRandomChoiceHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4460,8 +4407,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void fall(IClientPlayerAPI var0, float var1) {
@@ -4497,10 +4444,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenFall(ClientPlayerBase var1) {
-        if (this.overrideFallHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideFallHooks.length; ++var2) {
+        if (this.overrideFallHooks != null) {
+            for (int var2 = 0; var2 < this.overrideFallHooks.length; ++var2) {
                 if (this.overrideFallHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4510,8 +4455,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getAIMoveSpeed(IClientPlayerAPI var0) {
@@ -4550,10 +4495,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetAIMoveSpeed(ClientPlayerBase var1) {
-        if (this.overrideGetAIMoveSpeedHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetAIMoveSpeedHooks.length; ++var2) {
+        if (this.overrideGetAIMoveSpeedHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetAIMoveSpeedHooks.length; ++var2) {
                 if (this.overrideGetAIMoveSpeedHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4563,8 +4506,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getBedOrientationInDegrees(IClientPlayerAPI var0) {
@@ -4603,10 +4546,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetBedOrientationInDegrees(ClientPlayerBase var1) {
-        if (this.overrideGetBedOrientationInDegreesHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetBedOrientationInDegreesHooks.length; ++var2) {
+        if (this.overrideGetBedOrientationInDegreesHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetBedOrientationInDegreesHooks.length; ++var2) {
                 if (this.overrideGetBedOrientationInDegreesHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4616,8 +4557,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getBrightness(IClientPlayerAPI var0, float var1) {
@@ -4656,10 +4597,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetBrightness(ClientPlayerBase var1) {
-        if (this.overrideGetBrightnessHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetBrightnessHooks.length; ++var2) {
+        if (this.overrideGetBrightnessHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetBrightnessHooks.length; ++var2) {
                 if (this.overrideGetBrightnessHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4669,8 +4608,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static int getBrightnessForRender(IClientPlayerAPI var0, float var1) {
@@ -4709,10 +4648,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetBrightnessForRender(ClientPlayerBase var1) {
-        if (this.overrideGetBrightnessForRenderHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetBrightnessForRenderHooks.length; ++var2) {
+        if (this.overrideGetBrightnessForRenderHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetBrightnessForRenderHooks.length; ++var2) {
                 if (this.overrideGetBrightnessForRenderHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4722,8 +4659,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getCurrentPlayerStrVsBlock(IClientPlayerAPI var0, Block var1, boolean var2) {
@@ -4762,10 +4699,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetCurrentPlayerStrVsBlock(ClientPlayerBase var1) {
-        if (this.overrideGetCurrentPlayerStrVsBlockHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetCurrentPlayerStrVsBlockHooks.length; ++var2) {
+        if (this.overrideGetCurrentPlayerStrVsBlockHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetCurrentPlayerStrVsBlockHooks.length; ++var2) {
                 if (this.overrideGetCurrentPlayerStrVsBlockHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4775,8 +4710,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getCurrentPlayerStrVsBlockForge(IClientPlayerAPI var0, Block var1, boolean var2, int var3) {
@@ -4815,10 +4750,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetCurrentPlayerStrVsBlockForge(ClientPlayerBase var1) {
-        if (this.overrideGetCurrentPlayerStrVsBlockForgeHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetCurrentPlayerStrVsBlockForgeHooks.length; ++var2) {
+        if (this.overrideGetCurrentPlayerStrVsBlockForgeHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetCurrentPlayerStrVsBlockForgeHooks.length; ++var2) {
                 if (this.overrideGetCurrentPlayerStrVsBlockForgeHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4828,8 +4761,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static double getDistanceSq(IClientPlayerAPI var0, double var1, double var3, double var5) {
@@ -4868,10 +4801,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetDistanceSq(ClientPlayerBase var1) {
-        if (this.overrideGetDistanceSqHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetDistanceSqHooks.length; ++var2) {
+        if (this.overrideGetDistanceSqHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetDistanceSqHooks.length; ++var2) {
                 if (this.overrideGetDistanceSqHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4881,8 +4812,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static double getDistanceSqToEntity(IClientPlayerAPI var0, Entity var1) {
@@ -4921,10 +4852,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetDistanceSqToEntity(ClientPlayerBase var1) {
-        if (this.overrideGetDistanceSqToEntityHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetDistanceSqToEntityHooks.length; ++var2) {
+        if (this.overrideGetDistanceSqToEntityHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetDistanceSqToEntityHooks.length; ++var2) {
                 if (this.overrideGetDistanceSqToEntityHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4934,8 +4863,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static float getFOVMultiplier(IClientPlayerAPI var0) {
@@ -4974,10 +4903,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetFOVMultiplier(ClientPlayerBase var1) {
-        if (this.overrideGetFOVMultiplierHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetFOVMultiplierHooks.length; ++var2) {
+        if (this.overrideGetFOVMultiplierHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetFOVMultiplierHooks.length; ++var2) {
                 if (this.overrideGetFOVMultiplierHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -4987,8 +4914,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static String getHurtSound(IClientPlayerAPI var0) {
@@ -5027,10 +4954,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetHurtSound(ClientPlayerBase var1) {
-        if (this.overrideGetHurtSoundHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetHurtSoundHooks.length; ++var2) {
+        if (this.overrideGetHurtSoundHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetHurtSoundHooks.length; ++var2) {
                 if (this.overrideGetHurtSoundHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5040,8 +4965,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static IIcon getItemIcon(IClientPlayerAPI var0, ItemStack var1, int var2) {
@@ -5080,10 +5005,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetItemIcon(ClientPlayerBase var1) {
-        if (this.overrideGetItemIconHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetItemIconHooks.length; ++var2) {
+        if (this.overrideGetItemIconHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetItemIconHooks.length; ++var2) {
                 if (this.overrideGetItemIconHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5093,8 +5016,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static int getSleepTimer(IClientPlayerAPI var0) {
@@ -5133,10 +5056,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenGetSleepTimer(ClientPlayerBase var1) {
-        if (this.overrideGetSleepTimerHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideGetSleepTimerHooks.length; ++var2) {
+        if (this.overrideGetSleepTimerHooks != null) {
+            for (int var2 = 0; var2 < this.overrideGetSleepTimerHooks.length; ++var2) {
                 if (this.overrideGetSleepTimerHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5146,8 +5067,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean handleLavaMovement(IClientPlayerAPI var0) {
@@ -5186,10 +5107,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenHandleLavaMovement(ClientPlayerBase var1) {
-        if (this.overrideHandleLavaMovementHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideHandleLavaMovementHooks.length; ++var2) {
+        if (this.overrideHandleLavaMovementHooks != null) {
+            for (int var2 = 0; var2 < this.overrideHandleLavaMovementHooks.length; ++var2) {
                 if (this.overrideHandleLavaMovementHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5199,8 +5118,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean handleWaterMovement(IClientPlayerAPI var0) {
@@ -5239,10 +5158,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenHandleWaterMovement(ClientPlayerBase var1) {
-        if (this.overrideHandleWaterMovementHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideHandleWaterMovementHooks.length; ++var2) {
+        if (this.overrideHandleWaterMovementHooks != null) {
+            for (int var2 = 0; var2 < this.overrideHandleWaterMovementHooks.length; ++var2) {
                 if (this.overrideHandleWaterMovementHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5252,8 +5169,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void heal(IClientPlayerAPI var0, float var1) {
@@ -5289,10 +5206,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenHeal(ClientPlayerBase var1) {
-        if (this.overrideHealHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideHealHooks.length; ++var2) {
+        if (this.overrideHealHooks != null) {
+            for (int var2 = 0; var2 < this.overrideHealHooks.length; ++var2) {
                 if (this.overrideHealHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5302,8 +5217,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isEntityInsideOpaqueBlock(IClientPlayerAPI var0) {
@@ -5342,10 +5257,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsEntityInsideOpaqueBlock(ClientPlayerBase var1) {
-        if (this.overrideIsEntityInsideOpaqueBlockHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsEntityInsideOpaqueBlockHooks.length; ++var2) {
+        if (this.overrideIsEntityInsideOpaqueBlockHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsEntityInsideOpaqueBlockHooks.length; ++var2) {
                 if (this.overrideIsEntityInsideOpaqueBlockHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5355,8 +5268,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isInWater(IClientPlayerAPI var0) {
@@ -5395,10 +5308,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsInWater(ClientPlayerBase var1) {
-        if (this.overrideIsInWaterHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsInWaterHooks.length; ++var2) {
+        if (this.overrideIsInWaterHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsInWaterHooks.length; ++var2) {
                 if (this.overrideIsInWaterHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5408,8 +5319,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isInsideOfMaterial(IClientPlayerAPI var0, Material var1) {
@@ -5448,10 +5359,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsInsideOfMaterial(ClientPlayerBase var1) {
-        if (this.overrideIsInsideOfMaterialHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsInsideOfMaterialHooks.length; ++var2) {
+        if (this.overrideIsInsideOfMaterialHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsInsideOfMaterialHooks.length; ++var2) {
                 if (this.overrideIsInsideOfMaterialHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5461,8 +5370,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isOnLadder(IClientPlayerAPI var0) {
@@ -5501,10 +5410,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsOnLadder(ClientPlayerBase var1) {
-        if (this.overrideIsOnLadderHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsOnLadderHooks.length; ++var2) {
+        if (this.overrideIsOnLadderHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsOnLadderHooks.length; ++var2) {
                 if (this.overrideIsOnLadderHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5514,8 +5421,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isPlayerSleeping(IClientPlayerAPI var0) {
@@ -5554,10 +5461,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsPlayerSleeping(ClientPlayerBase var1) {
-        if (this.overrideIsPlayerSleepingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsPlayerSleepingHooks.length; ++var2) {
+        if (this.overrideIsPlayerSleepingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsPlayerSleepingHooks.length; ++var2) {
                 if (this.overrideIsPlayerSleepingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5567,8 +5472,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isSneaking(IClientPlayerAPI var0) {
@@ -5607,10 +5512,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsSneaking(ClientPlayerBase var1) {
-        if (this.overrideIsSneakingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsSneakingHooks.length; ++var2) {
+        if (this.overrideIsSneakingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsSneakingHooks.length; ++var2) {
                 if (this.overrideIsSneakingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5620,8 +5523,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean isSprinting(IClientPlayerAPI var0) {
@@ -5660,10 +5563,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenIsSprinting(ClientPlayerBase var1) {
-        if (this.overrideIsSprintingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideIsSprintingHooks.length; ++var2) {
+        if (this.overrideIsSprintingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideIsSprintingHooks.length; ++var2) {
                 if (this.overrideIsSprintingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5673,8 +5574,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void jump(IClientPlayerAPI var0) {
@@ -5710,10 +5611,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenJump(ClientPlayerBase var1) {
-        if (this.overrideJumpHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideJumpHooks.length; ++var2) {
+        if (this.overrideJumpHooks != null) {
+            for (int var2 = 0; var2 < this.overrideJumpHooks.length; ++var2) {
                 if (this.overrideJumpHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5723,8 +5622,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void knockBack(IClientPlayerAPI var0, Entity var1, float var2, double var3, double var5) {
@@ -5760,10 +5659,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenKnockBack(ClientPlayerBase var1) {
-        if (this.overrideKnockBackHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideKnockBackHooks.length; ++var2) {
+        if (this.overrideKnockBackHooks != null) {
+            for (int var2 = 0; var2 < this.overrideKnockBackHooks.length; ++var2) {
                 if (this.overrideKnockBackHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5773,8 +5670,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void moveEntity(IClientPlayerAPI var0, double var1, double var3, double var5) {
@@ -5810,10 +5707,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntity(ClientPlayerBase var1) {
-        if (this.overrideMoveEntityHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideMoveEntityHooks.length; ++var2) {
+        if (this.overrideMoveEntityHooks != null) {
+            for (int var2 = 0; var2 < this.overrideMoveEntityHooks.length; ++var2) {
                 if (this.overrideMoveEntityHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5823,8 +5718,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void moveEntityWithHeading(IClientPlayerAPI var0, float var1, float var2) {
@@ -5860,10 +5755,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntityWithHeading(ClientPlayerBase var1) {
-        if (this.overrideMoveEntityWithHeadingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideMoveEntityWithHeadingHooks.length; ++var2) {
+        if (this.overrideMoveEntityWithHeadingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideMoveEntityWithHeadingHooks.length; ++var2) {
                 if (this.overrideMoveEntityWithHeadingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5873,8 +5766,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void moveFlying(IClientPlayerAPI var0, float var1, float var2, float var3) {
@@ -5910,10 +5803,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenMoveFlying(ClientPlayerBase var1) {
-        if (this.overrideMoveFlyingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideMoveFlyingHooks.length; ++var2) {
+        if (this.overrideMoveFlyingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideMoveFlyingHooks.length; ++var2) {
                 if (this.overrideMoveFlyingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5923,8 +5814,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void onDeath(IClientPlayerAPI var0, DamageSource var1) {
@@ -5960,10 +5851,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenOnDeath(ClientPlayerBase var1) {
-        if (this.overrideOnDeathHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideOnDeathHooks.length; ++var2) {
+        if (this.overrideOnDeathHooks != null) {
+            for (int var2 = 0; var2 < this.overrideOnDeathHooks.length; ++var2) {
                 if (this.overrideOnDeathHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -5973,8 +5862,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void onLivingUpdate(IClientPlayerAPI var0) {
@@ -6010,10 +5899,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenOnLivingUpdate(ClientPlayerBase var1) {
-        if (this.overrideOnLivingUpdateHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideOnLivingUpdateHooks.length; ++var2) {
+        if (this.overrideOnLivingUpdateHooks != null) {
+            for (int var2 = 0; var2 < this.overrideOnLivingUpdateHooks.length; ++var2) {
                 if (this.overrideOnLivingUpdateHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6023,8 +5910,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void onKillEntity(IClientPlayerAPI var0, EntityLivingBase var1) {
@@ -6060,10 +5947,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenOnKillEntity(ClientPlayerBase var1) {
-        if (this.overrideOnKillEntityHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideOnKillEntityHooks.length; ++var2) {
+        if (this.overrideOnKillEntityHooks != null) {
+            for (int var2 = 0; var2 < this.overrideOnKillEntityHooks.length; ++var2) {
                 if (this.overrideOnKillEntityHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6073,8 +5958,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void onStruckByLightning(IClientPlayerAPI var0, EntityLightningBolt var1) {
@@ -6110,10 +5995,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenOnStruckByLightning(ClientPlayerBase var1) {
-        if (this.overrideOnStruckByLightningHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideOnStruckByLightningHooks.length; ++var2) {
+        if (this.overrideOnStruckByLightningHooks != null) {
+            for (int var2 = 0; var2 < this.overrideOnStruckByLightningHooks.length; ++var2) {
                 if (this.overrideOnStruckByLightningHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6123,8 +6006,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void onUpdate(IClientPlayerAPI var0) {
@@ -6160,10 +6043,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenOnUpdate(ClientPlayerBase var1) {
-        if (this.overrideOnUpdateHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideOnUpdateHooks.length; ++var2) {
+        if (this.overrideOnUpdateHooks != null) {
+            for (int var2 = 0; var2 < this.overrideOnUpdateHooks.length; ++var2) {
                 if (this.overrideOnUpdateHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6173,8 +6054,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void playStepSound(IClientPlayerAPI var0, int var1, int var2, int var3, Block var4) {
@@ -6210,10 +6091,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenPlayStepSound(ClientPlayerBase var1) {
-        if (this.overridePlayStepSoundHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overridePlayStepSoundHooks.length; ++var2) {
+        if (this.overridePlayStepSoundHooks != null) {
+            for (int var2 = 0; var2 < this.overridePlayStepSoundHooks.length; ++var2) {
                 if (this.overridePlayStepSoundHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6223,8 +6102,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static boolean pushOutOfBlocks(IClientPlayerAPI var0, double var1, double var3, double var5) {
@@ -6263,10 +6142,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenPushOutOfBlocks(ClientPlayerBase var1) {
-        if (this.overridePushOutOfBlocksHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overridePushOutOfBlocksHooks.length; ++var2) {
+        if (this.overridePushOutOfBlocksHooks != null) {
+            for (int var2 = 0; var2 < this.overridePushOutOfBlocksHooks.length; ++var2) {
                 if (this.overridePushOutOfBlocksHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6276,8 +6153,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static MovingObjectPosition rayTrace(IClientPlayerAPI var0, double var1, float var3) {
@@ -6316,10 +6193,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenRayTrace(ClientPlayerBase var1) {
-        if (this.overrideRayTraceHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideRayTraceHooks.length; ++var2) {
+        if (this.overrideRayTraceHooks != null) {
+            for (int var2 = 0; var2 < this.overrideRayTraceHooks.length; ++var2) {
                 if (this.overrideRayTraceHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6329,8 +6204,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void readEntityFromNBT(IClientPlayerAPI var0, NBTTagCompound var1) {
@@ -6366,10 +6241,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenReadEntityFromNBT(ClientPlayerBase var1) {
-        if (this.overrideReadEntityFromNBTHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideReadEntityFromNBTHooks.length; ++var2) {
+        if (this.overrideReadEntityFromNBTHooks != null) {
+            for (int var2 = 0; var2 < this.overrideReadEntityFromNBTHooks.length; ++var2) {
                 if (this.overrideReadEntityFromNBTHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6379,8 +6252,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void respawnPlayer(IClientPlayerAPI var0) {
@@ -6416,10 +6289,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenRespawnPlayer(ClientPlayerBase var1) {
-        if (this.overrideRespawnPlayerHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideRespawnPlayerHooks.length; ++var2) {
+        if (this.overrideRespawnPlayerHooks != null) {
+            for (int var2 = 0; var2 < this.overrideRespawnPlayerHooks.length; ++var2) {
                 if (this.overrideRespawnPlayerHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6429,8 +6300,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void setDead(IClientPlayerAPI var0) {
@@ -6466,10 +6337,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSetDead(ClientPlayerBase var1) {
-        if (this.overrideSetDeadHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSetDeadHooks.length; ++var2) {
+        if (this.overrideSetDeadHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSetDeadHooks.length; ++var2) {
                 if (this.overrideSetDeadHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6479,8 +6348,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void setPlayerSPHealth(IClientPlayerAPI var0, float var1) {
@@ -6516,10 +6385,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSetPlayerSPHealth(ClientPlayerBase var1) {
-        if (this.overrideSetPlayerSPHealthHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSetPlayerSPHealthHooks.length; ++var2) {
+        if (this.overrideSetPlayerSPHealthHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSetPlayerSPHealthHooks.length; ++var2) {
                 if (this.overrideSetPlayerSPHealthHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6529,8 +6396,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void setPositionAndRotation(IClientPlayerAPI var0, double var1, double var3, double var5, float var7, float var8) {
@@ -6566,10 +6433,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSetPositionAndRotation(ClientPlayerBase var1) {
-        if (this.overrideSetPositionAndRotationHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSetPositionAndRotationHooks.length; ++var2) {
+        if (this.overrideSetPositionAndRotationHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSetPositionAndRotationHooks.length; ++var2) {
                 if (this.overrideSetPositionAndRotationHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6579,8 +6444,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void setSneaking(IClientPlayerAPI var0, boolean var1) {
@@ -6616,10 +6481,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSetSneaking(ClientPlayerBase var1) {
-        if (this.overrideSetSneakingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSetSneakingHooks.length; ++var2) {
+        if (this.overrideSetSneakingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSetSneakingHooks.length; ++var2) {
                 if (this.overrideSetSneakingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6629,8 +6492,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void setSprinting(IClientPlayerAPI var0, boolean var1) {
@@ -6666,10 +6529,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSetSprinting(ClientPlayerBase var1) {
-        if (this.overrideSetSprintingHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSetSprintingHooks.length; ++var2) {
+        if (this.overrideSetSprintingHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSetSprintingHooks.length; ++var2) {
                 if (this.overrideSetSprintingHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6679,8 +6540,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static EnumStatus sleepInBedAt(IClientPlayerAPI var0, int var1, int var2, int var3) {
@@ -6719,10 +6580,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSleepInBedAt(ClientPlayerBase var1) {
-        if (this.overrideSleepInBedAtHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSleepInBedAtHooks.length; ++var2) {
+        if (this.overrideSleepInBedAtHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSleepInBedAtHooks.length; ++var2) {
                 if (this.overrideSleepInBedAtHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6732,8 +6591,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void swingItem(IClientPlayerAPI var0) {
@@ -6769,10 +6628,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenSwingItem(ClientPlayerBase var1) {
-        if (this.overrideSwingItemHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideSwingItemHooks.length; ++var2) {
+        if (this.overrideSwingItemHooks != null) {
+            for (int var2 = 0; var2 < this.overrideSwingItemHooks.length; ++var2) {
                 if (this.overrideSwingItemHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6782,8 +6639,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void updateEntityActionState(IClientPlayerAPI var0) {
@@ -6819,10 +6676,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenUpdateEntityActionState(ClientPlayerBase var1) {
-        if (this.overrideUpdateEntityActionStateHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideUpdateEntityActionStateHooks.length; ++var2) {
+        if (this.overrideUpdateEntityActionStateHooks != null) {
+            for (int var2 = 0; var2 < this.overrideUpdateEntityActionStateHooks.length; ++var2) {
                 if (this.overrideUpdateEntityActionStateHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6832,8 +6687,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void updateRidden(IClientPlayerAPI var0) {
@@ -6869,10 +6724,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenUpdateRidden(ClientPlayerBase var1) {
-        if (this.overrideUpdateRiddenHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideUpdateRiddenHooks.length; ++var2) {
+        if (this.overrideUpdateRiddenHooks != null) {
+            for (int var2 = 0; var2 < this.overrideUpdateRiddenHooks.length; ++var2) {
                 if (this.overrideUpdateRiddenHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6882,8 +6735,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void wakeUpPlayer(IClientPlayerAPI var0, boolean var1, boolean var2, boolean var3) {
@@ -6919,10 +6772,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenWakeUpPlayer(ClientPlayerBase var1) {
-        if (this.overrideWakeUpPlayerHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideWakeUpPlayerHooks.length; ++var2) {
+        if (this.overrideWakeUpPlayerHooks != null) {
+            for (int var2 = 0; var2 < this.overrideWakeUpPlayerHooks.length; ++var2) {
                 if (this.overrideWakeUpPlayerHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6932,8 +6783,8 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 
     public static void writeEntityToNBT(IClientPlayerAPI var0, NBTTagCompound var1) {
@@ -6969,10 +6820,8 @@ public final class ClientPlayerAPI {
     }
 
     protected ClientPlayerBase GetOverwrittenWriteEntityToNBT(ClientPlayerBase var1) {
-        if (this.overrideWriteEntityToNBTHooks == null) {
-            return var1;
-        } else {
-            for(int var2 = 0; var2 < this.overrideWriteEntityToNBTHooks.length; ++var2) {
+        if (this.overrideWriteEntityToNBTHooks != null) {
+            for (int var2 = 0; var2 < this.overrideWriteEntityToNBTHooks.length; ++var2) {
                 if (this.overrideWriteEntityToNBTHooks[var2] == var1) {
                     if (var2 == 0) {
                         return null;
@@ -6982,7 +6831,7 @@ public final class ClientPlayerAPI {
                 }
             }
 
-            return var1;
         }
+        return var1;
     }
 }
