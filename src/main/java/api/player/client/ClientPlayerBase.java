@@ -35,23 +35,17 @@ public abstract class ClientPlayerBase {
         this.player = playerAPI.player.getEntityPlayerSP();
     }
 
-    public void beforeBaseAttach(boolean onTheFly) {
-    }
+    public void beforeBaseAttach(boolean onTheFly) {}
 
-    public void afterBaseAttach(boolean onTheFly) {
-    }
+    public void afterBaseAttach(boolean onTheFly) {}
 
-    public void beforeLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {
-    }
+    public void beforeLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {}
 
-    public void afterLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {
-    }
+    public void afterLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {}
 
-    public void beforeBaseDetach(boolean onTheFly) {
-    }
+    public void beforeBaseDetach(boolean onTheFly) {}
 
-    public void afterBaseDetach(boolean onTheFly) {
-    }
+    public void afterBaseDetach(boolean onTheFly) {}
 
     public Object dynamic(String key, Object[] parameters) {
         return this.internalClientPlayerAPI.dynamicOverwritten(key, parameters, this);
@@ -62,8 +56,7 @@ public abstract class ClientPlayerBase {
         return super.hashCode();
     }
 
-    public void beforeAddExhaustion(float var1) {
-    }
+    public void beforeAddExhaustion(float var1) {}
 
     public void addExhaustion(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenAddExhaustion(this);
@@ -72,14 +65,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.addExhaustion(var1);
         }
-
     }
 
-    public void afterAddExhaustion(float var1) {
-    }
+    public void afterAddExhaustion(float var1) {}
 
-    public void beforeAddMovementStat(double var1, double var3, double var5) {
-    }
+    public void beforeAddMovementStat(double var1, double var3, double var5) {}
 
     public void addMovementStat(double var1, double var3, double var5) {
         ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenAddMovementStat(this);
@@ -88,14 +78,11 @@ public abstract class ClientPlayerBase {
         } else if (var7 != this) {
             var7.addMovementStat(var1, var3, var5);
         }
-
     }
 
-    public void afterAddMovementStat(double var1, double var3, double var5) {
-    }
+    public void afterAddMovementStat(double var1, double var3, double var5) {}
 
-    public void beforeAddStat(StatBase var1, int var2) {
-    }
+    public void beforeAddStat(StatBase var1, int var2) {}
 
     public void addStat(StatBase var1, int var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenAddStat(this);
@@ -104,14 +91,11 @@ public abstract class ClientPlayerBase {
         } else if (var3 != this) {
             var3.addStat(var1, var2);
         }
-
     }
 
-    public void afterAddStat(StatBase var1, int var2) {
-    }
+    public void afterAddStat(StatBase var1, int var2) {}
 
-    public void beforeAttackEntityFrom(DamageSource var1, float var2) {
-    }
+    public void beforeAttackEntityFrom(DamageSource var1, float var2) {}
 
     public boolean attackEntityFrom(DamageSource var1, float var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenAttackEntityFrom(this);
@@ -127,11 +111,9 @@ public abstract class ClientPlayerBase {
         return var4;
     }
 
-    public void afterAttackEntityFrom(DamageSource var1, float var2) {
-    }
+    public void afterAttackEntityFrom(DamageSource var1, float var2) {}
 
-    public void beforeAttackTargetEntityWithCurrentItem(Entity var1) {
-    }
+    public void beforeAttackTargetEntityWithCurrentItem(Entity var1) {}
 
     public void attackTargetEntityWithCurrentItem(Entity var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenAttackTargetEntityWithCurrentItem(this);
@@ -140,14 +122,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.attackTargetEntityWithCurrentItem(var1);
         }
-
     }
 
-    public void afterAttackTargetEntityWithCurrentItem(Entity var1) {
-    }
+    public void afterAttackTargetEntityWithCurrentItem(Entity var1) {}
 
-    public void beforeCanBreatheUnderwater() {
-    }
+    public void beforeCanBreatheUnderwater() {}
 
     public boolean canBreatheUnderwater() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCanBreatheUnderwater(this);
@@ -163,11 +142,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterCanBreatheUnderwater() {
-    }
+    public void afterCanBreatheUnderwater() {}
 
-    public void beforeCanHarvestBlock(Block var1) {
-    }
+    public void beforeCanHarvestBlock(Block var1) {}
 
     public boolean canHarvestBlock(Block var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenCanHarvestBlock(this);
@@ -183,11 +160,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterCanHarvestBlock(Block var1) {
-    }
+    public void afterCanHarvestBlock(Block var1) {}
 
-    public void beforeCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {
-    }
+    public void beforeCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {}
 
     public boolean canPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {
         ClientPlayerBase var6 = this.internalClientPlayerAPI.GetOverwrittenCanPlayerEdit(this);
@@ -203,11 +178,9 @@ public abstract class ClientPlayerBase {
         return var7;
     }
 
-    public void afterCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {
-    }
+    public void afterCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {}
 
-    public void beforeCanTriggerWalking() {
-    }
+    public void beforeCanTriggerWalking() {}
 
     public boolean canTriggerWalking() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCanTriggerWalking(this);
@@ -223,11 +196,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterCanTriggerWalking() {
-    }
+    public void afterCanTriggerWalking() {}
 
-    public void beforeCloseScreen() {
-    }
+    public void beforeCloseScreen() {}
 
     public void closeScreen() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCloseScreen(this);
@@ -236,14 +207,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.closeScreen();
         }
-
     }
 
-    public void afterCloseScreen() {
-    }
+    public void afterCloseScreen() {}
 
-    public void beforeDamageEntity(DamageSource var1, float var2) {
-    }
+    public void beforeDamageEntity(DamageSource var1, float var2) {}
 
     public void damageEntity(DamageSource var1, float var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenDamageEntity(this);
@@ -252,14 +220,11 @@ public abstract class ClientPlayerBase {
         } else if (var3 != this) {
             var3.damageEntity(var1, var2);
         }
-
     }
 
-    public void afterDamageEntity(DamageSource var1, float var2) {
-    }
+    public void afterDamageEntity(DamageSource var1, float var2) {}
 
-    public void beforeDisplayGUIBrewingStand(TileEntityBrewingStand var1) {
-    }
+    public void beforeDisplayGUIBrewingStand(TileEntityBrewingStand var1) {}
 
     public void displayGUIBrewingStand(TileEntityBrewingStand var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIBrewingStand(this);
@@ -268,14 +233,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.displayGUIBrewingStand(var1);
         }
-
     }
 
-    public void afterDisplayGUIBrewingStand(TileEntityBrewingStand var1) {
-    }
+    public void afterDisplayGUIBrewingStand(TileEntityBrewingStand var1) {}
 
-    public void beforeDisplayGUIChest(IInventory var1) {
-    }
+    public void beforeDisplayGUIChest(IInventory var1) {}
 
     public void displayGUIChest(IInventory var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIChest(this);
@@ -284,14 +246,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.displayGUIChest(var1);
         }
-
     }
 
-    public void afterDisplayGUIChest(IInventory var1) {
-    }
+    public void afterDisplayGUIChest(IInventory var1) {}
 
-    public void beforeDisplayGUIDispenser(TileEntityDispenser var1) {
-    }
+    public void beforeDisplayGUIDispenser(TileEntityDispenser var1) {}
 
     public void displayGUIDispenser(TileEntityDispenser var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIDispenser(this);
@@ -300,14 +259,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.displayGUIDispenser(var1);
         }
-
     }
 
-    public void afterDisplayGUIDispenser(TileEntityDispenser var1) {
-    }
+    public void afterDisplayGUIDispenser(TileEntityDispenser var1) {}
 
-    public void beforeDisplayGUIEditSign(TileEntity var1) {
-    }
+    public void beforeDisplayGUIEditSign(TileEntity var1) {}
 
     public void displayGUIEditSign(TileEntity var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIEditSign(this);
@@ -316,14 +272,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.displayGUIEditSign(var1);
         }
-
     }
 
-    public void afterDisplayGUIEditSign(TileEntity var1) {
-    }
+    public void afterDisplayGUIEditSign(TileEntity var1) {}
 
-    public void beforeDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {
-    }
+    public void beforeDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {}
 
     public void displayGUIEnchantment(int var1, int var2, int var3, String var4) {
         ClientPlayerBase var5 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIEnchantment(this);
@@ -332,14 +285,11 @@ public abstract class ClientPlayerBase {
         } else if (var5 != this) {
             var5.displayGUIEnchantment(var1, var2, var3, var4);
         }
-
     }
 
-    public void afterDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {
-    }
+    public void afterDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {}
 
-    public void beforeDisplayGUIFurnace(TileEntityFurnace var1) {
-    }
+    public void beforeDisplayGUIFurnace(TileEntityFurnace var1) {}
 
     public void displayGUIFurnace(TileEntityFurnace var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIFurnace(this);
@@ -348,14 +298,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.displayGUIFurnace(var1);
         }
-
     }
 
-    public void afterDisplayGUIFurnace(TileEntityFurnace var1) {
-    }
+    public void afterDisplayGUIFurnace(TileEntityFurnace var1) {}
 
-    public void beforeDisplayGUIWorkbench(int var1, int var2, int var3) {
-    }
+    public void beforeDisplayGUIWorkbench(int var1, int var2, int var3) {}
 
     public void displayGUIWorkbench(int var1, int var2, int var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIWorkbench(this);
@@ -364,14 +311,11 @@ public abstract class ClientPlayerBase {
         } else if (var4 != this) {
             var4.displayGUIWorkbench(var1, var2, var3);
         }
-
     }
 
-    public void afterDisplayGUIWorkbench(int var1, int var2, int var3) {
-    }
+    public void afterDisplayGUIWorkbench(int var1, int var2, int var3) {}
 
-    public void beforeDropOneItem(boolean var1) {
-    }
+    public void beforeDropOneItem(boolean var1) {}
 
     public EntityItem dropOneItem(boolean var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDropOneItem(this);
@@ -387,11 +331,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterDropOneItem(boolean var1) {
-    }
+    public void afterDropOneItem(boolean var1) {}
 
-    public void beforeDropPlayerItem(ItemStack var1, boolean var2) {
-    }
+    public void beforeDropPlayerItem(ItemStack var1, boolean var2) {}
 
     public EntityItem dropPlayerItem(ItemStack var1, boolean var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenDropPlayerItem(this);
@@ -407,11 +349,9 @@ public abstract class ClientPlayerBase {
         return var4;
     }
 
-    public void afterDropPlayerItem(ItemStack var1, boolean var2) {
-    }
+    public void afterDropPlayerItem(ItemStack var1, boolean var2) {}
 
-    public void beforeDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {
-    }
+    public void beforeDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {}
 
     public EntityItem dropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenDropPlayerItemWithRandomChoice(this);
@@ -427,11 +367,9 @@ public abstract class ClientPlayerBase {
         return var5;
     }
 
-    public void afterDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {
-    }
+    public void afterDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {}
 
-    public void beforeFall(float var1) {
-    }
+    public void beforeFall(float var1) {}
 
     public void fall(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenFall(this);
@@ -440,14 +378,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.fall(var1);
         }
-
     }
 
-    public void afterFall(float var1) {
-    }
+    public void afterFall(float var1) {}
 
-    public void beforeGetAIMoveSpeed() {
-    }
+    public void beforeGetAIMoveSpeed() {}
 
     public float getAIMoveSpeed() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetAIMoveSpeed(this);
@@ -463,11 +398,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterGetAIMoveSpeed() {
-    }
+    public void afterGetAIMoveSpeed() {}
 
-    public void beforeGetBedOrientationInDegrees() {
-    }
+    public void beforeGetBedOrientationInDegrees() {}
 
     public float getBedOrientationInDegrees() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetBedOrientationInDegrees(this);
@@ -483,11 +416,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterGetBedOrientationInDegrees() {
-    }
+    public void afterGetBedOrientationInDegrees() {}
 
-    public void beforeGetBrightness(float var1) {
-    }
+    public void beforeGetBrightness(float var1) {}
 
     public float getBrightness(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetBrightness(this);
@@ -503,11 +434,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterGetBrightness(float var1) {
-    }
+    public void afterGetBrightness(float var1) {}
 
-    public void beforeGetBrightnessForRender(float var1) {
-    }
+    public void beforeGetBrightnessForRender(float var1) {}
 
     public int getBrightnessForRender(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetBrightnessForRender(this);
@@ -523,11 +452,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterGetBrightnessForRender(float var1) {
-    }
+    public void afterGetBrightnessForRender(float var1) {}
 
-    public void beforeGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {
-    }
+    public void beforeGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {}
 
     public float getCurrentPlayerStrVsBlock(Block var1, boolean var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlock(this);
@@ -543,11 +470,9 @@ public abstract class ClientPlayerBase {
         return var4;
     }
 
-    public void afterGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {
-    }
+    public void afterGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {}
 
-    public void beforeGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {
-    }
+    public void beforeGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {}
 
     public float getCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlockForge(this);
@@ -563,11 +488,9 @@ public abstract class ClientPlayerBase {
         return var5;
     }
 
-    public void afterGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {
-    }
+    public void afterGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {}
 
-    public void beforeGetDistanceSq(double var1, double var3, double var5) {
-    }
+    public void beforeGetDistanceSq(double var1, double var3, double var5) {}
 
     public double getDistanceSq(double var1, double var3, double var5) {
         ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenGetDistanceSq(this);
@@ -583,11 +506,9 @@ public abstract class ClientPlayerBase {
         return var8;
     }
 
-    public void afterGetDistanceSq(double var1, double var3, double var5) {
-    }
+    public void afterGetDistanceSq(double var1, double var3, double var5) {}
 
-    public void beforeGetDistanceSqToEntity(Entity var1) {
-    }
+    public void beforeGetDistanceSqToEntity(Entity var1) {}
 
     public double getDistanceSqToEntity(Entity var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetDistanceSqToEntity(this);
@@ -603,11 +524,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterGetDistanceSqToEntity(Entity var1) {
-    }
+    public void afterGetDistanceSqToEntity(Entity var1) {}
 
-    public void beforeGetFOVMultiplier() {
-    }
+    public void beforeGetFOVMultiplier() {}
 
     public float getFOVMultiplier() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetFOVMultiplier(this);
@@ -623,11 +542,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterGetFOVMultiplier() {
-    }
+    public void afterGetFOVMultiplier() {}
 
-    public void beforeGetHurtSound() {
-    }
+    public void beforeGetHurtSound() {}
 
     public String getHurtSound() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetHurtSound(this);
@@ -643,11 +560,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterGetHurtSound() {
-    }
+    public void afterGetHurtSound() {}
 
-    public void beforeGetItemIcon(ItemStack var1, int var2) {
-    }
+    public void beforeGetItemIcon(ItemStack var1, int var2) {}
 
     public IIcon getItemIcon(ItemStack var1, int var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenGetItemIcon(this);
@@ -663,11 +578,9 @@ public abstract class ClientPlayerBase {
         return var4;
     }
 
-    public void afterGetItemIcon(ItemStack var1, int var2) {
-    }
+    public void afterGetItemIcon(ItemStack var1, int var2) {}
 
-    public void beforeGetSleepTimer() {
-    }
+    public void beforeGetSleepTimer() {}
 
     public int getSleepTimer() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetSleepTimer(this);
@@ -683,11 +596,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterGetSleepTimer() {
-    }
+    public void afterGetSleepTimer() {}
 
-    public void beforeHandleLavaMovement() {
-    }
+    public void beforeHandleLavaMovement() {}
 
     public boolean handleLavaMovement() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenHandleLavaMovement(this);
@@ -703,11 +614,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterHandleLavaMovement() {
-    }
+    public void afterHandleLavaMovement() {}
 
-    public void beforeHandleWaterMovement() {
-    }
+    public void beforeHandleWaterMovement() {}
 
     public boolean handleWaterMovement() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenHandleWaterMovement(this);
@@ -723,11 +632,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterHandleWaterMovement() {
-    }
+    public void afterHandleWaterMovement() {}
 
-    public void beforeHeal(float var1) {
-    }
+    public void beforeHeal(float var1) {}
 
     public void heal(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenHeal(this);
@@ -736,14 +643,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.heal(var1);
         }
-
     }
 
-    public void afterHeal(float var1) {
-    }
+    public void afterHeal(float var1) {}
 
-    public void beforeIsEntityInsideOpaqueBlock() {
-    }
+    public void beforeIsEntityInsideOpaqueBlock() {}
 
     public boolean isEntityInsideOpaqueBlock() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsEntityInsideOpaqueBlock(this);
@@ -759,11 +663,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsEntityInsideOpaqueBlock() {
-    }
+    public void afterIsEntityInsideOpaqueBlock() {}
 
-    public void beforeIsInWater() {
-    }
+    public void beforeIsInWater() {}
 
     public boolean isInWater() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsInWater(this);
@@ -779,11 +681,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsInWater() {
-    }
+    public void afterIsInWater() {}
 
-    public void beforeIsInsideOfMaterial(Material var1) {
-    }
+    public void beforeIsInsideOfMaterial(Material var1) {}
 
     public boolean isInsideOfMaterial(Material var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenIsInsideOfMaterial(this);
@@ -799,11 +699,9 @@ public abstract class ClientPlayerBase {
         return var3;
     }
 
-    public void afterIsInsideOfMaterial(Material var1) {
-    }
+    public void afterIsInsideOfMaterial(Material var1) {}
 
-    public void beforeIsOnLadder() {
-    }
+    public void beforeIsOnLadder() {}
 
     public boolean isOnLadder() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsOnLadder(this);
@@ -819,11 +717,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsOnLadder() {
-    }
+    public void afterIsOnLadder() {}
 
-    public void beforeIsPlayerSleeping() {
-    }
+    public void beforeIsPlayerSleeping() {}
 
     public boolean isPlayerSleeping() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsPlayerSleeping(this);
@@ -839,11 +735,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsPlayerSleeping() {
-    }
+    public void afterIsPlayerSleeping() {}
 
-    public void beforeIsSneaking() {
-    }
+    public void beforeIsSneaking() {}
 
     public boolean isSneaking() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsSneaking(this);
@@ -859,11 +753,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsSneaking() {
-    }
+    public void afterIsSneaking() {}
 
-    public void beforeIsSprinting() {
-    }
+    public void beforeIsSprinting() {}
 
     public boolean isSprinting() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsSprinting(this);
@@ -879,11 +771,9 @@ public abstract class ClientPlayerBase {
         return var2;
     }
 
-    public void afterIsSprinting() {
-    }
+    public void afterIsSprinting() {}
 
-    public void beforeJump() {
-    }
+    public void beforeJump() {}
 
     public void jump() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenJump(this);
@@ -892,14 +782,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.jump();
         }
-
     }
 
-    public void afterJump() {
-    }
+    public void afterJump() {}
 
-    public void beforeKnockBack(Entity var1, float var2, double var3, double var5) {
-    }
+    public void beforeKnockBack(Entity var1, float var2, double var3, double var5) {}
 
     public void knockBack(Entity var1, float var2, double var3, double var5) {
         ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenKnockBack(this);
@@ -908,14 +795,11 @@ public abstract class ClientPlayerBase {
         } else if (var7 != this) {
             var7.knockBack(var1, var2, var3, var5);
         }
-
     }
 
-    public void afterKnockBack(Entity var1, float var2, double var3, double var5) {
-    }
+    public void afterKnockBack(Entity var1, float var2, double var3, double var5) {}
 
-    public void beforeMoveEntity(double var1, double var3, double var5) {
-    }
+    public void beforeMoveEntity(double var1, double var3, double var5) {}
 
     public void moveEntity(double var1, double var3, double var5) {
         ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenMoveEntity(this);
@@ -924,14 +808,11 @@ public abstract class ClientPlayerBase {
         } else if (var7 != this) {
             var7.moveEntity(var1, var3, var5);
         }
-
     }
 
-    public void afterMoveEntity(double var1, double var3, double var5) {
-    }
+    public void afterMoveEntity(double var1, double var3, double var5) {}
 
-    public void beforeMoveEntityWithHeading(float var1, float var2) {
-    }
+    public void beforeMoveEntityWithHeading(float var1, float var2) {}
 
     public void moveEntityWithHeading(float var1, float var2) {
         ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenMoveEntityWithHeading(this);
@@ -940,14 +821,11 @@ public abstract class ClientPlayerBase {
         } else if (var3 != this) {
             var3.moveEntityWithHeading(var1, var2);
         }
-
     }
 
-    public void afterMoveEntityWithHeading(float var1, float var2) {
-    }
+    public void afterMoveEntityWithHeading(float var1, float var2) {}
 
-    public void beforeMoveFlying(float var1, float var2, float var3) {
-    }
+    public void beforeMoveFlying(float var1, float var2, float var3) {}
 
     public void moveFlying(float var1, float var2, float var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenMoveFlying(this);
@@ -956,14 +834,11 @@ public abstract class ClientPlayerBase {
         } else if (var4 != this) {
             var4.moveFlying(var1, var2, var3);
         }
-
     }
 
-    public void afterMoveFlying(float var1, float var2, float var3) {
-    }
+    public void afterMoveFlying(float var1, float var2, float var3) {}
 
-    public void beforeOnDeath(DamageSource var1) {
-    }
+    public void beforeOnDeath(DamageSource var1) {}
 
     public void onDeath(DamageSource var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnDeath(this);
@@ -972,14 +847,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.onDeath(var1);
         }
-
     }
 
-    public void afterOnDeath(DamageSource var1) {
-    }
+    public void afterOnDeath(DamageSource var1) {}
 
-    public void beforeOnLivingUpdate() {
-    }
+    public void beforeOnLivingUpdate() {}
 
     public void onLivingUpdate() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenOnLivingUpdate(this);
@@ -988,14 +860,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.onLivingUpdate();
         }
-
     }
 
-    public void afterOnLivingUpdate() {
-    }
+    public void afterOnLivingUpdate() {}
 
-    public void beforeOnKillEntity(EntityLivingBase var1) {
-    }
+    public void beforeOnKillEntity(EntityLivingBase var1) {}
 
     public void onKillEntity(EntityLivingBase var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnKillEntity(this);
@@ -1004,14 +873,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.onKillEntity(var1);
         }
-
     }
 
-    public void afterOnKillEntity(EntityLivingBase var1) {
-    }
+    public void afterOnKillEntity(EntityLivingBase var1) {}
 
-    public void beforeOnStruckByLightning(EntityLightningBolt var1) {
-    }
+    public void beforeOnStruckByLightning(EntityLightningBolt var1) {}
 
     public void onStruckByLightning(EntityLightningBolt var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnStruckByLightning(this);
@@ -1020,14 +886,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.onStruckByLightning(var1);
         }
-
     }
 
-    public void afterOnStruckByLightning(EntityLightningBolt var1) {
-    }
+    public void afterOnStruckByLightning(EntityLightningBolt var1) {}
 
-    public void beforeOnUpdate() {
-    }
+    public void beforeOnUpdate() {}
 
     public void onUpdate() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenOnUpdate(this);
@@ -1036,14 +899,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.onUpdate();
         }
-
     }
 
-    public void afterOnUpdate() {
-    }
+    public void afterOnUpdate() {}
 
-    public void beforePlayStepSound(int var1, int var2, int var3, Block var4) {
-    }
+    public void beforePlayStepSound(int var1, int var2, int var3, Block var4) {}
 
     public void playStepSound(int var1, int var2, int var3, Block var4) {
         ClientPlayerBase var5 = this.internalClientPlayerAPI.GetOverwrittenPlayStepSound(this);
@@ -1052,14 +912,11 @@ public abstract class ClientPlayerBase {
         } else if (var5 != this) {
             var5.playStepSound(var1, var2, var3, var4);
         }
-
     }
 
-    public void afterPlayStepSound(int var1, int var2, int var3, Block var4) {
-    }
+    public void afterPlayStepSound(int var1, int var2, int var3, Block var4) {}
 
-    public void beforePushOutOfBlocks(double var1, double var3, double var5) {
-    }
+    public void beforePushOutOfBlocks(double var1, double var3, double var5) {}
 
     public boolean pushOutOfBlocks(double var1, double var3, double var5) {
         ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenPushOutOfBlocks(this);
@@ -1075,11 +932,9 @@ public abstract class ClientPlayerBase {
         return var8;
     }
 
-    public void afterPushOutOfBlocks(double var1, double var3, double var5) {
-    }
+    public void afterPushOutOfBlocks(double var1, double var3, double var5) {}
 
-    public void beforeRayTrace(double var1, float var3) {
-    }
+    public void beforeRayTrace(double var1, float var3) {}
 
     public MovingObjectPosition rayTrace(double var1, float var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenRayTrace(this);
@@ -1095,11 +950,9 @@ public abstract class ClientPlayerBase {
         return var5;
     }
 
-    public void afterRayTrace(double var1, float var3) {
-    }
+    public void afterRayTrace(double var1, float var3) {}
 
-    public void beforeReadEntityFromNBT(NBTTagCompound var1) {
-    }
+    public void beforeReadEntityFromNBT(NBTTagCompound var1) {}
 
     public void readEntityFromNBT(NBTTagCompound var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenReadEntityFromNBT(this);
@@ -1108,14 +961,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.readEntityFromNBT(var1);
         }
-
     }
 
-    public void afterReadEntityFromNBT(NBTTagCompound var1) {
-    }
+    public void afterReadEntityFromNBT(NBTTagCompound var1) {}
 
-    public void beforeRespawnPlayer() {
-    }
+    public void beforeRespawnPlayer() {}
 
     public void respawnPlayer() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenRespawnPlayer(this);
@@ -1124,14 +974,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.respawnPlayer();
         }
-
     }
 
-    public void afterRespawnPlayer() {
-    }
+    public void afterRespawnPlayer() {}
 
-    public void beforeSetDead() {
-    }
+    public void beforeSetDead() {}
 
     public void setDead() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenSetDead(this);
@@ -1140,14 +987,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.setDead();
         }
-
     }
 
-    public void afterSetDead() {
-    }
+    public void afterSetDead() {}
 
-    public void beforeSetPlayerSPHealth(float var1) {
-    }
+    public void beforeSetPlayerSPHealth(float var1) {}
 
     public void setPlayerSPHealth(float var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetPlayerSPHealth(this);
@@ -1156,14 +1000,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.setPlayerSPHealth(var1);
         }
-
     }
 
-    public void afterSetPlayerSPHealth(float var1) {
-    }
+    public void afterSetPlayerSPHealth(float var1) {}
 
-    public void beforeSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {
-    }
+    public void beforeSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {}
 
     public void setPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {
         ClientPlayerBase var9 = this.internalClientPlayerAPI.GetOverwrittenSetPositionAndRotation(this);
@@ -1172,14 +1013,11 @@ public abstract class ClientPlayerBase {
         } else if (var9 != this) {
             var9.setPositionAndRotation(var1, var3, var5, var7, var8);
         }
-
     }
 
-    public void afterSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {
-    }
+    public void afterSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {}
 
-    public void beforeSetSneaking(boolean var1) {
-    }
+    public void beforeSetSneaking(boolean var1) {}
 
     public void setSneaking(boolean var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetSneaking(this);
@@ -1188,14 +1026,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.setSneaking(var1);
         }
-
     }
 
-    public void afterSetSneaking(boolean var1) {
-    }
+    public void afterSetSneaking(boolean var1) {}
 
-    public void beforeSetSprinting(boolean var1) {
-    }
+    public void beforeSetSprinting(boolean var1) {}
 
     public void setSprinting(boolean var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetSprinting(this);
@@ -1204,14 +1039,11 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.setSprinting(var1);
         }
-
     }
 
-    public void afterSetSprinting(boolean var1) {
-    }
+    public void afterSetSprinting(boolean var1) {}
 
-    public void beforeSleepInBedAt(int var1, int var2, int var3) {
-    }
+    public void beforeSleepInBedAt(int var1, int var2, int var3) {}
 
     public EnumStatus sleepInBedAt(int var1, int var2, int var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenSleepInBedAt(this);
@@ -1227,11 +1059,9 @@ public abstract class ClientPlayerBase {
         return var5;
     }
 
-    public void afterSleepInBedAt(int var1, int var2, int var3) {
-    }
+    public void afterSleepInBedAt(int var1, int var2, int var3) {}
 
-    public void beforeSwingItem() {
-    }
+    public void beforeSwingItem() {}
 
     public void swingItem() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenSwingItem(this);
@@ -1240,14 +1070,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.swingItem();
         }
-
     }
 
-    public void afterSwingItem() {
-    }
+    public void afterSwingItem() {}
 
-    public void beforeUpdateEntityActionState() {
-    }
+    public void beforeUpdateEntityActionState() {}
 
     public void updateEntityActionState() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenUpdateEntityActionState(this);
@@ -1256,14 +1083,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.updateEntityActionState();
         }
-
     }
 
-    public void afterUpdateEntityActionState() {
-    }
+    public void afterUpdateEntityActionState() {}
 
-    public void beforeUpdateRidden() {
-    }
+    public void beforeUpdateRidden() {}
 
     public void updateRidden() {
         ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenUpdateRidden(this);
@@ -1272,14 +1096,11 @@ public abstract class ClientPlayerBase {
         } else if (var1 != this) {
             var1.updateRidden();
         }
-
     }
 
-    public void afterUpdateRidden() {
-    }
+    public void afterUpdateRidden() {}
 
-    public void beforeWakeUpPlayer(boolean var1, boolean var2, boolean var3) {
-    }
+    public void beforeWakeUpPlayer(boolean var1, boolean var2, boolean var3) {}
 
     public void wakeUpPlayer(boolean var1, boolean var2, boolean var3) {
         ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenWakeUpPlayer(this);
@@ -1288,14 +1109,11 @@ public abstract class ClientPlayerBase {
         } else if (var4 != this) {
             var4.wakeUpPlayer(var1, var2, var3);
         }
-
     }
 
-    public void afterWakeUpPlayer(boolean var1, boolean var2, boolean var3) {
-    }
+    public void afterWakeUpPlayer(boolean var1, boolean var2, boolean var3) {}
 
-    public void beforeWriteEntityToNBT(NBTTagCompound var1) {
-    }
+    public void beforeWriteEntityToNBT(NBTTagCompound var1) {}
 
     public void writeEntityToNBT(NBTTagCompound var1) {
         ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenWriteEntityToNBT(this);
@@ -1304,9 +1122,7 @@ public abstract class ClientPlayerBase {
         } else if (var2 != this) {
             var2.writeEntityToNBT(var1);
         }
-
     }
 
-    public void afterWriteEntityToNBT(NBTTagCompound var1) {
-    }
+    public void afterWriteEntityToNBT(NBTTagCompound var1) {}
 }

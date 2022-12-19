@@ -11,7 +11,9 @@ public class PlayerAPITransformer implements IClassTransformer {
         if (transformedName.equals("net.minecraft.client.entity.EntityPlayerSP")) {
             return ClientPlayerClassVisitor.transform(bytes, PlayerAPIPlugin.isObfuscated);
         } else {
-            return transformedName.equals("net.minecraft.entity.player.EntityPlayerMP") ? ServerPlayerClassVisitor.transform(bytes, PlayerAPIPlugin.isObfuscated) : bytes;
+            return transformedName.equals("net.minecraft.entity.player.EntityPlayerMP")
+                    ? ServerPlayerClassVisitor.transform(bytes, PlayerAPIPlugin.isObfuscated)
+                    : bytes;
         }
     }
 }

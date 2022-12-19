@@ -42,8 +42,8 @@ import net.minecraft.world.World;
 
 public final class ClientPlayerAPI {
 
-    private static final Class<?>[] Class = new Class[]{ClientPlayerAPI.class};
-    private static final Class<?>[] Classes = new Class[]{ClientPlayerAPI.class, String.class};
+    private static final Class<?>[] Class = new Class[] {ClientPlayerAPI.class};
+    private static final Class<?>[] Classes = new Class[] {ClientPlayerAPI.class, String.class};
     private static boolean isCreated;
     private static final Logger logger = Logger.getLogger("ClientPlayerAPI");
     private static final Map<String, String[]> EmptySortMap = Collections.unmodifiableMap(new HashMap<>());
@@ -106,12 +106,18 @@ public final class ClientPlayerAPI {
     private ClientPlayerBase[] overrideAttackTargetEntityWithCurrentItemHooks;
     private ClientPlayerBase[] afterAttackTargetEntityWithCurrentItemHooks;
     public boolean isAttackTargetEntityWithCurrentItemModded;
-    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemInferiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemInferiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemInferiors = new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemInferiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemInferiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemInferiors =
+            new Hashtable<>(0);
     private static final List<String> beforeCanBreatheUnderwaterHookTypes = new LinkedList<>();
     private static final List<String> overrideCanBreatheUnderwaterHookTypes = new LinkedList<>();
     private static final List<String> afterCanBreatheUnderwaterHookTypes = new LinkedList<>();
@@ -314,10 +320,14 @@ public final class ClientPlayerAPI {
     private ClientPlayerBase[] overrideDropPlayerItemWithRandomChoiceHooks;
     private ClientPlayerBase[] afterDropPlayerItemWithRandomChoiceHooks;
     public boolean isDropPlayerItemWithRandomChoiceModded;
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceInferiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceInferiors = new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceInferiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceInferiors =
+            new Hashtable<>(0);
     private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<>(0);
     private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceInferiors = new Hashtable<>(0);
     private static final List<String> beforeFallHookTypes = new LinkedList<>();
@@ -405,12 +415,18 @@ public final class ClientPlayerAPI {
     private ClientPlayerBase[] overrideGetCurrentPlayerStrVsBlockForgeHooks;
     private ClientPlayerBase[] afterGetCurrentPlayerStrVsBlockForgeHooks;
     public boolean isGetCurrentPlayerStrVsBlockForgeModded;
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors =
+            new Hashtable<>(0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors =
+            new Hashtable<>(0);
     private static final List<String> beforeGetDistanceSqHookTypes = new LinkedList<>();
     private static final List<String> overrideGetDistanceSqHookTypes = new LinkedList<>();
     private static final List<String> afterGetDistanceSqHookTypes = new LinkedList<>();
@@ -1017,26 +1033,46 @@ public final class ClientPlayerAPI {
             try {
                 Method mandatory = EntityPlayerSP.class.getMethod("getClientPlayerBase", String.class);
                 if (mandatory.getReturnType() != ClientPlayerBase.class) {
-                    throw new NoSuchMethodException(ClientPlayerBase.class.getName() + " " + EntityPlayerSP.class.getName() + ".getClientPlayerBase(" + String.class.getName() + ")");
+                    throw new NoSuchMethodException(ClientPlayerBase.class.getName() + " "
+                            + EntityPlayerSP.class.getName() + ".getClientPlayerBase(" + String.class.getName() + ")");
                 }
             } catch (NoSuchMethodException exception) {
-                String[] errorMessageParts = new String[]{"========================================", "The API \"Client Player\" version " + PlayerAPIPlugin.Version + " of the mod \"Player API Core " + PlayerAPIPlugin.Version + "\" can not be created!", "----------------------------------------", "Mandatory member method \"{0} getClientPlayerBase({3})\" not found in class \"{1}\".", "There are three scenarios this can happen:", "* Minecraft Forge is missing a Player API Core which Minecraft version matches its own.", "  Download and install the latest Player API Core for the Minecraft version you were trying to run.", "* The code of the class \"{2}\" of Player API Core has been modified beyond recognition by another Minecraft Forge coremod.", "  Try temporary deinstallation of other core mods to find the culprit and deinstall it permanently to fix this specific problem.", "* Player API Core has not been installed correctly.", "  Deinstall Player API Core and install it again following the installation instructions in the readme file.", "========================================"};
+                String[] errorMessageParts = new String[] {
+                    "========================================",
+                    "The API \"Client Player\" version " + PlayerAPIPlugin.Version + " of the mod \"Player API Core "
+                            + PlayerAPIPlugin.Version + "\" can not be created!",
+                    "----------------------------------------",
+                    "Mandatory member method \"{0} getClientPlayerBase({3})\" not found in class \"{1}\".",
+                    "There are three scenarios this can happen:",
+                    "* Minecraft Forge is missing a Player API Core which Minecraft version matches its own.",
+                    "  Download and install the latest Player API Core for the Minecraft version you were trying to run.",
+                    "* The code of the class \"{2}\" of Player API Core has been modified beyond recognition by another Minecraft Forge coremod.",
+                    "  Try temporary deinstallation of other core mods to find the culprit and deinstall it permanently to fix this specific problem.",
+                    "* Player API Core has not been installed correctly.",
+                    "  Deinstall Player API Core and install it again following the installation instructions in the readme file.",
+                    "========================================"
+                };
                 String baseEntityPlayerSPClassName = ClientPlayerBase.class.getName();
                 String targetClassName = EntityPlayerSP.class.getName();
                 String targetClassFileName = targetClassName.replace(".", File.separator);
                 String stringClassName = String.class.getName();
 
-                for(int i = 0; i < errorMessageParts.length; ++i) {
-                    errorMessageParts[i] = MessageFormat.format(errorMessageParts[i], baseEntityPlayerSPClassName, targetClassName, targetClassFileName, stringClassName);
+                for (int i = 0; i < errorMessageParts.length; ++i) {
+                    errorMessageParts[i] = MessageFormat.format(
+                            errorMessageParts[i],
+                            baseEntityPlayerSPClassName,
+                            targetClassName,
+                            targetClassFileName,
+                            stringClassName);
                 }
-                for(String errorMessagePart : errorMessageParts) {
+                for (String errorMessagePart : errorMessageParts) {
                     logger.severe(errorMessagePart);
                 }
-                for(String errorMessagePart : errorMessageParts) {
+                for (String errorMessagePart : errorMessageParts) {
                     System.err.println(errorMessagePart);
                 }
                 String errorMessage = "\n\n";
-                for(String errorMessagePart : errorMessageParts) {
+                for (String errorMessagePart : errorMessageParts) {
                     errorMessage = errorMessage + "\t" + errorMessagePart + "\n";
                 }
 
@@ -1054,7 +1090,10 @@ public final class ClientPlayerAPI {
         } else {
             Constructor<?> allreadyRegistered = allBaseConstructors.get(id);
             if (allreadyRegistered != null) {
-                throw new IllegalArgumentException("The class '" + baseClass.getName() + "' can not be registered with the id '" + id + "' because the class '" + allreadyRegistered.getDeclaringClass().getName() + "' has allready been registered with the same id");
+                throw new IllegalArgumentException("The class '" + baseClass.getName()
+                        + "' can not be registered with the id '" + id + "' because the class '"
+                        + allreadyRegistered.getDeclaringClass().getName()
+                        + "' has allready been registered with the same id");
             } else {
                 Constructor<?> baseConstructor;
                 try {
@@ -1063,16 +1102,33 @@ public final class ClientPlayerAPI {
                     try {
                         baseConstructor = baseClass.getDeclaredConstructor(Class);
                     } catch (Throwable s) {
-                        throw new IllegalArgumentException("Can not find necessary constructor with one argument of type '" + ClientPlayerAPI.class.getName() + "' and eventually a second argument of type 'String' in the class '" + baseClass.getName() + "'", t);
+                        throw new IllegalArgumentException(
+                                "Can not find necessary constructor with one argument of type '"
+                                        + ClientPlayerAPI.class.getName()
+                                        + "' and eventually a second argument of type 'String' in the class '"
+                                        + baseClass.getName() + "'",
+                                t);
                     }
                 }
 
                 allBaseConstructors.put(id, baseConstructor);
                 if (baseSorting != null) {
-                    addSorting(id, allBaseBeforeLocalConstructingSuperiors, baseSorting.getBeforeLocalConstructingSuperiors());
-                    addSorting(id, allBaseBeforeLocalConstructingInferiors, baseSorting.getBeforeLocalConstructingInferiors());
-                    addSorting(id, allBaseAfterLocalConstructingSuperiors, baseSorting.getAfterLocalConstructingSuperiors());
-                    addSorting(id, allBaseAfterLocalConstructingInferiors, baseSorting.getAfterLocalConstructingInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeLocalConstructingSuperiors,
+                            baseSorting.getBeforeLocalConstructingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeLocalConstructingInferiors,
+                            baseSorting.getBeforeLocalConstructingInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterLocalConstructingSuperiors,
+                            baseSorting.getAfterLocalConstructingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterLocalConstructingInferiors,
+                            baseSorting.getAfterLocalConstructingInferiors());
                     addDynamicSorting(id, allBaseBeforeDynamicSuperiors, baseSorting.getDynamicBeforeSuperiors());
                     addDynamicSorting(id, allBaseBeforeDynamicInferiors, baseSorting.getDynamicBeforeInferiors());
                     addDynamicSorting(id, allBaseOverrideDynamicSuperiors, baseSorting.getDynamicOverrideSuperiors());
@@ -1081,58 +1137,150 @@ public final class ClientPlayerAPI {
                     addDynamicSorting(id, allBaseAfterDynamicInferiors, baseSorting.getDynamicAfterInferiors());
                     addSorting(id, allBaseBeforeAddExhaustionSuperiors, baseSorting.getBeforeAddExhaustionSuperiors());
                     addSorting(id, allBaseBeforeAddExhaustionInferiors, baseSorting.getBeforeAddExhaustionInferiors());
-                    addSorting(id, allBaseOverrideAddExhaustionSuperiors, baseSorting.getOverrideAddExhaustionSuperiors());
-                    addSorting(id, allBaseOverrideAddExhaustionInferiors, baseSorting.getOverrideAddExhaustionInferiors());
+                    addSorting(
+                            id, allBaseOverrideAddExhaustionSuperiors, baseSorting.getOverrideAddExhaustionSuperiors());
+                    addSorting(
+                            id, allBaseOverrideAddExhaustionInferiors, baseSorting.getOverrideAddExhaustionInferiors());
                     addSorting(id, allBaseAfterAddExhaustionSuperiors, baseSorting.getAfterAddExhaustionSuperiors());
                     addSorting(id, allBaseAfterAddExhaustionInferiors, baseSorting.getAfterAddExhaustionInferiors());
-                    addSorting(id, allBaseBeforeAddMovementStatSuperiors, baseSorting.getBeforeAddMovementStatSuperiors());
-                    addSorting(id, allBaseBeforeAddMovementStatInferiors, baseSorting.getBeforeAddMovementStatInferiors());
-                    addSorting(id, allBaseOverrideAddMovementStatSuperiors, baseSorting.getOverrideAddMovementStatSuperiors());
-                    addSorting(id, allBaseOverrideAddMovementStatInferiors, baseSorting.getOverrideAddMovementStatInferiors());
-                    addSorting(id, allBaseAfterAddMovementStatSuperiors, baseSorting.getAfterAddMovementStatSuperiors());
-                    addSorting(id, allBaseAfterAddMovementStatInferiors, baseSorting.getAfterAddMovementStatInferiors());
+                    addSorting(
+                            id, allBaseBeforeAddMovementStatSuperiors, baseSorting.getBeforeAddMovementStatSuperiors());
+                    addSorting(
+                            id, allBaseBeforeAddMovementStatInferiors, baseSorting.getBeforeAddMovementStatInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAddMovementStatSuperiors,
+                            baseSorting.getOverrideAddMovementStatSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAddMovementStatInferiors,
+                            baseSorting.getOverrideAddMovementStatInferiors());
+                    addSorting(
+                            id, allBaseAfterAddMovementStatSuperiors, baseSorting.getAfterAddMovementStatSuperiors());
+                    addSorting(
+                            id, allBaseAfterAddMovementStatInferiors, baseSorting.getAfterAddMovementStatInferiors());
                     addSorting(id, allBaseBeforeAddStatSuperiors, baseSorting.getBeforeAddStatSuperiors());
                     addSorting(id, allBaseBeforeAddStatInferiors, baseSorting.getBeforeAddStatInferiors());
                     addSorting(id, allBaseOverrideAddStatSuperiors, baseSorting.getOverrideAddStatSuperiors());
                     addSorting(id, allBaseOverrideAddStatInferiors, baseSorting.getOverrideAddStatInferiors());
                     addSorting(id, allBaseAfterAddStatSuperiors, baseSorting.getAfterAddStatSuperiors());
                     addSorting(id, allBaseAfterAddStatInferiors, baseSorting.getAfterAddStatInferiors());
-                    addSorting(id, allBaseBeforeAttackEntityFromSuperiors, baseSorting.getBeforeAttackEntityFromSuperiors());
-                    addSorting(id, allBaseBeforeAttackEntityFromInferiors, baseSorting.getBeforeAttackEntityFromInferiors());
-                    addSorting(id, allBaseOverrideAttackEntityFromSuperiors, baseSorting.getOverrideAttackEntityFromSuperiors());
-                    addSorting(id, allBaseOverrideAttackEntityFromInferiors, baseSorting.getOverrideAttackEntityFromInferiors());
-                    addSorting(id, allBaseAfterAttackEntityFromSuperiors, baseSorting.getAfterAttackEntityFromSuperiors());
-                    addSorting(id, allBaseAfterAttackEntityFromInferiors, baseSorting.getAfterAttackEntityFromInferiors());
-                    addSorting(id, allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors, baseSorting.getBeforeAttackTargetEntityWithCurrentItemSuperiors());
-                    addSorting(id, allBaseBeforeAttackTargetEntityWithCurrentItemInferiors, baseSorting.getBeforeAttackTargetEntityWithCurrentItemInferiors());
-                    addSorting(id, allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors, baseSorting.getOverrideAttackTargetEntityWithCurrentItemSuperiors());
-                    addSorting(id, allBaseOverrideAttackTargetEntityWithCurrentItemInferiors, baseSorting.getOverrideAttackTargetEntityWithCurrentItemInferiors());
-                    addSorting(id, allBaseAfterAttackTargetEntityWithCurrentItemSuperiors, baseSorting.getAfterAttackTargetEntityWithCurrentItemSuperiors());
-                    addSorting(id, allBaseAfterAttackTargetEntityWithCurrentItemInferiors, baseSorting.getAfterAttackTargetEntityWithCurrentItemInferiors());
-                    addSorting(id, allBaseBeforeCanBreatheUnderwaterSuperiors, baseSorting.getBeforeCanBreatheUnderwaterSuperiors());
-                    addSorting(id, allBaseBeforeCanBreatheUnderwaterInferiors, baseSorting.getBeforeCanBreatheUnderwaterInferiors());
-                    addSorting(id, allBaseOverrideCanBreatheUnderwaterSuperiors, baseSorting.getOverrideCanBreatheUnderwaterSuperiors());
-                    addSorting(id, allBaseOverrideCanBreatheUnderwaterInferiors, baseSorting.getOverrideCanBreatheUnderwaterInferiors());
-                    addSorting(id, allBaseAfterCanBreatheUnderwaterSuperiors, baseSorting.getAfterCanBreatheUnderwaterSuperiors());
-                    addSorting(id, allBaseAfterCanBreatheUnderwaterInferiors, baseSorting.getAfterCanBreatheUnderwaterInferiors());
-                    addSorting(id, allBaseBeforeCanHarvestBlockSuperiors, baseSorting.getBeforeCanHarvestBlockSuperiors());
-                    addSorting(id, allBaseBeforeCanHarvestBlockInferiors, baseSorting.getBeforeCanHarvestBlockInferiors());
-                    addSorting(id, allBaseOverrideCanHarvestBlockSuperiors, baseSorting.getOverrideCanHarvestBlockSuperiors());
-                    addSorting(id, allBaseOverrideCanHarvestBlockInferiors, baseSorting.getOverrideCanHarvestBlockInferiors());
-                    addSorting(id, allBaseAfterCanHarvestBlockSuperiors, baseSorting.getAfterCanHarvestBlockSuperiors());
-                    addSorting(id, allBaseAfterCanHarvestBlockInferiors, baseSorting.getAfterCanHarvestBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeAttackEntityFromSuperiors,
+                            baseSorting.getBeforeAttackEntityFromSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeAttackEntityFromInferiors,
+                            baseSorting.getBeforeAttackEntityFromInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAttackEntityFromSuperiors,
+                            baseSorting.getOverrideAttackEntityFromSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAttackEntityFromInferiors,
+                            baseSorting.getOverrideAttackEntityFromInferiors());
+                    addSorting(
+                            id, allBaseAfterAttackEntityFromSuperiors, baseSorting.getAfterAttackEntityFromSuperiors());
+                    addSorting(
+                            id, allBaseAfterAttackEntityFromInferiors, baseSorting.getAfterAttackEntityFromInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors,
+                            baseSorting.getBeforeAttackTargetEntityWithCurrentItemSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeAttackTargetEntityWithCurrentItemInferiors,
+                            baseSorting.getBeforeAttackTargetEntityWithCurrentItemInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors,
+                            baseSorting.getOverrideAttackTargetEntityWithCurrentItemSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideAttackTargetEntityWithCurrentItemInferiors,
+                            baseSorting.getOverrideAttackTargetEntityWithCurrentItemInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterAttackTargetEntityWithCurrentItemSuperiors,
+                            baseSorting.getAfterAttackTargetEntityWithCurrentItemSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterAttackTargetEntityWithCurrentItemInferiors,
+                            baseSorting.getAfterAttackTargetEntityWithCurrentItemInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeCanBreatheUnderwaterSuperiors,
+                            baseSorting.getBeforeCanBreatheUnderwaterSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeCanBreatheUnderwaterInferiors,
+                            baseSorting.getBeforeCanBreatheUnderwaterInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanBreatheUnderwaterSuperiors,
+                            baseSorting.getOverrideCanBreatheUnderwaterSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanBreatheUnderwaterInferiors,
+                            baseSorting.getOverrideCanBreatheUnderwaterInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterCanBreatheUnderwaterSuperiors,
+                            baseSorting.getAfterCanBreatheUnderwaterSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterCanBreatheUnderwaterInferiors,
+                            baseSorting.getAfterCanBreatheUnderwaterInferiors());
+                    addSorting(
+                            id, allBaseBeforeCanHarvestBlockSuperiors, baseSorting.getBeforeCanHarvestBlockSuperiors());
+                    addSorting(
+                            id, allBaseBeforeCanHarvestBlockInferiors, baseSorting.getBeforeCanHarvestBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanHarvestBlockSuperiors,
+                            baseSorting.getOverrideCanHarvestBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanHarvestBlockInferiors,
+                            baseSorting.getOverrideCanHarvestBlockInferiors());
+                    addSorting(
+                            id, allBaseAfterCanHarvestBlockSuperiors, baseSorting.getAfterCanHarvestBlockSuperiors());
+                    addSorting(
+                            id, allBaseAfterCanHarvestBlockInferiors, baseSorting.getAfterCanHarvestBlockInferiors());
                     addSorting(id, allBaseBeforeCanPlayerEditSuperiors, baseSorting.getBeforeCanPlayerEditSuperiors());
                     addSorting(id, allBaseBeforeCanPlayerEditInferiors, baseSorting.getBeforeCanPlayerEditInferiors());
-                    addSorting(id, allBaseOverrideCanPlayerEditSuperiors, baseSorting.getOverrideCanPlayerEditSuperiors());
-                    addSorting(id, allBaseOverrideCanPlayerEditInferiors, baseSorting.getOverrideCanPlayerEditInferiors());
+                    addSorting(
+                            id, allBaseOverrideCanPlayerEditSuperiors, baseSorting.getOverrideCanPlayerEditSuperiors());
+                    addSorting(
+                            id, allBaseOverrideCanPlayerEditInferiors, baseSorting.getOverrideCanPlayerEditInferiors());
                     addSorting(id, allBaseAfterCanPlayerEditSuperiors, baseSorting.getAfterCanPlayerEditSuperiors());
                     addSorting(id, allBaseAfterCanPlayerEditInferiors, baseSorting.getAfterCanPlayerEditInferiors());
-                    addSorting(id, allBaseBeforeCanTriggerWalkingSuperiors, baseSorting.getBeforeCanTriggerWalkingSuperiors());
-                    addSorting(id, allBaseBeforeCanTriggerWalkingInferiors, baseSorting.getBeforeCanTriggerWalkingInferiors());
-                    addSorting(id, allBaseOverrideCanTriggerWalkingSuperiors, baseSorting.getOverrideCanTriggerWalkingSuperiors());
-                    addSorting(id, allBaseOverrideCanTriggerWalkingInferiors, baseSorting.getOverrideCanTriggerWalkingInferiors());
-                    addSorting(id, allBaseAfterCanTriggerWalkingSuperiors, baseSorting.getAfterCanTriggerWalkingSuperiors());
-                    addSorting(id, allBaseAfterCanTriggerWalkingInferiors, baseSorting.getAfterCanTriggerWalkingInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeCanTriggerWalkingSuperiors,
+                            baseSorting.getBeforeCanTriggerWalkingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeCanTriggerWalkingInferiors,
+                            baseSorting.getBeforeCanTriggerWalkingInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanTriggerWalkingSuperiors,
+                            baseSorting.getOverrideCanTriggerWalkingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideCanTriggerWalkingInferiors,
+                            baseSorting.getOverrideCanTriggerWalkingInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterCanTriggerWalkingSuperiors,
+                            baseSorting.getAfterCanTriggerWalkingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterCanTriggerWalkingInferiors,
+                            baseSorting.getAfterCanTriggerWalkingInferiors());
                     addSorting(id, allBaseBeforeCloseScreenSuperiors, baseSorting.getBeforeCloseScreenSuperiors());
                     addSorting(id, allBaseBeforeCloseScreenInferiors, baseSorting.getBeforeCloseScreenInferiors());
                     addSorting(id, allBaseOverrideCloseScreenSuperiors, baseSorting.getOverrideCloseScreenSuperiors());
@@ -1141,134 +1289,398 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseAfterCloseScreenInferiors, baseSorting.getAfterCloseScreenInferiors());
                     addSorting(id, allBaseBeforeDamageEntitySuperiors, baseSorting.getBeforeDamageEntitySuperiors());
                     addSorting(id, allBaseBeforeDamageEntityInferiors, baseSorting.getBeforeDamageEntityInferiors());
-                    addSorting(id, allBaseOverrideDamageEntitySuperiors, baseSorting.getOverrideDamageEntitySuperiors());
-                    addSorting(id, allBaseOverrideDamageEntityInferiors, baseSorting.getOverrideDamageEntityInferiors());
+                    addSorting(
+                            id, allBaseOverrideDamageEntitySuperiors, baseSorting.getOverrideDamageEntitySuperiors());
+                    addSorting(
+                            id, allBaseOverrideDamageEntityInferiors, baseSorting.getOverrideDamageEntityInferiors());
                     addSorting(id, allBaseAfterDamageEntitySuperiors, baseSorting.getAfterDamageEntitySuperiors());
                     addSorting(id, allBaseAfterDamageEntityInferiors, baseSorting.getAfterDamageEntityInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIBrewingStandSuperiors, baseSorting.getBeforeDisplayGUIBrewingStandSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIBrewingStandInferiors, baseSorting.getBeforeDisplayGUIBrewingStandInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIBrewingStandSuperiors, baseSorting.getOverrideDisplayGUIBrewingStandSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIBrewingStandInferiors, baseSorting.getOverrideDisplayGUIBrewingStandInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIBrewingStandSuperiors, baseSorting.getAfterDisplayGUIBrewingStandSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIBrewingStandInferiors, baseSorting.getAfterDisplayGUIBrewingStandInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIChestSuperiors, baseSorting.getBeforeDisplayGUIChestSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIChestInferiors, baseSorting.getBeforeDisplayGUIChestInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIChestSuperiors, baseSorting.getOverrideDisplayGUIChestSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIChestInferiors, baseSorting.getOverrideDisplayGUIChestInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIChestSuperiors, baseSorting.getAfterDisplayGUIChestSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIChestInferiors, baseSorting.getAfterDisplayGUIChestInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIDispenserSuperiors, baseSorting.getBeforeDisplayGUIDispenserSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIDispenserInferiors, baseSorting.getBeforeDisplayGUIDispenserInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIDispenserSuperiors, baseSorting.getOverrideDisplayGUIDispenserSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIDispenserInferiors, baseSorting.getOverrideDisplayGUIDispenserInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIDispenserSuperiors, baseSorting.getAfterDisplayGUIDispenserSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIDispenserInferiors, baseSorting.getAfterDisplayGUIDispenserInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIEditSignSuperiors, baseSorting.getBeforeDisplayGUIEditSignSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIEditSignInferiors, baseSorting.getBeforeDisplayGUIEditSignInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIEditSignSuperiors, baseSorting.getOverrideDisplayGUIEditSignSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIEditSignInferiors, baseSorting.getOverrideDisplayGUIEditSignInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIEditSignSuperiors, baseSorting.getAfterDisplayGUIEditSignSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIEditSignInferiors, baseSorting.getAfterDisplayGUIEditSignInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIEnchantmentSuperiors, baseSorting.getBeforeDisplayGUIEnchantmentSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIEnchantmentInferiors, baseSorting.getBeforeDisplayGUIEnchantmentInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIEnchantmentSuperiors, baseSorting.getOverrideDisplayGUIEnchantmentSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIEnchantmentInferiors, baseSorting.getOverrideDisplayGUIEnchantmentInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIEnchantmentSuperiors, baseSorting.getAfterDisplayGUIEnchantmentSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIEnchantmentInferiors, baseSorting.getAfterDisplayGUIEnchantmentInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIFurnaceSuperiors, baseSorting.getBeforeDisplayGUIFurnaceSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIFurnaceInferiors, baseSorting.getBeforeDisplayGUIFurnaceInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIFurnaceSuperiors, baseSorting.getOverrideDisplayGUIFurnaceSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIFurnaceInferiors, baseSorting.getOverrideDisplayGUIFurnaceInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIFurnaceSuperiors, baseSorting.getAfterDisplayGUIFurnaceSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIFurnaceInferiors, baseSorting.getAfterDisplayGUIFurnaceInferiors());
-                    addSorting(id, allBaseBeforeDisplayGUIWorkbenchSuperiors, baseSorting.getBeforeDisplayGUIWorkbenchSuperiors());
-                    addSorting(id, allBaseBeforeDisplayGUIWorkbenchInferiors, baseSorting.getBeforeDisplayGUIWorkbenchInferiors());
-                    addSorting(id, allBaseOverrideDisplayGUIWorkbenchSuperiors, baseSorting.getOverrideDisplayGUIWorkbenchSuperiors());
-                    addSorting(id, allBaseOverrideDisplayGUIWorkbenchInferiors, baseSorting.getOverrideDisplayGUIWorkbenchInferiors());
-                    addSorting(id, allBaseAfterDisplayGUIWorkbenchSuperiors, baseSorting.getAfterDisplayGUIWorkbenchSuperiors());
-                    addSorting(id, allBaseAfterDisplayGUIWorkbenchInferiors, baseSorting.getAfterDisplayGUIWorkbenchInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIBrewingStandSuperiors,
+                            baseSorting.getBeforeDisplayGUIBrewingStandSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIBrewingStandInferiors,
+                            baseSorting.getBeforeDisplayGUIBrewingStandInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIBrewingStandSuperiors,
+                            baseSorting.getOverrideDisplayGUIBrewingStandSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIBrewingStandInferiors,
+                            baseSorting.getOverrideDisplayGUIBrewingStandInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIBrewingStandSuperiors,
+                            baseSorting.getAfterDisplayGUIBrewingStandSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIBrewingStandInferiors,
+                            baseSorting.getAfterDisplayGUIBrewingStandInferiors());
+                    addSorting(
+                            id, allBaseBeforeDisplayGUIChestSuperiors, baseSorting.getBeforeDisplayGUIChestSuperiors());
+                    addSorting(
+                            id, allBaseBeforeDisplayGUIChestInferiors, baseSorting.getBeforeDisplayGUIChestInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIChestSuperiors,
+                            baseSorting.getOverrideDisplayGUIChestSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIChestInferiors,
+                            baseSorting.getOverrideDisplayGUIChestInferiors());
+                    addSorting(
+                            id, allBaseAfterDisplayGUIChestSuperiors, baseSorting.getAfterDisplayGUIChestSuperiors());
+                    addSorting(
+                            id, allBaseAfterDisplayGUIChestInferiors, baseSorting.getAfterDisplayGUIChestInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIDispenserSuperiors,
+                            baseSorting.getBeforeDisplayGUIDispenserSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIDispenserInferiors,
+                            baseSorting.getBeforeDisplayGUIDispenserInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIDispenserSuperiors,
+                            baseSorting.getOverrideDisplayGUIDispenserSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIDispenserInferiors,
+                            baseSorting.getOverrideDisplayGUIDispenserInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIDispenserSuperiors,
+                            baseSorting.getAfterDisplayGUIDispenserSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIDispenserInferiors,
+                            baseSorting.getAfterDisplayGUIDispenserInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIEditSignSuperiors,
+                            baseSorting.getBeforeDisplayGUIEditSignSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIEditSignInferiors,
+                            baseSorting.getBeforeDisplayGUIEditSignInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIEditSignSuperiors,
+                            baseSorting.getOverrideDisplayGUIEditSignSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIEditSignInferiors,
+                            baseSorting.getOverrideDisplayGUIEditSignInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIEditSignSuperiors,
+                            baseSorting.getAfterDisplayGUIEditSignSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIEditSignInferiors,
+                            baseSorting.getAfterDisplayGUIEditSignInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIEnchantmentSuperiors,
+                            baseSorting.getBeforeDisplayGUIEnchantmentSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIEnchantmentInferiors,
+                            baseSorting.getBeforeDisplayGUIEnchantmentInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIEnchantmentSuperiors,
+                            baseSorting.getOverrideDisplayGUIEnchantmentSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIEnchantmentInferiors,
+                            baseSorting.getOverrideDisplayGUIEnchantmentInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIEnchantmentSuperiors,
+                            baseSorting.getAfterDisplayGUIEnchantmentSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIEnchantmentInferiors,
+                            baseSorting.getAfterDisplayGUIEnchantmentInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIFurnaceSuperiors,
+                            baseSorting.getBeforeDisplayGUIFurnaceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIFurnaceInferiors,
+                            baseSorting.getBeforeDisplayGUIFurnaceInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIFurnaceSuperiors,
+                            baseSorting.getOverrideDisplayGUIFurnaceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIFurnaceInferiors,
+                            baseSorting.getOverrideDisplayGUIFurnaceInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIFurnaceSuperiors,
+                            baseSorting.getAfterDisplayGUIFurnaceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIFurnaceInferiors,
+                            baseSorting.getAfterDisplayGUIFurnaceInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIWorkbenchSuperiors,
+                            baseSorting.getBeforeDisplayGUIWorkbenchSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDisplayGUIWorkbenchInferiors,
+                            baseSorting.getBeforeDisplayGUIWorkbenchInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIWorkbenchSuperiors,
+                            baseSorting.getOverrideDisplayGUIWorkbenchSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDisplayGUIWorkbenchInferiors,
+                            baseSorting.getOverrideDisplayGUIWorkbenchInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIWorkbenchSuperiors,
+                            baseSorting.getAfterDisplayGUIWorkbenchSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDisplayGUIWorkbenchInferiors,
+                            baseSorting.getAfterDisplayGUIWorkbenchInferiors());
                     addSorting(id, allBaseBeforeDropOneItemSuperiors, baseSorting.getBeforeDropOneItemSuperiors());
                     addSorting(id, allBaseBeforeDropOneItemInferiors, baseSorting.getBeforeDropOneItemInferiors());
                     addSorting(id, allBaseOverrideDropOneItemSuperiors, baseSorting.getOverrideDropOneItemSuperiors());
                     addSorting(id, allBaseOverrideDropOneItemInferiors, baseSorting.getOverrideDropOneItemInferiors());
                     addSorting(id, allBaseAfterDropOneItemSuperiors, baseSorting.getAfterDropOneItemSuperiors());
                     addSorting(id, allBaseAfterDropOneItemInferiors, baseSorting.getAfterDropOneItemInferiors());
-                    addSorting(id, allBaseBeforeDropPlayerItemSuperiors, baseSorting.getBeforeDropPlayerItemSuperiors());
-                    addSorting(id, allBaseBeforeDropPlayerItemInferiors, baseSorting.getBeforeDropPlayerItemInferiors());
-                    addSorting(id, allBaseOverrideDropPlayerItemSuperiors, baseSorting.getOverrideDropPlayerItemSuperiors());
-                    addSorting(id, allBaseOverrideDropPlayerItemInferiors, baseSorting.getOverrideDropPlayerItemInferiors());
+                    addSorting(
+                            id, allBaseBeforeDropPlayerItemSuperiors, baseSorting.getBeforeDropPlayerItemSuperiors());
+                    addSorting(
+                            id, allBaseBeforeDropPlayerItemInferiors, baseSorting.getBeforeDropPlayerItemInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDropPlayerItemSuperiors,
+                            baseSorting.getOverrideDropPlayerItemSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDropPlayerItemInferiors,
+                            baseSorting.getOverrideDropPlayerItemInferiors());
                     addSorting(id, allBaseAfterDropPlayerItemSuperiors, baseSorting.getAfterDropPlayerItemSuperiors());
                     addSorting(id, allBaseAfterDropPlayerItemInferiors, baseSorting.getAfterDropPlayerItemInferiors());
-                    addSorting(id, allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors, baseSorting.getBeforeDropPlayerItemWithRandomChoiceSuperiors());
-                    addSorting(id, allBaseBeforeDropPlayerItemWithRandomChoiceInferiors, baseSorting.getBeforeDropPlayerItemWithRandomChoiceInferiors());
-                    addSorting(id, allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors, baseSorting.getOverrideDropPlayerItemWithRandomChoiceSuperiors());
-                    addSorting(id, allBaseOverrideDropPlayerItemWithRandomChoiceInferiors, baseSorting.getOverrideDropPlayerItemWithRandomChoiceInferiors());
-                    addSorting(id, allBaseAfterDropPlayerItemWithRandomChoiceSuperiors, baseSorting.getAfterDropPlayerItemWithRandomChoiceSuperiors());
-                    addSorting(id, allBaseAfterDropPlayerItemWithRandomChoiceInferiors, baseSorting.getAfterDropPlayerItemWithRandomChoiceInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors,
+                            baseSorting.getBeforeDropPlayerItemWithRandomChoiceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeDropPlayerItemWithRandomChoiceInferiors,
+                            baseSorting.getBeforeDropPlayerItemWithRandomChoiceInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors,
+                            baseSorting.getOverrideDropPlayerItemWithRandomChoiceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideDropPlayerItemWithRandomChoiceInferiors,
+                            baseSorting.getOverrideDropPlayerItemWithRandomChoiceInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDropPlayerItemWithRandomChoiceSuperiors,
+                            baseSorting.getAfterDropPlayerItemWithRandomChoiceSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterDropPlayerItemWithRandomChoiceInferiors,
+                            baseSorting.getAfterDropPlayerItemWithRandomChoiceInferiors());
                     addSorting(id, allBaseBeforeFallSuperiors, baseSorting.getBeforeFallSuperiors());
                     addSorting(id, allBaseBeforeFallInferiors, baseSorting.getBeforeFallInferiors());
                     addSorting(id, allBaseOverrideFallSuperiors, baseSorting.getOverrideFallSuperiors());
                     addSorting(id, allBaseOverrideFallInferiors, baseSorting.getOverrideFallInferiors());
                     addSorting(id, allBaseAfterFallSuperiors, baseSorting.getAfterFallSuperiors());
                     addSorting(id, allBaseAfterFallInferiors, baseSorting.getAfterFallInferiors());
-                    addSorting(id, allBaseBeforeGetAIMoveSpeedSuperiors, baseSorting.getBeforeGetAIMoveSpeedSuperiors());
-                    addSorting(id, allBaseBeforeGetAIMoveSpeedInferiors, baseSorting.getBeforeGetAIMoveSpeedInferiors());
-                    addSorting(id, allBaseOverrideGetAIMoveSpeedSuperiors, baseSorting.getOverrideGetAIMoveSpeedSuperiors());
-                    addSorting(id, allBaseOverrideGetAIMoveSpeedInferiors, baseSorting.getOverrideGetAIMoveSpeedInferiors());
+                    addSorting(
+                            id, allBaseBeforeGetAIMoveSpeedSuperiors, baseSorting.getBeforeGetAIMoveSpeedSuperiors());
+                    addSorting(
+                            id, allBaseBeforeGetAIMoveSpeedInferiors, baseSorting.getBeforeGetAIMoveSpeedInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetAIMoveSpeedSuperiors,
+                            baseSorting.getOverrideGetAIMoveSpeedSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetAIMoveSpeedInferiors,
+                            baseSorting.getOverrideGetAIMoveSpeedInferiors());
                     addSorting(id, allBaseAfterGetAIMoveSpeedSuperiors, baseSorting.getAfterGetAIMoveSpeedSuperiors());
                     addSorting(id, allBaseAfterGetAIMoveSpeedInferiors, baseSorting.getAfterGetAIMoveSpeedInferiors());
-                    addSorting(id, allBaseBeforeGetBedOrientationInDegreesSuperiors, baseSorting.getBeforeGetBedOrientationInDegreesSuperiors());
-                    addSorting(id, allBaseBeforeGetBedOrientationInDegreesInferiors, baseSorting.getBeforeGetBedOrientationInDegreesInferiors());
-                    addSorting(id, allBaseOverrideGetBedOrientationInDegreesSuperiors, baseSorting.getOverrideGetBedOrientationInDegreesSuperiors());
-                    addSorting(id, allBaseOverrideGetBedOrientationInDegreesInferiors, baseSorting.getOverrideGetBedOrientationInDegreesInferiors());
-                    addSorting(id, allBaseAfterGetBedOrientationInDegreesSuperiors, baseSorting.getAfterGetBedOrientationInDegreesSuperiors());
-                    addSorting(id, allBaseAfterGetBedOrientationInDegreesInferiors, baseSorting.getAfterGetBedOrientationInDegreesInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetBedOrientationInDegreesSuperiors,
+                            baseSorting.getBeforeGetBedOrientationInDegreesSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetBedOrientationInDegreesInferiors,
+                            baseSorting.getBeforeGetBedOrientationInDegreesInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetBedOrientationInDegreesSuperiors,
+                            baseSorting.getOverrideGetBedOrientationInDegreesSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetBedOrientationInDegreesInferiors,
+                            baseSorting.getOverrideGetBedOrientationInDegreesInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetBedOrientationInDegreesSuperiors,
+                            baseSorting.getAfterGetBedOrientationInDegreesSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetBedOrientationInDegreesInferiors,
+                            baseSorting.getAfterGetBedOrientationInDegreesInferiors());
                     addSorting(id, allBaseBeforeGetBrightnessSuperiors, baseSorting.getBeforeGetBrightnessSuperiors());
                     addSorting(id, allBaseBeforeGetBrightnessInferiors, baseSorting.getBeforeGetBrightnessInferiors());
-                    addSorting(id, allBaseOverrideGetBrightnessSuperiors, baseSorting.getOverrideGetBrightnessSuperiors());
-                    addSorting(id, allBaseOverrideGetBrightnessInferiors, baseSorting.getOverrideGetBrightnessInferiors());
+                    addSorting(
+                            id, allBaseOverrideGetBrightnessSuperiors, baseSorting.getOverrideGetBrightnessSuperiors());
+                    addSorting(
+                            id, allBaseOverrideGetBrightnessInferiors, baseSorting.getOverrideGetBrightnessInferiors());
                     addSorting(id, allBaseAfterGetBrightnessSuperiors, baseSorting.getAfterGetBrightnessSuperiors());
                     addSorting(id, allBaseAfterGetBrightnessInferiors, baseSorting.getAfterGetBrightnessInferiors());
-                    addSorting(id, allBaseBeforeGetBrightnessForRenderSuperiors, baseSorting.getBeforeGetBrightnessForRenderSuperiors());
-                    addSorting(id, allBaseBeforeGetBrightnessForRenderInferiors, baseSorting.getBeforeGetBrightnessForRenderInferiors());
-                    addSorting(id, allBaseOverrideGetBrightnessForRenderSuperiors, baseSorting.getOverrideGetBrightnessForRenderSuperiors());
-                    addSorting(id, allBaseOverrideGetBrightnessForRenderInferiors, baseSorting.getOverrideGetBrightnessForRenderInferiors());
-                    addSorting(id, allBaseAfterGetBrightnessForRenderSuperiors, baseSorting.getAfterGetBrightnessForRenderSuperiors());
-                    addSorting(id, allBaseAfterGetBrightnessForRenderInferiors, baseSorting.getAfterGetBrightnessForRenderInferiors());
-                    addSorting(id, allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors, baseSorting.getBeforeGetCurrentPlayerStrVsBlockSuperiors());
-                    addSorting(id, allBaseBeforeGetCurrentPlayerStrVsBlockInferiors, baseSorting.getBeforeGetCurrentPlayerStrVsBlockInferiors());
-                    addSorting(id, allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors, baseSorting.getOverrideGetCurrentPlayerStrVsBlockSuperiors());
-                    addSorting(id, allBaseOverrideGetCurrentPlayerStrVsBlockInferiors, baseSorting.getOverrideGetCurrentPlayerStrVsBlockInferiors());
-                    addSorting(id, allBaseAfterGetCurrentPlayerStrVsBlockSuperiors, baseSorting.getAfterGetCurrentPlayerStrVsBlockSuperiors());
-                    addSorting(id, allBaseAfterGetCurrentPlayerStrVsBlockInferiors, baseSorting.getAfterGetCurrentPlayerStrVsBlockInferiors());
-                    addSorting(id, allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors, baseSorting.getBeforeGetCurrentPlayerStrVsBlockForgeSuperiors());
-                    addSorting(id, allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors, baseSorting.getBeforeGetCurrentPlayerStrVsBlockForgeInferiors());
-                    addSorting(id, allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors, baseSorting.getOverrideGetCurrentPlayerStrVsBlockForgeSuperiors());
-                    addSorting(id, allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors, baseSorting.getOverrideGetCurrentPlayerStrVsBlockForgeInferiors());
-                    addSorting(id, allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors, baseSorting.getAfterGetCurrentPlayerStrVsBlockForgeSuperiors());
-                    addSorting(id, allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors, baseSorting.getAfterGetCurrentPlayerStrVsBlockForgeInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetBrightnessForRenderSuperiors,
+                            baseSorting.getBeforeGetBrightnessForRenderSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetBrightnessForRenderInferiors,
+                            baseSorting.getBeforeGetBrightnessForRenderInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetBrightnessForRenderSuperiors,
+                            baseSorting.getOverrideGetBrightnessForRenderSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetBrightnessForRenderInferiors,
+                            baseSorting.getOverrideGetBrightnessForRenderInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetBrightnessForRenderSuperiors,
+                            baseSorting.getAfterGetBrightnessForRenderSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetBrightnessForRenderInferiors,
+                            baseSorting.getAfterGetBrightnessForRenderInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors,
+                            baseSorting.getBeforeGetCurrentPlayerStrVsBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetCurrentPlayerStrVsBlockInferiors,
+                            baseSorting.getBeforeGetCurrentPlayerStrVsBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors,
+                            baseSorting.getOverrideGetCurrentPlayerStrVsBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetCurrentPlayerStrVsBlockInferiors,
+                            baseSorting.getOverrideGetCurrentPlayerStrVsBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetCurrentPlayerStrVsBlockSuperiors,
+                            baseSorting.getAfterGetCurrentPlayerStrVsBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetCurrentPlayerStrVsBlockInferiors,
+                            baseSorting.getAfterGetCurrentPlayerStrVsBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors,
+                            baseSorting.getBeforeGetCurrentPlayerStrVsBlockForgeSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors,
+                            baseSorting.getBeforeGetCurrentPlayerStrVsBlockForgeInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors,
+                            baseSorting.getOverrideGetCurrentPlayerStrVsBlockForgeSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors,
+                            baseSorting.getOverrideGetCurrentPlayerStrVsBlockForgeInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors,
+                            baseSorting.getAfterGetCurrentPlayerStrVsBlockForgeSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors,
+                            baseSorting.getAfterGetCurrentPlayerStrVsBlockForgeInferiors());
                     addSorting(id, allBaseBeforeGetDistanceSqSuperiors, baseSorting.getBeforeGetDistanceSqSuperiors());
                     addSorting(id, allBaseBeforeGetDistanceSqInferiors, baseSorting.getBeforeGetDistanceSqInferiors());
-                    addSorting(id, allBaseOverrideGetDistanceSqSuperiors, baseSorting.getOverrideGetDistanceSqSuperiors());
-                    addSorting(id, allBaseOverrideGetDistanceSqInferiors, baseSorting.getOverrideGetDistanceSqInferiors());
+                    addSorting(
+                            id, allBaseOverrideGetDistanceSqSuperiors, baseSorting.getOverrideGetDistanceSqSuperiors());
+                    addSorting(
+                            id, allBaseOverrideGetDistanceSqInferiors, baseSorting.getOverrideGetDistanceSqInferiors());
                     addSorting(id, allBaseAfterGetDistanceSqSuperiors, baseSorting.getAfterGetDistanceSqSuperiors());
                     addSorting(id, allBaseAfterGetDistanceSqInferiors, baseSorting.getAfterGetDistanceSqInferiors());
-                    addSorting(id, allBaseBeforeGetDistanceSqToEntitySuperiors, baseSorting.getBeforeGetDistanceSqToEntitySuperiors());
-                    addSorting(id, allBaseBeforeGetDistanceSqToEntityInferiors, baseSorting.getBeforeGetDistanceSqToEntityInferiors());
-                    addSorting(id, allBaseOverrideGetDistanceSqToEntitySuperiors, baseSorting.getOverrideGetDistanceSqToEntitySuperiors());
-                    addSorting(id, allBaseOverrideGetDistanceSqToEntityInferiors, baseSorting.getOverrideGetDistanceSqToEntityInferiors());
-                    addSorting(id, allBaseAfterGetDistanceSqToEntitySuperiors, baseSorting.getAfterGetDistanceSqToEntitySuperiors());
-                    addSorting(id, allBaseAfterGetDistanceSqToEntityInferiors, baseSorting.getAfterGetDistanceSqToEntityInferiors());
-                    addSorting(id, allBaseBeforeGetFOVMultiplierSuperiors, baseSorting.getBeforeGetFOVMultiplierSuperiors());
-                    addSorting(id, allBaseBeforeGetFOVMultiplierInferiors, baseSorting.getBeforeGetFOVMultiplierInferiors());
-                    addSorting(id, allBaseOverrideGetFOVMultiplierSuperiors, baseSorting.getOverrideGetFOVMultiplierSuperiors());
-                    addSorting(id, allBaseOverrideGetFOVMultiplierInferiors, baseSorting.getOverrideGetFOVMultiplierInferiors());
-                    addSorting(id, allBaseAfterGetFOVMultiplierSuperiors, baseSorting.getAfterGetFOVMultiplierSuperiors());
-                    addSorting(id, allBaseAfterGetFOVMultiplierInferiors, baseSorting.getAfterGetFOVMultiplierInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetDistanceSqToEntitySuperiors,
+                            baseSorting.getBeforeGetDistanceSqToEntitySuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetDistanceSqToEntityInferiors,
+                            baseSorting.getBeforeGetDistanceSqToEntityInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetDistanceSqToEntitySuperiors,
+                            baseSorting.getOverrideGetDistanceSqToEntitySuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetDistanceSqToEntityInferiors,
+                            baseSorting.getOverrideGetDistanceSqToEntityInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetDistanceSqToEntitySuperiors,
+                            baseSorting.getAfterGetDistanceSqToEntitySuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterGetDistanceSqToEntityInferiors,
+                            baseSorting.getAfterGetDistanceSqToEntityInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetFOVMultiplierSuperiors,
+                            baseSorting.getBeforeGetFOVMultiplierSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeGetFOVMultiplierInferiors,
+                            baseSorting.getBeforeGetFOVMultiplierInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetFOVMultiplierSuperiors,
+                            baseSorting.getOverrideGetFOVMultiplierSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideGetFOVMultiplierInferiors,
+                            baseSorting.getOverrideGetFOVMultiplierInferiors());
+                    addSorting(
+                            id, allBaseAfterGetFOVMultiplierSuperiors, baseSorting.getAfterGetFOVMultiplierSuperiors());
+                    addSorting(
+                            id, allBaseAfterGetFOVMultiplierInferiors, baseSorting.getAfterGetFOVMultiplierInferiors());
                     addSorting(id, allBaseBeforeGetHurtSoundSuperiors, baseSorting.getBeforeGetHurtSoundSuperiors());
                     addSorting(id, allBaseBeforeGetHurtSoundInferiors, baseSorting.getBeforeGetHurtSoundInferiors());
-                    addSorting(id, allBaseOverrideGetHurtSoundSuperiors, baseSorting.getOverrideGetHurtSoundSuperiors());
-                    addSorting(id, allBaseOverrideGetHurtSoundInferiors, baseSorting.getOverrideGetHurtSoundInferiors());
+                    addSorting(
+                            id, allBaseOverrideGetHurtSoundSuperiors, baseSorting.getOverrideGetHurtSoundSuperiors());
+                    addSorting(
+                            id, allBaseOverrideGetHurtSoundInferiors, baseSorting.getOverrideGetHurtSoundInferiors());
                     addSorting(id, allBaseAfterGetHurtSoundSuperiors, baseSorting.getAfterGetHurtSoundSuperiors());
                     addSorting(id, allBaseAfterGetHurtSoundInferiors, baseSorting.getAfterGetHurtSoundInferiors());
                     addSorting(id, allBaseBeforeGetItemIconSuperiors, baseSorting.getBeforeGetItemIconSuperiors());
@@ -1279,58 +1691,146 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseAfterGetItemIconInferiors, baseSorting.getAfterGetItemIconInferiors());
                     addSorting(id, allBaseBeforeGetSleepTimerSuperiors, baseSorting.getBeforeGetSleepTimerSuperiors());
                     addSorting(id, allBaseBeforeGetSleepTimerInferiors, baseSorting.getBeforeGetSleepTimerInferiors());
-                    addSorting(id, allBaseOverrideGetSleepTimerSuperiors, baseSorting.getOverrideGetSleepTimerSuperiors());
-                    addSorting(id, allBaseOverrideGetSleepTimerInferiors, baseSorting.getOverrideGetSleepTimerInferiors());
+                    addSorting(
+                            id, allBaseOverrideGetSleepTimerSuperiors, baseSorting.getOverrideGetSleepTimerSuperiors());
+                    addSorting(
+                            id, allBaseOverrideGetSleepTimerInferiors, baseSorting.getOverrideGetSleepTimerInferiors());
                     addSorting(id, allBaseAfterGetSleepTimerSuperiors, baseSorting.getAfterGetSleepTimerSuperiors());
                     addSorting(id, allBaseAfterGetSleepTimerInferiors, baseSorting.getAfterGetSleepTimerInferiors());
-                    addSorting(id, allBaseBeforeHandleLavaMovementSuperiors, baseSorting.getBeforeHandleLavaMovementSuperiors());
-                    addSorting(id, allBaseBeforeHandleLavaMovementInferiors, baseSorting.getBeforeHandleLavaMovementInferiors());
-                    addSorting(id, allBaseOverrideHandleLavaMovementSuperiors, baseSorting.getOverrideHandleLavaMovementSuperiors());
-                    addSorting(id, allBaseOverrideHandleLavaMovementInferiors, baseSorting.getOverrideHandleLavaMovementInferiors());
-                    addSorting(id, allBaseAfterHandleLavaMovementSuperiors, baseSorting.getAfterHandleLavaMovementSuperiors());
-                    addSorting(id, allBaseAfterHandleLavaMovementInferiors, baseSorting.getAfterHandleLavaMovementInferiors());
-                    addSorting(id, allBaseBeforeHandleWaterMovementSuperiors, baseSorting.getBeforeHandleWaterMovementSuperiors());
-                    addSorting(id, allBaseBeforeHandleWaterMovementInferiors, baseSorting.getBeforeHandleWaterMovementInferiors());
-                    addSorting(id, allBaseOverrideHandleWaterMovementSuperiors, baseSorting.getOverrideHandleWaterMovementSuperiors());
-                    addSorting(id, allBaseOverrideHandleWaterMovementInferiors, baseSorting.getOverrideHandleWaterMovementInferiors());
-                    addSorting(id, allBaseAfterHandleWaterMovementSuperiors, baseSorting.getAfterHandleWaterMovementSuperiors());
-                    addSorting(id, allBaseAfterHandleWaterMovementInferiors, baseSorting.getAfterHandleWaterMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeHandleLavaMovementSuperiors,
+                            baseSorting.getBeforeHandleLavaMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeHandleLavaMovementInferiors,
+                            baseSorting.getBeforeHandleLavaMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideHandleLavaMovementSuperiors,
+                            baseSorting.getOverrideHandleLavaMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideHandleLavaMovementInferiors,
+                            baseSorting.getOverrideHandleLavaMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterHandleLavaMovementSuperiors,
+                            baseSorting.getAfterHandleLavaMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterHandleLavaMovementInferiors,
+                            baseSorting.getAfterHandleLavaMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeHandleWaterMovementSuperiors,
+                            baseSorting.getBeforeHandleWaterMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeHandleWaterMovementInferiors,
+                            baseSorting.getBeforeHandleWaterMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideHandleWaterMovementSuperiors,
+                            baseSorting.getOverrideHandleWaterMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideHandleWaterMovementInferiors,
+                            baseSorting.getOverrideHandleWaterMovementInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterHandleWaterMovementSuperiors,
+                            baseSorting.getAfterHandleWaterMovementSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterHandleWaterMovementInferiors,
+                            baseSorting.getAfterHandleWaterMovementInferiors());
                     addSorting(id, allBaseBeforeHealSuperiors, baseSorting.getBeforeHealSuperiors());
                     addSorting(id, allBaseBeforeHealInferiors, baseSorting.getBeforeHealInferiors());
                     addSorting(id, allBaseOverrideHealSuperiors, baseSorting.getOverrideHealSuperiors());
                     addSorting(id, allBaseOverrideHealInferiors, baseSorting.getOverrideHealInferiors());
                     addSorting(id, allBaseAfterHealSuperiors, baseSorting.getAfterHealSuperiors());
                     addSorting(id, allBaseAfterHealInferiors, baseSorting.getAfterHealInferiors());
-                    addSorting(id, allBaseBeforeIsEntityInsideOpaqueBlockSuperiors, baseSorting.getBeforeIsEntityInsideOpaqueBlockSuperiors());
-                    addSorting(id, allBaseBeforeIsEntityInsideOpaqueBlockInferiors, baseSorting.getBeforeIsEntityInsideOpaqueBlockInferiors());
-                    addSorting(id, allBaseOverrideIsEntityInsideOpaqueBlockSuperiors, baseSorting.getOverrideIsEntityInsideOpaqueBlockSuperiors());
-                    addSorting(id, allBaseOverrideIsEntityInsideOpaqueBlockInferiors, baseSorting.getOverrideIsEntityInsideOpaqueBlockInferiors());
-                    addSorting(id, allBaseAfterIsEntityInsideOpaqueBlockSuperiors, baseSorting.getAfterIsEntityInsideOpaqueBlockSuperiors());
-                    addSorting(id, allBaseAfterIsEntityInsideOpaqueBlockInferiors, baseSorting.getAfterIsEntityInsideOpaqueBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsEntityInsideOpaqueBlockSuperiors,
+                            baseSorting.getBeforeIsEntityInsideOpaqueBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsEntityInsideOpaqueBlockInferiors,
+                            baseSorting.getBeforeIsEntityInsideOpaqueBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsEntityInsideOpaqueBlockSuperiors,
+                            baseSorting.getOverrideIsEntityInsideOpaqueBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsEntityInsideOpaqueBlockInferiors,
+                            baseSorting.getOverrideIsEntityInsideOpaqueBlockInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterIsEntityInsideOpaqueBlockSuperiors,
+                            baseSorting.getAfterIsEntityInsideOpaqueBlockSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterIsEntityInsideOpaqueBlockInferiors,
+                            baseSorting.getAfterIsEntityInsideOpaqueBlockInferiors());
                     addSorting(id, allBaseBeforeIsInWaterSuperiors, baseSorting.getBeforeIsInWaterSuperiors());
                     addSorting(id, allBaseBeforeIsInWaterInferiors, baseSorting.getBeforeIsInWaterInferiors());
                     addSorting(id, allBaseOverrideIsInWaterSuperiors, baseSorting.getOverrideIsInWaterSuperiors());
                     addSorting(id, allBaseOverrideIsInWaterInferiors, baseSorting.getOverrideIsInWaterInferiors());
                     addSorting(id, allBaseAfterIsInWaterSuperiors, baseSorting.getAfterIsInWaterSuperiors());
                     addSorting(id, allBaseAfterIsInWaterInferiors, baseSorting.getAfterIsInWaterInferiors());
-                    addSorting(id, allBaseBeforeIsInsideOfMaterialSuperiors, baseSorting.getBeforeIsInsideOfMaterialSuperiors());
-                    addSorting(id, allBaseBeforeIsInsideOfMaterialInferiors, baseSorting.getBeforeIsInsideOfMaterialInferiors());
-                    addSorting(id, allBaseOverrideIsInsideOfMaterialSuperiors, baseSorting.getOverrideIsInsideOfMaterialSuperiors());
-                    addSorting(id, allBaseOverrideIsInsideOfMaterialInferiors, baseSorting.getOverrideIsInsideOfMaterialInferiors());
-                    addSorting(id, allBaseAfterIsInsideOfMaterialSuperiors, baseSorting.getAfterIsInsideOfMaterialSuperiors());
-                    addSorting(id, allBaseAfterIsInsideOfMaterialInferiors, baseSorting.getAfterIsInsideOfMaterialInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsInsideOfMaterialSuperiors,
+                            baseSorting.getBeforeIsInsideOfMaterialSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsInsideOfMaterialInferiors,
+                            baseSorting.getBeforeIsInsideOfMaterialInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsInsideOfMaterialSuperiors,
+                            baseSorting.getOverrideIsInsideOfMaterialSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsInsideOfMaterialInferiors,
+                            baseSorting.getOverrideIsInsideOfMaterialInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterIsInsideOfMaterialSuperiors,
+                            baseSorting.getAfterIsInsideOfMaterialSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterIsInsideOfMaterialInferiors,
+                            baseSorting.getAfterIsInsideOfMaterialInferiors());
                     addSorting(id, allBaseBeforeIsOnLadderSuperiors, baseSorting.getBeforeIsOnLadderSuperiors());
                     addSorting(id, allBaseBeforeIsOnLadderInferiors, baseSorting.getBeforeIsOnLadderInferiors());
                     addSorting(id, allBaseOverrideIsOnLadderSuperiors, baseSorting.getOverrideIsOnLadderSuperiors());
                     addSorting(id, allBaseOverrideIsOnLadderInferiors, baseSorting.getOverrideIsOnLadderInferiors());
                     addSorting(id, allBaseAfterIsOnLadderSuperiors, baseSorting.getAfterIsOnLadderSuperiors());
                     addSorting(id, allBaseAfterIsOnLadderInferiors, baseSorting.getAfterIsOnLadderInferiors());
-                    addSorting(id, allBaseBeforeIsPlayerSleepingSuperiors, baseSorting.getBeforeIsPlayerSleepingSuperiors());
-                    addSorting(id, allBaseBeforeIsPlayerSleepingInferiors, baseSorting.getBeforeIsPlayerSleepingInferiors());
-                    addSorting(id, allBaseOverrideIsPlayerSleepingSuperiors, baseSorting.getOverrideIsPlayerSleepingSuperiors());
-                    addSorting(id, allBaseOverrideIsPlayerSleepingInferiors, baseSorting.getOverrideIsPlayerSleepingInferiors());
-                    addSorting(id, allBaseAfterIsPlayerSleepingSuperiors, baseSorting.getAfterIsPlayerSleepingSuperiors());
-                    addSorting(id, allBaseAfterIsPlayerSleepingInferiors, baseSorting.getAfterIsPlayerSleepingInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsPlayerSleepingSuperiors,
+                            baseSorting.getBeforeIsPlayerSleepingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeIsPlayerSleepingInferiors,
+                            baseSorting.getBeforeIsPlayerSleepingInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsPlayerSleepingSuperiors,
+                            baseSorting.getOverrideIsPlayerSleepingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideIsPlayerSleepingInferiors,
+                            baseSorting.getOverrideIsPlayerSleepingInferiors());
+                    addSorting(
+                            id, allBaseAfterIsPlayerSleepingSuperiors, baseSorting.getAfterIsPlayerSleepingSuperiors());
+                    addSorting(
+                            id, allBaseAfterIsPlayerSleepingInferiors, baseSorting.getAfterIsPlayerSleepingInferiors());
                     addSorting(id, allBaseBeforeIsSneakingSuperiors, baseSorting.getBeforeIsSneakingSuperiors());
                     addSorting(id, allBaseBeforeIsSneakingInferiors, baseSorting.getBeforeIsSneakingInferiors());
                     addSorting(id, allBaseOverrideIsSneakingSuperiors, baseSorting.getOverrideIsSneakingSuperiors());
@@ -1361,12 +1861,30 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseOverrideMoveEntityInferiors, baseSorting.getOverrideMoveEntityInferiors());
                     addSorting(id, allBaseAfterMoveEntitySuperiors, baseSorting.getAfterMoveEntitySuperiors());
                     addSorting(id, allBaseAfterMoveEntityInferiors, baseSorting.getAfterMoveEntityInferiors());
-                    addSorting(id, allBaseBeforeMoveEntityWithHeadingSuperiors, baseSorting.getBeforeMoveEntityWithHeadingSuperiors());
-                    addSorting(id, allBaseBeforeMoveEntityWithHeadingInferiors, baseSorting.getBeforeMoveEntityWithHeadingInferiors());
-                    addSorting(id, allBaseOverrideMoveEntityWithHeadingSuperiors, baseSorting.getOverrideMoveEntityWithHeadingSuperiors());
-                    addSorting(id, allBaseOverrideMoveEntityWithHeadingInferiors, baseSorting.getOverrideMoveEntityWithHeadingInferiors());
-                    addSorting(id, allBaseAfterMoveEntityWithHeadingSuperiors, baseSorting.getAfterMoveEntityWithHeadingSuperiors());
-                    addSorting(id, allBaseAfterMoveEntityWithHeadingInferiors, baseSorting.getAfterMoveEntityWithHeadingInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeMoveEntityWithHeadingSuperiors,
+                            baseSorting.getBeforeMoveEntityWithHeadingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeMoveEntityWithHeadingInferiors,
+                            baseSorting.getBeforeMoveEntityWithHeadingInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideMoveEntityWithHeadingSuperiors,
+                            baseSorting.getOverrideMoveEntityWithHeadingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideMoveEntityWithHeadingInferiors,
+                            baseSorting.getOverrideMoveEntityWithHeadingInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterMoveEntityWithHeadingSuperiors,
+                            baseSorting.getAfterMoveEntityWithHeadingSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterMoveEntityWithHeadingInferiors,
+                            baseSorting.getAfterMoveEntityWithHeadingInferiors());
                     addSorting(id, allBaseBeforeMoveFlyingSuperiors, baseSorting.getBeforeMoveFlyingSuperiors());
                     addSorting(id, allBaseBeforeMoveFlyingInferiors, baseSorting.getBeforeMoveFlyingInferiors());
                     addSorting(id, allBaseOverrideMoveFlyingSuperiors, baseSorting.getOverrideMoveFlyingSuperiors());
@@ -1379,24 +1897,52 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseOverrideOnDeathInferiors, baseSorting.getOverrideOnDeathInferiors());
                     addSorting(id, allBaseAfterOnDeathSuperiors, baseSorting.getAfterOnDeathSuperiors());
                     addSorting(id, allBaseAfterOnDeathInferiors, baseSorting.getAfterOnDeathInferiors());
-                    addSorting(id, allBaseBeforeOnLivingUpdateSuperiors, baseSorting.getBeforeOnLivingUpdateSuperiors());
-                    addSorting(id, allBaseBeforeOnLivingUpdateInferiors, baseSorting.getBeforeOnLivingUpdateInferiors());
-                    addSorting(id, allBaseOverrideOnLivingUpdateSuperiors, baseSorting.getOverrideOnLivingUpdateSuperiors());
-                    addSorting(id, allBaseOverrideOnLivingUpdateInferiors, baseSorting.getOverrideOnLivingUpdateInferiors());
+                    addSorting(
+                            id, allBaseBeforeOnLivingUpdateSuperiors, baseSorting.getBeforeOnLivingUpdateSuperiors());
+                    addSorting(
+                            id, allBaseBeforeOnLivingUpdateInferiors, baseSorting.getBeforeOnLivingUpdateInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideOnLivingUpdateSuperiors,
+                            baseSorting.getOverrideOnLivingUpdateSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideOnLivingUpdateInferiors,
+                            baseSorting.getOverrideOnLivingUpdateInferiors());
                     addSorting(id, allBaseAfterOnLivingUpdateSuperiors, baseSorting.getAfterOnLivingUpdateSuperiors());
                     addSorting(id, allBaseAfterOnLivingUpdateInferiors, baseSorting.getAfterOnLivingUpdateInferiors());
                     addSorting(id, allBaseBeforeOnKillEntitySuperiors, baseSorting.getBeforeOnKillEntitySuperiors());
                     addSorting(id, allBaseBeforeOnKillEntityInferiors, baseSorting.getBeforeOnKillEntityInferiors());
-                    addSorting(id, allBaseOverrideOnKillEntitySuperiors, baseSorting.getOverrideOnKillEntitySuperiors());
-                    addSorting(id, allBaseOverrideOnKillEntityInferiors, baseSorting.getOverrideOnKillEntityInferiors());
+                    addSorting(
+                            id, allBaseOverrideOnKillEntitySuperiors, baseSorting.getOverrideOnKillEntitySuperiors());
+                    addSorting(
+                            id, allBaseOverrideOnKillEntityInferiors, baseSorting.getOverrideOnKillEntityInferiors());
                     addSorting(id, allBaseAfterOnKillEntitySuperiors, baseSorting.getAfterOnKillEntitySuperiors());
                     addSorting(id, allBaseAfterOnKillEntityInferiors, baseSorting.getAfterOnKillEntityInferiors());
-                    addSorting(id, allBaseBeforeOnStruckByLightningSuperiors, baseSorting.getBeforeOnStruckByLightningSuperiors());
-                    addSorting(id, allBaseBeforeOnStruckByLightningInferiors, baseSorting.getBeforeOnStruckByLightningInferiors());
-                    addSorting(id, allBaseOverrideOnStruckByLightningSuperiors, baseSorting.getOverrideOnStruckByLightningSuperiors());
-                    addSorting(id, allBaseOverrideOnStruckByLightningInferiors, baseSorting.getOverrideOnStruckByLightningInferiors());
-                    addSorting(id, allBaseAfterOnStruckByLightningSuperiors, baseSorting.getAfterOnStruckByLightningSuperiors());
-                    addSorting(id, allBaseAfterOnStruckByLightningInferiors, baseSorting.getAfterOnStruckByLightningInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeOnStruckByLightningSuperiors,
+                            baseSorting.getBeforeOnStruckByLightningSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeOnStruckByLightningInferiors,
+                            baseSorting.getBeforeOnStruckByLightningInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideOnStruckByLightningSuperiors,
+                            baseSorting.getOverrideOnStruckByLightningSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideOnStruckByLightningInferiors,
+                            baseSorting.getOverrideOnStruckByLightningInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterOnStruckByLightningSuperiors,
+                            baseSorting.getAfterOnStruckByLightningSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterOnStruckByLightningInferiors,
+                            baseSorting.getAfterOnStruckByLightningInferiors());
                     addSorting(id, allBaseBeforeOnUpdateSuperiors, baseSorting.getBeforeOnUpdateSuperiors());
                     addSorting(id, allBaseBeforeOnUpdateInferiors, baseSorting.getBeforeOnUpdateInferiors());
                     addSorting(id, allBaseOverrideOnUpdateSuperiors, baseSorting.getOverrideOnUpdateSuperiors());
@@ -1405,32 +1951,64 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseAfterOnUpdateInferiors, baseSorting.getAfterOnUpdateInferiors());
                     addSorting(id, allBaseBeforePlayStepSoundSuperiors, baseSorting.getBeforePlayStepSoundSuperiors());
                     addSorting(id, allBaseBeforePlayStepSoundInferiors, baseSorting.getBeforePlayStepSoundInferiors());
-                    addSorting(id, allBaseOverridePlayStepSoundSuperiors, baseSorting.getOverridePlayStepSoundSuperiors());
-                    addSorting(id, allBaseOverridePlayStepSoundInferiors, baseSorting.getOverridePlayStepSoundInferiors());
+                    addSorting(
+                            id, allBaseOverridePlayStepSoundSuperiors, baseSorting.getOverridePlayStepSoundSuperiors());
+                    addSorting(
+                            id, allBaseOverridePlayStepSoundInferiors, baseSorting.getOverridePlayStepSoundInferiors());
                     addSorting(id, allBaseAfterPlayStepSoundSuperiors, baseSorting.getAfterPlayStepSoundSuperiors());
                     addSorting(id, allBaseAfterPlayStepSoundInferiors, baseSorting.getAfterPlayStepSoundInferiors());
-                    addSorting(id, allBaseBeforePushOutOfBlocksSuperiors, baseSorting.getBeforePushOutOfBlocksSuperiors());
-                    addSorting(id, allBaseBeforePushOutOfBlocksInferiors, baseSorting.getBeforePushOutOfBlocksInferiors());
-                    addSorting(id, allBaseOverridePushOutOfBlocksSuperiors, baseSorting.getOverridePushOutOfBlocksSuperiors());
-                    addSorting(id, allBaseOverridePushOutOfBlocksInferiors, baseSorting.getOverridePushOutOfBlocksInferiors());
-                    addSorting(id, allBaseAfterPushOutOfBlocksSuperiors, baseSorting.getAfterPushOutOfBlocksSuperiors());
-                    addSorting(id, allBaseAfterPushOutOfBlocksInferiors, baseSorting.getAfterPushOutOfBlocksInferiors());
+                    addSorting(
+                            id, allBaseBeforePushOutOfBlocksSuperiors, baseSorting.getBeforePushOutOfBlocksSuperiors());
+                    addSorting(
+                            id, allBaseBeforePushOutOfBlocksInferiors, baseSorting.getBeforePushOutOfBlocksInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverridePushOutOfBlocksSuperiors,
+                            baseSorting.getOverridePushOutOfBlocksSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverridePushOutOfBlocksInferiors,
+                            baseSorting.getOverridePushOutOfBlocksInferiors());
+                    addSorting(
+                            id, allBaseAfterPushOutOfBlocksSuperiors, baseSorting.getAfterPushOutOfBlocksSuperiors());
+                    addSorting(
+                            id, allBaseAfterPushOutOfBlocksInferiors, baseSorting.getAfterPushOutOfBlocksInferiors());
                     addSorting(id, allBaseBeforeRayTraceSuperiors, baseSorting.getBeforeRayTraceSuperiors());
                     addSorting(id, allBaseBeforeRayTraceInferiors, baseSorting.getBeforeRayTraceInferiors());
                     addSorting(id, allBaseOverrideRayTraceSuperiors, baseSorting.getOverrideRayTraceSuperiors());
                     addSorting(id, allBaseOverrideRayTraceInferiors, baseSorting.getOverrideRayTraceInferiors());
                     addSorting(id, allBaseAfterRayTraceSuperiors, baseSorting.getAfterRayTraceSuperiors());
                     addSorting(id, allBaseAfterRayTraceInferiors, baseSorting.getAfterRayTraceInferiors());
-                    addSorting(id, allBaseBeforeReadEntityFromNBTSuperiors, baseSorting.getBeforeReadEntityFromNBTSuperiors());
-                    addSorting(id, allBaseBeforeReadEntityFromNBTInferiors, baseSorting.getBeforeReadEntityFromNBTInferiors());
-                    addSorting(id, allBaseOverrideReadEntityFromNBTSuperiors, baseSorting.getOverrideReadEntityFromNBTSuperiors());
-                    addSorting(id, allBaseOverrideReadEntityFromNBTInferiors, baseSorting.getOverrideReadEntityFromNBTInferiors());
-                    addSorting(id, allBaseAfterReadEntityFromNBTSuperiors, baseSorting.getAfterReadEntityFromNBTSuperiors());
-                    addSorting(id, allBaseAfterReadEntityFromNBTInferiors, baseSorting.getAfterReadEntityFromNBTInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeReadEntityFromNBTSuperiors,
+                            baseSorting.getBeforeReadEntityFromNBTSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeReadEntityFromNBTInferiors,
+                            baseSorting.getBeforeReadEntityFromNBTInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideReadEntityFromNBTSuperiors,
+                            baseSorting.getOverrideReadEntityFromNBTSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideReadEntityFromNBTInferiors,
+                            baseSorting.getOverrideReadEntityFromNBTInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterReadEntityFromNBTSuperiors,
+                            baseSorting.getAfterReadEntityFromNBTSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterReadEntityFromNBTInferiors,
+                            baseSorting.getAfterReadEntityFromNBTInferiors());
                     addSorting(id, allBaseBeforeRespawnPlayerSuperiors, baseSorting.getBeforeRespawnPlayerSuperiors());
                     addSorting(id, allBaseBeforeRespawnPlayerInferiors, baseSorting.getBeforeRespawnPlayerInferiors());
-                    addSorting(id, allBaseOverrideRespawnPlayerSuperiors, baseSorting.getOverrideRespawnPlayerSuperiors());
-                    addSorting(id, allBaseOverrideRespawnPlayerInferiors, baseSorting.getOverrideRespawnPlayerInferiors());
+                    addSorting(
+                            id, allBaseOverrideRespawnPlayerSuperiors, baseSorting.getOverrideRespawnPlayerSuperiors());
+                    addSorting(
+                            id, allBaseOverrideRespawnPlayerInferiors, baseSorting.getOverrideRespawnPlayerInferiors());
                     addSorting(id, allBaseAfterRespawnPlayerSuperiors, baseSorting.getAfterRespawnPlayerSuperiors());
                     addSorting(id, allBaseAfterRespawnPlayerInferiors, baseSorting.getAfterRespawnPlayerInferiors());
                     addSorting(id, allBaseBeforeSetDeadSuperiors, baseSorting.getBeforeSetDeadSuperiors());
@@ -1439,18 +2017,54 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseOverrideSetDeadInferiors, baseSorting.getOverrideSetDeadInferiors());
                     addSorting(id, allBaseAfterSetDeadSuperiors, baseSorting.getAfterSetDeadSuperiors());
                     addSorting(id, allBaseAfterSetDeadInferiors, baseSorting.getAfterSetDeadInferiors());
-                    addSorting(id, allBaseBeforeSetPlayerSPHealthSuperiors, baseSorting.getBeforeSetPlayerSPHealthSuperiors());
-                    addSorting(id, allBaseBeforeSetPlayerSPHealthInferiors, baseSorting.getBeforeSetPlayerSPHealthInferiors());
-                    addSorting(id, allBaseOverrideSetPlayerSPHealthSuperiors, baseSorting.getOverrideSetPlayerSPHealthSuperiors());
-                    addSorting(id, allBaseOverrideSetPlayerSPHealthInferiors, baseSorting.getOverrideSetPlayerSPHealthInferiors());
-                    addSorting(id, allBaseAfterSetPlayerSPHealthSuperiors, baseSorting.getAfterSetPlayerSPHealthSuperiors());
-                    addSorting(id, allBaseAfterSetPlayerSPHealthInferiors, baseSorting.getAfterSetPlayerSPHealthInferiors());
-                    addSorting(id, allBaseBeforeSetPositionAndRotationSuperiors, baseSorting.getBeforeSetPositionAndRotationSuperiors());
-                    addSorting(id, allBaseBeforeSetPositionAndRotationInferiors, baseSorting.getBeforeSetPositionAndRotationInferiors());
-                    addSorting(id, allBaseOverrideSetPositionAndRotationSuperiors, baseSorting.getOverrideSetPositionAndRotationSuperiors());
-                    addSorting(id, allBaseOverrideSetPositionAndRotationInferiors, baseSorting.getOverrideSetPositionAndRotationInferiors());
-                    addSorting(id, allBaseAfterSetPositionAndRotationSuperiors, baseSorting.getAfterSetPositionAndRotationSuperiors());
-                    addSorting(id, allBaseAfterSetPositionAndRotationInferiors, baseSorting.getAfterSetPositionAndRotationInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeSetPlayerSPHealthSuperiors,
+                            baseSorting.getBeforeSetPlayerSPHealthSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeSetPlayerSPHealthInferiors,
+                            baseSorting.getBeforeSetPlayerSPHealthInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideSetPlayerSPHealthSuperiors,
+                            baseSorting.getOverrideSetPlayerSPHealthSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideSetPlayerSPHealthInferiors,
+                            baseSorting.getOverrideSetPlayerSPHealthInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterSetPlayerSPHealthSuperiors,
+                            baseSorting.getAfterSetPlayerSPHealthSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterSetPlayerSPHealthInferiors,
+                            baseSorting.getAfterSetPlayerSPHealthInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeSetPositionAndRotationSuperiors,
+                            baseSorting.getBeforeSetPositionAndRotationSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeSetPositionAndRotationInferiors,
+                            baseSorting.getBeforeSetPositionAndRotationInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideSetPositionAndRotationSuperiors,
+                            baseSorting.getOverrideSetPositionAndRotationSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideSetPositionAndRotationInferiors,
+                            baseSorting.getOverrideSetPositionAndRotationInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterSetPositionAndRotationSuperiors,
+                            baseSorting.getAfterSetPositionAndRotationSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterSetPositionAndRotationInferiors,
+                            baseSorting.getAfterSetPositionAndRotationInferiors());
                     addSorting(id, allBaseBeforeSetSneakingSuperiors, baseSorting.getBeforeSetSneakingSuperiors());
                     addSorting(id, allBaseBeforeSetSneakingInferiors, baseSorting.getBeforeSetSneakingInferiors());
                     addSorting(id, allBaseOverrideSetSneakingSuperiors, baseSorting.getOverrideSetSneakingSuperiors());
@@ -1459,14 +2073,18 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseAfterSetSneakingInferiors, baseSorting.getAfterSetSneakingInferiors());
                     addSorting(id, allBaseBeforeSetSprintingSuperiors, baseSorting.getBeforeSetSprintingSuperiors());
                     addSorting(id, allBaseBeforeSetSprintingInferiors, baseSorting.getBeforeSetSprintingInferiors());
-                    addSorting(id, allBaseOverrideSetSprintingSuperiors, baseSorting.getOverrideSetSprintingSuperiors());
-                    addSorting(id, allBaseOverrideSetSprintingInferiors, baseSorting.getOverrideSetSprintingInferiors());
+                    addSorting(
+                            id, allBaseOverrideSetSprintingSuperiors, baseSorting.getOverrideSetSprintingSuperiors());
+                    addSorting(
+                            id, allBaseOverrideSetSprintingInferiors, baseSorting.getOverrideSetSprintingInferiors());
                     addSorting(id, allBaseAfterSetSprintingSuperiors, baseSorting.getAfterSetSprintingSuperiors());
                     addSorting(id, allBaseAfterSetSprintingInferiors, baseSorting.getAfterSetSprintingInferiors());
                     addSorting(id, allBaseBeforeSleepInBedAtSuperiors, baseSorting.getBeforeSleepInBedAtSuperiors());
                     addSorting(id, allBaseBeforeSleepInBedAtInferiors, baseSorting.getBeforeSleepInBedAtInferiors());
-                    addSorting(id, allBaseOverrideSleepInBedAtSuperiors, baseSorting.getOverrideSleepInBedAtSuperiors());
-                    addSorting(id, allBaseOverrideSleepInBedAtInferiors, baseSorting.getOverrideSleepInBedAtInferiors());
+                    addSorting(
+                            id, allBaseOverrideSleepInBedAtSuperiors, baseSorting.getOverrideSleepInBedAtSuperiors());
+                    addSorting(
+                            id, allBaseOverrideSleepInBedAtInferiors, baseSorting.getOverrideSleepInBedAtInferiors());
                     addSorting(id, allBaseAfterSleepInBedAtSuperiors, baseSorting.getAfterSleepInBedAtSuperiors());
                     addSorting(id, allBaseAfterSleepInBedAtInferiors, baseSorting.getAfterSleepInBedAtInferiors());
                     addSorting(id, allBaseBeforeSwingItemSuperiors, baseSorting.getBeforeSwingItemSuperiors());
@@ -1475,97 +2093,373 @@ public final class ClientPlayerAPI {
                     addSorting(id, allBaseOverrideSwingItemInferiors, baseSorting.getOverrideSwingItemInferiors());
                     addSorting(id, allBaseAfterSwingItemSuperiors, baseSorting.getAfterSwingItemSuperiors());
                     addSorting(id, allBaseAfterSwingItemInferiors, baseSorting.getAfterSwingItemInferiors());
-                    addSorting(id, allBaseBeforeUpdateEntityActionStateSuperiors, baseSorting.getBeforeUpdateEntityActionStateSuperiors());
-                    addSorting(id, allBaseBeforeUpdateEntityActionStateInferiors, baseSorting.getBeforeUpdateEntityActionStateInferiors());
-                    addSorting(id, allBaseOverrideUpdateEntityActionStateSuperiors, baseSorting.getOverrideUpdateEntityActionStateSuperiors());
-                    addSorting(id, allBaseOverrideUpdateEntityActionStateInferiors, baseSorting.getOverrideUpdateEntityActionStateInferiors());
-                    addSorting(id, allBaseAfterUpdateEntityActionStateSuperiors, baseSorting.getAfterUpdateEntityActionStateSuperiors());
-                    addSorting(id, allBaseAfterUpdateEntityActionStateInferiors, baseSorting.getAfterUpdateEntityActionStateInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeUpdateEntityActionStateSuperiors,
+                            baseSorting.getBeforeUpdateEntityActionStateSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeUpdateEntityActionStateInferiors,
+                            baseSorting.getBeforeUpdateEntityActionStateInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideUpdateEntityActionStateSuperiors,
+                            baseSorting.getOverrideUpdateEntityActionStateSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideUpdateEntityActionStateInferiors,
+                            baseSorting.getOverrideUpdateEntityActionStateInferiors());
+                    addSorting(
+                            id,
+                            allBaseAfterUpdateEntityActionStateSuperiors,
+                            baseSorting.getAfterUpdateEntityActionStateSuperiors());
+                    addSorting(
+                            id,
+                            allBaseAfterUpdateEntityActionStateInferiors,
+                            baseSorting.getAfterUpdateEntityActionStateInferiors());
                     addSorting(id, allBaseBeforeUpdateRiddenSuperiors, baseSorting.getBeforeUpdateRiddenSuperiors());
                     addSorting(id, allBaseBeforeUpdateRiddenInferiors, baseSorting.getBeforeUpdateRiddenInferiors());
-                    addSorting(id, allBaseOverrideUpdateRiddenSuperiors, baseSorting.getOverrideUpdateRiddenSuperiors());
-                    addSorting(id, allBaseOverrideUpdateRiddenInferiors, baseSorting.getOverrideUpdateRiddenInferiors());
+                    addSorting(
+                            id, allBaseOverrideUpdateRiddenSuperiors, baseSorting.getOverrideUpdateRiddenSuperiors());
+                    addSorting(
+                            id, allBaseOverrideUpdateRiddenInferiors, baseSorting.getOverrideUpdateRiddenInferiors());
                     addSorting(id, allBaseAfterUpdateRiddenSuperiors, baseSorting.getAfterUpdateRiddenSuperiors());
                     addSorting(id, allBaseAfterUpdateRiddenInferiors, baseSorting.getAfterUpdateRiddenInferiors());
                     addSorting(id, allBaseBeforeWakeUpPlayerSuperiors, baseSorting.getBeforeWakeUpPlayerSuperiors());
                     addSorting(id, allBaseBeforeWakeUpPlayerInferiors, baseSorting.getBeforeWakeUpPlayerInferiors());
-                    addSorting(id, allBaseOverrideWakeUpPlayerSuperiors, baseSorting.getOverrideWakeUpPlayerSuperiors());
-                    addSorting(id, allBaseOverrideWakeUpPlayerInferiors, baseSorting.getOverrideWakeUpPlayerInferiors());
+                    addSorting(
+                            id, allBaseOverrideWakeUpPlayerSuperiors, baseSorting.getOverrideWakeUpPlayerSuperiors());
+                    addSorting(
+                            id, allBaseOverrideWakeUpPlayerInferiors, baseSorting.getOverrideWakeUpPlayerInferiors());
                     addSorting(id, allBaseAfterWakeUpPlayerSuperiors, baseSorting.getAfterWakeUpPlayerSuperiors());
                     addSorting(id, allBaseAfterWakeUpPlayerInferiors, baseSorting.getAfterWakeUpPlayerInferiors());
-                    addSorting(id, allBaseBeforeWriteEntityToNBTSuperiors, baseSorting.getBeforeWriteEntityToNBTSuperiors());
-                    addSorting(id, allBaseBeforeWriteEntityToNBTInferiors, baseSorting.getBeforeWriteEntityToNBTInferiors());
-                    addSorting(id, allBaseOverrideWriteEntityToNBTSuperiors, baseSorting.getOverrideWriteEntityToNBTSuperiors());
-                    addSorting(id, allBaseOverrideWriteEntityToNBTInferiors, baseSorting.getOverrideWriteEntityToNBTInferiors());
-                    addSorting(id, allBaseAfterWriteEntityToNBTSuperiors, baseSorting.getAfterWriteEntityToNBTSuperiors());
-                    addSorting(id, allBaseAfterWriteEntityToNBTInferiors, baseSorting.getAfterWriteEntityToNBTInferiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeWriteEntityToNBTSuperiors,
+                            baseSorting.getBeforeWriteEntityToNBTSuperiors());
+                    addSorting(
+                            id,
+                            allBaseBeforeWriteEntityToNBTInferiors,
+                            baseSorting.getBeforeWriteEntityToNBTInferiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideWriteEntityToNBTSuperiors,
+                            baseSorting.getOverrideWriteEntityToNBTSuperiors());
+                    addSorting(
+                            id,
+                            allBaseOverrideWriteEntityToNBTInferiors,
+                            baseSorting.getOverrideWriteEntityToNBTInferiors());
+                    addSorting(
+                            id, allBaseAfterWriteEntityToNBTSuperiors, baseSorting.getAfterWriteEntityToNBTSuperiors());
+                    addSorting(
+                            id, allBaseAfterWriteEntityToNBTInferiors, baseSorting.getAfterWriteEntityToNBTInferiors());
                 }
 
-                addMethod(id, baseClass, beforeLocalConstructingHookTypes, "beforeLocalConstructing", Minecraft.class, World.class, Session.class, int.class);
-                addMethod(id, baseClass, afterLocalConstructingHookTypes, "afterLocalConstructing", Minecraft.class, World.class, Session.class, int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeLocalConstructingHookTypes,
+                        "beforeLocalConstructing",
+                        Minecraft.class,
+                        World.class,
+                        Session.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterLocalConstructingHookTypes,
+                        "afterLocalConstructing",
+                        Minecraft.class,
+                        World.class,
+                        Session.class,
+                        int.class);
                 addMethod(id, baseClass, beforeAddExhaustionHookTypes, "beforeAddExhaustion", float.class);
                 addMethod(id, baseClass, overrideAddExhaustionHookTypes, "addExhaustion", float.class);
                 addMethod(id, baseClass, afterAddExhaustionHookTypes, "afterAddExhaustion", float.class);
-                addMethod(id, baseClass, beforeAddMovementStatHookTypes, "beforeAddMovementStat", double.class, double.class, double.class);
-                addMethod(id, baseClass, overrideAddMovementStatHookTypes, "addMovementStat", double.class, double.class, double.class);
-                addMethod(id, baseClass, afterAddMovementStatHookTypes, "afterAddMovementStat", double.class, double.class, double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeAddMovementStatHookTypes,
+                        "beforeAddMovementStat",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideAddMovementStatHookTypes,
+                        "addMovementStat",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterAddMovementStatHookTypes,
+                        "afterAddMovementStat",
+                        double.class,
+                        double.class,
+                        double.class);
                 addMethod(id, baseClass, beforeAddStatHookTypes, "beforeAddStat", StatBase.class, int.class);
                 addMethod(id, baseClass, overrideAddStatHookTypes, "addStat", StatBase.class, int.class);
                 addMethod(id, baseClass, afterAddStatHookTypes, "afterAddStat", StatBase.class, int.class);
-                addMethod(id, baseClass, beforeAttackEntityFromHookTypes, "beforeAttackEntityFrom", DamageSource.class, float.class);
-                addMethod(id, baseClass, overrideAttackEntityFromHookTypes, "attackEntityFrom", DamageSource.class, float.class);
-                addMethod(id, baseClass, afterAttackEntityFromHookTypes, "afterAttackEntityFrom", DamageSource.class, float.class);
-                addMethod(id, baseClass, beforeAttackTargetEntityWithCurrentItemHookTypes, "beforeAttackTargetEntityWithCurrentItem", Entity.class);
-                addMethod(id, baseClass, overrideAttackTargetEntityWithCurrentItemHookTypes, "attackTargetEntityWithCurrentItem", Entity.class);
-                addMethod(id, baseClass, afterAttackTargetEntityWithCurrentItemHookTypes, "afterAttackTargetEntityWithCurrentItem", Entity.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeAttackEntityFromHookTypes,
+                        "beforeAttackEntityFrom",
+                        DamageSource.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideAttackEntityFromHookTypes,
+                        "attackEntityFrom",
+                        DamageSource.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterAttackEntityFromHookTypes,
+                        "afterAttackEntityFrom",
+                        DamageSource.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeAttackTargetEntityWithCurrentItemHookTypes,
+                        "beforeAttackTargetEntityWithCurrentItem",
+                        Entity.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideAttackTargetEntityWithCurrentItemHookTypes,
+                        "attackTargetEntityWithCurrentItem",
+                        Entity.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterAttackTargetEntityWithCurrentItemHookTypes,
+                        "afterAttackTargetEntityWithCurrentItem",
+                        Entity.class);
                 addMethod(id, baseClass, beforeCanBreatheUnderwaterHookTypes, "beforeCanBreatheUnderwater");
                 addMethod(id, baseClass, overrideCanBreatheUnderwaterHookTypes, "canBreatheUnderwater");
                 addMethod(id, baseClass, afterCanBreatheUnderwaterHookTypes, "afterCanBreatheUnderwater");
                 addMethod(id, baseClass, beforeCanHarvestBlockHookTypes, "beforeCanHarvestBlock", Block.class);
                 addMethod(id, baseClass, overrideCanHarvestBlockHookTypes, "canHarvestBlock", Block.class);
                 addMethod(id, baseClass, afterCanHarvestBlockHookTypes, "afterCanHarvestBlock", Block.class);
-                addMethod(id, baseClass, beforeCanPlayerEditHookTypes, "beforeCanPlayerEdit", int.class, int.class, int.class, int.class, ItemStack.class);
-                addMethod(id, baseClass, overrideCanPlayerEditHookTypes, "canPlayerEdit", int.class, int.class, int.class, int.class, ItemStack.class);
-                addMethod(id, baseClass, afterCanPlayerEditHookTypes, "afterCanPlayerEdit", int.class, int.class, int.class, int.class, ItemStack.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeCanPlayerEditHookTypes,
+                        "beforeCanPlayerEdit",
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        ItemStack.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideCanPlayerEditHookTypes,
+                        "canPlayerEdit",
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        ItemStack.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterCanPlayerEditHookTypes,
+                        "afterCanPlayerEdit",
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        ItemStack.class);
                 addMethod(id, baseClass, beforeCanTriggerWalkingHookTypes, "beforeCanTriggerWalking");
                 addMethod(id, baseClass, overrideCanTriggerWalkingHookTypes, "canTriggerWalking");
                 addMethod(id, baseClass, afterCanTriggerWalkingHookTypes, "afterCanTriggerWalking");
                 addMethod(id, baseClass, beforeCloseScreenHookTypes, "beforeCloseScreen");
                 addMethod(id, baseClass, overrideCloseScreenHookTypes, "closeScreen");
                 addMethod(id, baseClass, afterCloseScreenHookTypes, "afterCloseScreen");
-                addMethod(id, baseClass, beforeDamageEntityHookTypes, "beforeDamageEntity", DamageSource.class, float.class);
-                addMethod(id, baseClass, overrideDamageEntityHookTypes, "damageEntity", DamageSource.class, float.class);
-                addMethod(id, baseClass, afterDamageEntityHookTypes, "afterDamageEntity", DamageSource.class, float.class);
-                addMethod(id, baseClass, beforeDisplayGUIBrewingStandHookTypes, "beforeDisplayGUIBrewingStand", TileEntityBrewingStand.class);
-                addMethod(id, baseClass, overrideDisplayGUIBrewingStandHookTypes, "displayGUIBrewingStand", TileEntityBrewingStand.class);
-                addMethod(id, baseClass, afterDisplayGUIBrewingStandHookTypes, "afterDisplayGUIBrewingStand", TileEntityBrewingStand.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDamageEntityHookTypes,
+                        "beforeDamageEntity",
+                        DamageSource.class,
+                        float.class);
+                addMethod(
+                        id, baseClass, overrideDamageEntityHookTypes, "damageEntity", DamageSource.class, float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDamageEntityHookTypes,
+                        "afterDamageEntity",
+                        DamageSource.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDisplayGUIBrewingStandHookTypes,
+                        "beforeDisplayGUIBrewingStand",
+                        TileEntityBrewingStand.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDisplayGUIBrewingStandHookTypes,
+                        "displayGUIBrewingStand",
+                        TileEntityBrewingStand.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDisplayGUIBrewingStandHookTypes,
+                        "afterDisplayGUIBrewingStand",
+                        TileEntityBrewingStand.class);
                 addMethod(id, baseClass, beforeDisplayGUIChestHookTypes, "beforeDisplayGUIChest", IInventory.class);
                 addMethod(id, baseClass, overrideDisplayGUIChestHookTypes, "displayGUIChest", IInventory.class);
                 addMethod(id, baseClass, afterDisplayGUIChestHookTypes, "afterDisplayGUIChest", IInventory.class);
-                addMethod(id, baseClass, beforeDisplayGUIDispenserHookTypes, "beforeDisplayGUIDispenser", TileEntityDispenser.class);
-                addMethod(id, baseClass, overrideDisplayGUIDispenserHookTypes, "displayGUIDispenser", TileEntityDispenser.class);
-                addMethod(id, baseClass, afterDisplayGUIDispenserHookTypes, "afterDisplayGUIDispenser", TileEntityDispenser.class);
-                addMethod(id, baseClass, beforeDisplayGUIEditSignHookTypes, "beforeDisplayGUIEditSign", TileEntity.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDisplayGUIDispenserHookTypes,
+                        "beforeDisplayGUIDispenser",
+                        TileEntityDispenser.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDisplayGUIDispenserHookTypes,
+                        "displayGUIDispenser",
+                        TileEntityDispenser.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDisplayGUIDispenserHookTypes,
+                        "afterDisplayGUIDispenser",
+                        TileEntityDispenser.class);
+                addMethod(
+                        id, baseClass, beforeDisplayGUIEditSignHookTypes, "beforeDisplayGUIEditSign", TileEntity.class);
                 addMethod(id, baseClass, overrideDisplayGUIEditSignHookTypes, "displayGUIEditSign", TileEntity.class);
                 addMethod(id, baseClass, afterDisplayGUIEditSignHookTypes, "afterDisplayGUIEditSign", TileEntity.class);
-                addMethod(id, baseClass, beforeDisplayGUIEnchantmentHookTypes, "beforeDisplayGUIEnchantment", int.class, int.class, int.class, String.class);
-                addMethod(id, baseClass, overrideDisplayGUIEnchantmentHookTypes, "displayGUIEnchantment", int.class, int.class, int.class, String.class);
-                addMethod(id, baseClass, afterDisplayGUIEnchantmentHookTypes, "afterDisplayGUIEnchantment", int.class, int.class, int.class, String.class);
-                addMethod(id, baseClass, beforeDisplayGUIFurnaceHookTypes, "beforeDisplayGUIFurnace", TileEntityFurnace.class);
-                addMethod(id, baseClass, overrideDisplayGUIFurnaceHookTypes, "displayGUIFurnace", TileEntityFurnace.class);
-                addMethod(id, baseClass, afterDisplayGUIFurnaceHookTypes, "afterDisplayGUIFurnace", TileEntityFurnace.class);
-                addMethod(id, baseClass, beforeDisplayGUIWorkbenchHookTypes, "beforeDisplayGUIWorkbench", int.class, int.class, int.class);
-                addMethod(id, baseClass, overrideDisplayGUIWorkbenchHookTypes, "displayGUIWorkbench", int.class, int.class, int.class);
-                addMethod(id, baseClass, afterDisplayGUIWorkbenchHookTypes, "afterDisplayGUIWorkbench", int.class, int.class, int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDisplayGUIEnchantmentHookTypes,
+                        "beforeDisplayGUIEnchantment",
+                        int.class,
+                        int.class,
+                        int.class,
+                        String.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDisplayGUIEnchantmentHookTypes,
+                        "displayGUIEnchantment",
+                        int.class,
+                        int.class,
+                        int.class,
+                        String.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDisplayGUIEnchantmentHookTypes,
+                        "afterDisplayGUIEnchantment",
+                        int.class,
+                        int.class,
+                        int.class,
+                        String.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDisplayGUIFurnaceHookTypes,
+                        "beforeDisplayGUIFurnace",
+                        TileEntityFurnace.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDisplayGUIFurnaceHookTypes,
+                        "displayGUIFurnace",
+                        TileEntityFurnace.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDisplayGUIFurnaceHookTypes,
+                        "afterDisplayGUIFurnace",
+                        TileEntityFurnace.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDisplayGUIWorkbenchHookTypes,
+                        "beforeDisplayGUIWorkbench",
+                        int.class,
+                        int.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDisplayGUIWorkbenchHookTypes,
+                        "displayGUIWorkbench",
+                        int.class,
+                        int.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDisplayGUIWorkbenchHookTypes,
+                        "afterDisplayGUIWorkbench",
+                        int.class,
+                        int.class,
+                        int.class);
                 addMethod(id, baseClass, beforeDropOneItemHookTypes, "beforeDropOneItem", boolean.class);
                 addMethod(id, baseClass, overrideDropOneItemHookTypes, "dropOneItem", boolean.class);
                 addMethod(id, baseClass, afterDropOneItemHookTypes, "afterDropOneItem", boolean.class);
-                addMethod(id, baseClass, beforeDropPlayerItemHookTypes, "beforeDropPlayerItem", ItemStack.class, boolean.class);
-                addMethod(id, baseClass, overrideDropPlayerItemHookTypes, "dropPlayerItem", ItemStack.class, boolean.class);
-                addMethod(id, baseClass, afterDropPlayerItemHookTypes, "afterDropPlayerItem", ItemStack.class, boolean.class);
-                addMethod(id, baseClass, beforeDropPlayerItemWithRandomChoiceHookTypes, "beforeDropPlayerItemWithRandomChoice", ItemStack.class, boolean.class, boolean.class);
-                addMethod(id, baseClass, overrideDropPlayerItemWithRandomChoiceHookTypes, "dropPlayerItemWithRandomChoice", ItemStack.class, boolean.class, boolean.class);
-                addMethod(id, baseClass, afterDropPlayerItemWithRandomChoiceHookTypes, "afterDropPlayerItemWithRandomChoice", ItemStack.class, boolean.class, boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDropPlayerItemHookTypes,
+                        "beforeDropPlayerItem",
+                        ItemStack.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDropPlayerItemHookTypes,
+                        "dropPlayerItem",
+                        ItemStack.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDropPlayerItemHookTypes,
+                        "afterDropPlayerItem",
+                        ItemStack.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeDropPlayerItemWithRandomChoiceHookTypes,
+                        "beforeDropPlayerItemWithRandomChoice",
+                        ItemStack.class,
+                        boolean.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideDropPlayerItemWithRandomChoiceHookTypes,
+                        "dropPlayerItemWithRandomChoice",
+                        ItemStack.class,
+                        boolean.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterDropPlayerItemWithRandomChoiceHookTypes,
+                        "afterDropPlayerItemWithRandomChoice",
+                        ItemStack.class,
+                        boolean.class,
+                        boolean.class);
                 addMethod(id, baseClass, beforeFallHookTypes, "beforeFall", float.class);
                 addMethod(id, baseClass, overrideFallHookTypes, "fall", float.class);
                 addMethod(id, baseClass, afterFallHookTypes, "afterFall", float.class);
@@ -1578,21 +2472,98 @@ public final class ClientPlayerAPI {
                 addMethod(id, baseClass, beforeGetBrightnessHookTypes, "beforeGetBrightness", float.class);
                 addMethod(id, baseClass, overrideGetBrightnessHookTypes, "getBrightness", float.class);
                 addMethod(id, baseClass, afterGetBrightnessHookTypes, "afterGetBrightness", float.class);
-                addMethod(id, baseClass, beforeGetBrightnessForRenderHookTypes, "beforeGetBrightnessForRender", float.class);
-                addMethod(id, baseClass, overrideGetBrightnessForRenderHookTypes, "getBrightnessForRender", float.class);
-                addMethod(id, baseClass, afterGetBrightnessForRenderHookTypes, "afterGetBrightnessForRender", float.class);
-                addMethod(id, baseClass, beforeGetCurrentPlayerStrVsBlockHookTypes, "beforeGetCurrentPlayerStrVsBlock", Block.class, boolean.class);
-                addMethod(id, baseClass, overrideGetCurrentPlayerStrVsBlockHookTypes, "getCurrentPlayerStrVsBlock", Block.class, boolean.class);
-                addMethod(id, baseClass, afterGetCurrentPlayerStrVsBlockHookTypes, "afterGetCurrentPlayerStrVsBlock", Block.class, boolean.class);
-                addMethod(id, baseClass, beforeGetCurrentPlayerStrVsBlockForgeHookTypes, "beforeGetCurrentPlayerStrVsBlockForge", Block.class, boolean.class, int.class);
-                addMethod(id, baseClass, overrideGetCurrentPlayerStrVsBlockForgeHookTypes, "getCurrentPlayerStrVsBlockForge", Block.class, boolean.class, int.class);
-                addMethod(id, baseClass, afterGetCurrentPlayerStrVsBlockForgeHookTypes, "afterGetCurrentPlayerStrVsBlockForge", Block.class, boolean.class, int.class);
-                addMethod(id, baseClass, beforeGetDistanceSqHookTypes, "beforeGetDistanceSq", double.class, double.class, double.class);
-                addMethod(id, baseClass, overrideGetDistanceSqHookTypes, "getDistanceSq", double.class, double.class, double.class);
-                addMethod(id, baseClass, afterGetDistanceSqHookTypes, "afterGetDistanceSq", double.class, double.class, double.class);
-                addMethod(id, baseClass, beforeGetDistanceSqToEntityHookTypes, "beforeGetDistanceSqToEntity", Entity.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeGetBrightnessForRenderHookTypes,
+                        "beforeGetBrightnessForRender",
+                        float.class);
+                addMethod(
+                        id, baseClass, overrideGetBrightnessForRenderHookTypes, "getBrightnessForRender", float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterGetBrightnessForRenderHookTypes,
+                        "afterGetBrightnessForRender",
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeGetCurrentPlayerStrVsBlockHookTypes,
+                        "beforeGetCurrentPlayerStrVsBlock",
+                        Block.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideGetCurrentPlayerStrVsBlockHookTypes,
+                        "getCurrentPlayerStrVsBlock",
+                        Block.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterGetCurrentPlayerStrVsBlockHookTypes,
+                        "afterGetCurrentPlayerStrVsBlock",
+                        Block.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeGetCurrentPlayerStrVsBlockForgeHookTypes,
+                        "beforeGetCurrentPlayerStrVsBlockForge",
+                        Block.class,
+                        boolean.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideGetCurrentPlayerStrVsBlockForgeHookTypes,
+                        "getCurrentPlayerStrVsBlockForge",
+                        Block.class,
+                        boolean.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterGetCurrentPlayerStrVsBlockForgeHookTypes,
+                        "afterGetCurrentPlayerStrVsBlockForge",
+                        Block.class,
+                        boolean.class,
+                        int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeGetDistanceSqHookTypes,
+                        "beforeGetDistanceSq",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideGetDistanceSqHookTypes,
+                        "getDistanceSq",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterGetDistanceSqHookTypes,
+                        "afterGetDistanceSq",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeGetDistanceSqToEntityHookTypes,
+                        "beforeGetDistanceSqToEntity",
+                        Entity.class);
                 addMethod(id, baseClass, overrideGetDistanceSqToEntityHookTypes, "getDistanceSqToEntity", Entity.class);
-                addMethod(id, baseClass, afterGetDistanceSqToEntityHookTypes, "afterGetDistanceSqToEntity", Entity.class);
+                addMethod(
+                        id, baseClass, afterGetDistanceSqToEntityHookTypes, "afterGetDistanceSqToEntity", Entity.class);
                 addMethod(id, baseClass, beforeGetFOVMultiplierHookTypes, "beforeGetFOVMultiplier");
                 addMethod(id, baseClass, overrideGetFOVMultiplierHookTypes, "getFOVMultiplier");
                 addMethod(id, baseClass, afterGetFOVMultiplierHookTypes, "afterGetFOVMultiplier");
@@ -1638,18 +2609,102 @@ public final class ClientPlayerAPI {
                 addMethod(id, baseClass, beforeJumpHookTypes, "beforeJump");
                 addMethod(id, baseClass, overrideJumpHookTypes, "jump");
                 addMethod(id, baseClass, afterJumpHookTypes, "afterJump");
-                addMethod(id, baseClass, beforeKnockBackHookTypes, "beforeKnockBack", Entity.class, float.class, double.class, double.class);
-                addMethod(id, baseClass, overrideKnockBackHookTypes, "knockBack", Entity.class, float.class, double.class, double.class);
-                addMethod(id, baseClass, afterKnockBackHookTypes, "afterKnockBack", Entity.class, float.class, double.class, double.class);
-                addMethod(id, baseClass, beforeMoveEntityHookTypes, "beforeMoveEntity", double.class, double.class, double.class);
-                addMethod(id, baseClass, overrideMoveEntityHookTypes, "moveEntity", double.class, double.class, double.class);
-                addMethod(id, baseClass, afterMoveEntityHookTypes, "afterMoveEntity", double.class, double.class, double.class);
-                addMethod(id, baseClass, beforeMoveEntityWithHeadingHookTypes, "beforeMoveEntityWithHeading", float.class, float.class);
-                addMethod(id, baseClass, overrideMoveEntityWithHeadingHookTypes, "moveEntityWithHeading", float.class, float.class);
-                addMethod(id, baseClass, afterMoveEntityWithHeadingHookTypes, "afterMoveEntityWithHeading", float.class, float.class);
-                addMethod(id, baseClass, beforeMoveFlyingHookTypes, "beforeMoveFlying", float.class, float.class, float.class);
-                addMethod(id, baseClass, overrideMoveFlyingHookTypes, "moveFlying", float.class, float.class, float.class);
-                addMethod(id, baseClass, afterMoveFlyingHookTypes, "afterMoveFlying", float.class, float.class, float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeKnockBackHookTypes,
+                        "beforeKnockBack",
+                        Entity.class,
+                        float.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideKnockBackHookTypes,
+                        "knockBack",
+                        Entity.class,
+                        float.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterKnockBackHookTypes,
+                        "afterKnockBack",
+                        Entity.class,
+                        float.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeMoveEntityHookTypes,
+                        "beforeMoveEntity",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideMoveEntityHookTypes,
+                        "moveEntity",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterMoveEntityHookTypes,
+                        "afterMoveEntity",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeMoveEntityWithHeadingHookTypes,
+                        "beforeMoveEntityWithHeading",
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideMoveEntityWithHeadingHookTypes,
+                        "moveEntityWithHeading",
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterMoveEntityWithHeadingHookTypes,
+                        "afterMoveEntityWithHeading",
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeMoveFlyingHookTypes,
+                        "beforeMoveFlying",
+                        float.class,
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideMoveFlyingHookTypes,
+                        "moveFlying",
+                        float.class,
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterMoveFlyingHookTypes,
+                        "afterMoveFlying",
+                        float.class,
+                        float.class,
+                        float.class);
                 addMethod(id, baseClass, beforeOnDeathHookTypes, "beforeOnDeath", DamageSource.class);
                 addMethod(id, baseClass, overrideOnDeathHookTypes, "onDeath", DamageSource.class);
                 addMethod(id, baseClass, afterOnDeathHookTypes, "afterOnDeath", DamageSource.class);
@@ -1659,24 +2714,90 @@ public final class ClientPlayerAPI {
                 addMethod(id, baseClass, beforeOnKillEntityHookTypes, "beforeOnKillEntity", EntityLivingBase.class);
                 addMethod(id, baseClass, overrideOnKillEntityHookTypes, "onKillEntity", EntityLivingBase.class);
                 addMethod(id, baseClass, afterOnKillEntityHookTypes, "afterOnKillEntity", EntityLivingBase.class);
-                addMethod(id, baseClass, beforeOnStruckByLightningHookTypes, "beforeOnStruckByLightning", EntityLightningBolt.class);
-                addMethod(id, baseClass, overrideOnStruckByLightningHookTypes, "onStruckByLightning", EntityLightningBolt.class);
-                addMethod(id, baseClass, afterOnStruckByLightningHookTypes, "afterOnStruckByLightning", EntityLightningBolt.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeOnStruckByLightningHookTypes,
+                        "beforeOnStruckByLightning",
+                        EntityLightningBolt.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideOnStruckByLightningHookTypes,
+                        "onStruckByLightning",
+                        EntityLightningBolt.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterOnStruckByLightningHookTypes,
+                        "afterOnStruckByLightning",
+                        EntityLightningBolt.class);
                 addMethod(id, baseClass, beforeOnUpdateHookTypes, "beforeOnUpdate");
                 addMethod(id, baseClass, overrideOnUpdateHookTypes, "onUpdate");
                 addMethod(id, baseClass, afterOnUpdateHookTypes, "afterOnUpdate");
-                addMethod(id, baseClass, beforePlayStepSoundHookTypes, "beforePlayStepSound", int.class, int.class, int.class, Block.class);
-                addMethod(id, baseClass, overridePlayStepSoundHookTypes, "playStepSound", int.class, int.class, int.class, Block.class);
-                addMethod(id, baseClass, afterPlayStepSoundHookTypes, "afterPlayStepSound", int.class, int.class, int.class, Block.class);
-                addMethod(id, baseClass, beforePushOutOfBlocksHookTypes, "beforePushOutOfBlocks", double.class, double.class, double.class);
-                addMethod(id, baseClass, overridePushOutOfBlocksHookTypes, "pushOutOfBlocks", double.class, double.class, double.class);
-                addMethod(id, baseClass, afterPushOutOfBlocksHookTypes, "afterPushOutOfBlocks", double.class, double.class, double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforePlayStepSoundHookTypes,
+                        "beforePlayStepSound",
+                        int.class,
+                        int.class,
+                        int.class,
+                        Block.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overridePlayStepSoundHookTypes,
+                        "playStepSound",
+                        int.class,
+                        int.class,
+                        int.class,
+                        Block.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterPlayStepSoundHookTypes,
+                        "afterPlayStepSound",
+                        int.class,
+                        int.class,
+                        int.class,
+                        Block.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforePushOutOfBlocksHookTypes,
+                        "beforePushOutOfBlocks",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overridePushOutOfBlocksHookTypes,
+                        "pushOutOfBlocks",
+                        double.class,
+                        double.class,
+                        double.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterPushOutOfBlocksHookTypes,
+                        "afterPushOutOfBlocks",
+                        double.class,
+                        double.class,
+                        double.class);
                 addMethod(id, baseClass, beforeRayTraceHookTypes, "beforeRayTrace", double.class, float.class);
                 addMethod(id, baseClass, overrideRayTraceHookTypes, "rayTrace", double.class, float.class);
                 addMethod(id, baseClass, afterRayTraceHookTypes, "afterRayTrace", double.class, float.class);
-                addMethod(id, baseClass, beforeReadEntityFromNBTHookTypes, "beforeReadEntityFromNBT", NBTTagCompound.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeReadEntityFromNBTHookTypes,
+                        "beforeReadEntityFromNBT",
+                        NBTTagCompound.class);
                 addMethod(id, baseClass, overrideReadEntityFromNBTHookTypes, "readEntityFromNBT", NBTTagCompound.class);
-                addMethod(id, baseClass, afterReadEntityFromNBTHookTypes, "afterReadEntityFromNBT", NBTTagCompound.class);
+                addMethod(
+                        id, baseClass, afterReadEntityFromNBTHookTypes, "afterReadEntityFromNBT", NBTTagCompound.class);
                 addMethod(id, baseClass, beforeRespawnPlayerHookTypes, "beforeRespawnPlayer");
                 addMethod(id, baseClass, overrideRespawnPlayerHookTypes, "respawnPlayer");
                 addMethod(id, baseClass, afterRespawnPlayerHookTypes, "afterRespawnPlayer");
@@ -1686,18 +2807,60 @@ public final class ClientPlayerAPI {
                 addMethod(id, baseClass, beforeSetPlayerSPHealthHookTypes, "beforeSetPlayerSPHealth", float.class);
                 addMethod(id, baseClass, overrideSetPlayerSPHealthHookTypes, "setPlayerSPHealth", float.class);
                 addMethod(id, baseClass, afterSetPlayerSPHealthHookTypes, "afterSetPlayerSPHealth", float.class);
-                addMethod(id, baseClass, beforeSetPositionAndRotationHookTypes, "beforeSetPositionAndRotation", double.class, double.class, double.class, float.class, float.class);
-                addMethod(id, baseClass, overrideSetPositionAndRotationHookTypes, "setPositionAndRotation", double.class, double.class, double.class, float.class, float.class);
-                addMethod(id, baseClass, afterSetPositionAndRotationHookTypes, "afterSetPositionAndRotation", double.class, double.class, double.class, float.class, float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeSetPositionAndRotationHookTypes,
+                        "beforeSetPositionAndRotation",
+                        double.class,
+                        double.class,
+                        double.class,
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideSetPositionAndRotationHookTypes,
+                        "setPositionAndRotation",
+                        double.class,
+                        double.class,
+                        double.class,
+                        float.class,
+                        float.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterSetPositionAndRotationHookTypes,
+                        "afterSetPositionAndRotation",
+                        double.class,
+                        double.class,
+                        double.class,
+                        float.class,
+                        float.class);
                 addMethod(id, baseClass, beforeSetSneakingHookTypes, "beforeSetSneaking", boolean.class);
                 addMethod(id, baseClass, overrideSetSneakingHookTypes, "setSneaking", boolean.class);
                 addMethod(id, baseClass, afterSetSneakingHookTypes, "afterSetSneaking", boolean.class);
                 addMethod(id, baseClass, beforeSetSprintingHookTypes, "beforeSetSprinting", boolean.class);
                 addMethod(id, baseClass, overrideSetSprintingHookTypes, "setSprinting", boolean.class);
                 addMethod(id, baseClass, afterSetSprintingHookTypes, "afterSetSprinting", boolean.class);
-                addMethod(id, baseClass, beforeSleepInBedAtHookTypes, "beforeSleepInBedAt", int.class, int.class, int.class);
-                addMethod(id, baseClass, overrideSleepInBedAtHookTypes, "sleepInBedAt", int.class, int.class, int.class);
-                addMethod(id, baseClass, afterSleepInBedAtHookTypes, "afterSleepInBedAt", int.class, int.class, int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeSleepInBedAtHookTypes,
+                        "beforeSleepInBedAt",
+                        int.class,
+                        int.class,
+                        int.class);
+                addMethod(
+                        id, baseClass, overrideSleepInBedAtHookTypes, "sleepInBedAt", int.class, int.class, int.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterSleepInBedAtHookTypes,
+                        "afterSleepInBedAt",
+                        int.class,
+                        int.class,
+                        int.class);
                 addMethod(id, baseClass, beforeSwingItemHookTypes, "beforeSwingItem");
                 addMethod(id, baseClass, overrideSwingItemHookTypes, "swingItem");
                 addMethod(id, baseClass, afterSwingItemHookTypes, "afterSwingItem");
@@ -1707,22 +2870,44 @@ public final class ClientPlayerAPI {
                 addMethod(id, baseClass, beforeUpdateRiddenHookTypes, "beforeUpdateRidden");
                 addMethod(id, baseClass, overrideUpdateRiddenHookTypes, "updateRidden");
                 addMethod(id, baseClass, afterUpdateRiddenHookTypes, "afterUpdateRidden");
-                addMethod(id, baseClass, beforeWakeUpPlayerHookTypes, "beforeWakeUpPlayer", boolean.class, boolean.class, boolean.class);
-                addMethod(id, baseClass, overrideWakeUpPlayerHookTypes, "wakeUpPlayer", boolean.class, boolean.class, boolean.class);
-                addMethod(id, baseClass, afterWakeUpPlayerHookTypes, "afterWakeUpPlayer", boolean.class, boolean.class, boolean.class);
-                addMethod(id, baseClass, beforeWriteEntityToNBTHookTypes, "beforeWriteEntityToNBT", NBTTagCompound.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        beforeWakeUpPlayerHookTypes,
+                        "beforeWakeUpPlayer",
+                        boolean.class,
+                        boolean.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        overrideWakeUpPlayerHookTypes,
+                        "wakeUpPlayer",
+                        boolean.class,
+                        boolean.class,
+                        boolean.class);
+                addMethod(
+                        id,
+                        baseClass,
+                        afterWakeUpPlayerHookTypes,
+                        "afterWakeUpPlayer",
+                        boolean.class,
+                        boolean.class,
+                        boolean.class);
+                addMethod(
+                        id, baseClass, beforeWriteEntityToNBTHookTypes, "beforeWriteEntityToNBT", NBTTagCompound.class);
                 addMethod(id, baseClass, overrideWriteEntityToNBTHookTypes, "writeEntityToNBT", NBTTagCompound.class);
                 addMethod(id, baseClass, afterWriteEntityToNBTHookTypes, "afterWriteEntityToNBT", NBTTagCompound.class);
-                
+
                 addDynamicMethods(id, baseClass);
-                
+
                 addDynamicKeys(id, baseClass, beforeDynamicHookMethods, beforeDynamicHookTypes);
                 addDynamicKeys(id, baseClass, overrideDynamicHookMethods, overrideDynamicHookTypes);
                 addDynamicKeys(id, baseClass, afterDynamicHookMethods, afterDynamicHookTypes);
-                
+
                 initialize();
-                
-                for(IClientPlayerAPI instance : getAllInstancesList()) {
+
+                for (IClientPlayerAPI instance : getAllInstancesList()) {
                     instance.getClientPlayerAPI().attachClientPlayerBase(id);
                 }
 
@@ -1741,7 +2926,7 @@ public final class ClientPlayerAPI {
             if (constructor == null) {
                 return false;
             } else {
-                for(IClientPlayerAPI instance : getAllInstancesList()) {
+                for (IClientPlayerAPI instance : getAllInstancesList()) {
                     instance.getClientPlayerAPI().detachClientPlayerBase(id);
                 }
 
@@ -2378,13 +3563,13 @@ public final class ClientPlayerAPI {
                 overrideWriteEntityToNBTHookTypes.remove(id);
                 afterWriteEntityToNBTHookTypes.remove(id);
 
-                for(IClientPlayerAPI instance : getAllInstancesList()) {
+                for (IClientPlayerAPI instance : getAllInstancesList()) {
                     instance.getClientPlayerAPI().updateClientPlayerBases();
                 }
 
                 Iterator<String> iterator = keysToVirtualIds.keySet().iterator();
 
-                while(iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     String key = iterator.next();
                     if (keysToVirtualIds.get(key).equals(id)) {
                         keysToVirtualIds.remove(key);
@@ -2395,7 +3580,7 @@ public final class ClientPlayerAPI {
                 Class<?> type = constructor.getDeclaringClass();
                 iterator = allBaseConstructors.keySet().iterator();
 
-                while(iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     String otherId = iterator.next();
                     Class<?> otherType = allBaseConstructors.get(otherId).getDeclaringClass();
                     if (!otherId.equals(id) && otherType.equals(type)) {
@@ -2415,16 +3600,16 @@ public final class ClientPlayerAPI {
                 removeDynamicHookTypes(id, beforeDynamicHookTypes);
                 removeDynamicHookTypes(id, overrideDynamicHookTypes);
                 removeDynamicHookTypes(id, afterDynamicHookTypes);
-                
+
                 allBaseBeforeDynamicSuperiors.remove(id);
                 allBaseBeforeDynamicInferiors.remove(id);
                 allBaseOverrideDynamicSuperiors.remove(id);
                 allBaseOverrideDynamicInferiors.remove(id);
                 allBaseAfterDynamicSuperiors.remove(id);
                 allBaseAfterDynamicInferiors.remove(id);
-                
+
                 log("ClientPlayerAPI: unregistered id '" + id + "'");
-                
+
                 return true;
             }
         }
@@ -2435,7 +3620,6 @@ public final class ClientPlayerAPI {
         for (String s : map.keySet()) {
             map.get(s).remove(id);
         }
-
     }
 
     public static Set<String> getRegisteredIds() {
@@ -2446,17 +3630,17 @@ public final class ClientPlayerAPI {
         if (values != null && values.length > 0) {
             map.put(id, values);
         }
-
     }
 
-    private static void addDynamicSorting(String id, Map<String, Map<String, String[]>> map, Map<String, String[]> values) {
+    private static void addDynamicSorting(
+            String id, Map<String, Map<String, String[]>> map, Map<String, String[]> values) {
         if (values != null && values.size() > 0) {
             map.put(id, values);
         }
-
     }
 
-    private static boolean addMethod(String id, Class<?> baseClass, List<String> list, String methodName, Class<?>... _parameterTypes) {
+    private static boolean addMethod(
+            String id, Class<?> baseClass, List<String> list, String methodName, Class<?>... _parameterTypes) {
         try {
             Method method = baseClass.getMethod(methodName, _parameterTypes);
             boolean isOverridden = method.getDeclaringClass() != ClientPlayerBase.class;
@@ -2466,7 +3650,8 @@ public final class ClientPlayerAPI {
 
             return isOverridden;
         } catch (Exception e) {
-            throw new RuntimeException("Can not reflect method '" + methodName + "' of class '" + baseClass.getName() + "'", e);
+            throw new RuntimeException(
+                    "Can not reflect method '" + methodName + "' of class '" + baseClass.getName() + "'", e);
         }
     }
 
@@ -2492,7 +3677,8 @@ public final class ClientPlayerAPI {
                             if (name.substring(0, 7).equalsIgnoreCase("virtual")) {
                                 virtual = true;
                                 name = name.substring(7);
-                            } else if (name.length() >= 8 && name.substring(0, 8).equalsIgnoreCase("override")) {
+                            } else if (name.length() >= 8
+                                    && name.substring(0, 8).equalsIgnoreCase("override")) {
                                 name = name.substring(8);
                                 override = true;
                             } else if (name.substring(0, 6).equalsIgnoreCase("before")) {
@@ -2507,7 +3693,7 @@ public final class ClientPlayerAPI {
                                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
                             }
 
-                            while(name.charAt(0) == '_') {
+                            while (name.charAt(0) == '_') {
                                 name = name.substring(1);
                             }
 
@@ -2546,21 +3732,25 @@ public final class ClientPlayerAPI {
             if (afters != null) {
                 afterDynamicHookMethods.put(baseClass, afters);
             }
-
         }
     }
 
-    private static void addDynamicKeys(String id, Class<?> baseClass, Map<Class<?>, Map<String, Method>> dynamicHookMethods, Map<String, List<String>> dynamicHookTypes) {
+    private static void addDynamicKeys(
+            String id,
+            Class<?> baseClass,
+            Map<Class<?>, Map<String, Method>> dynamicHookMethods,
+            Map<String, List<String>> dynamicHookTypes) {
         Map<String, Method> methods = dynamicHookMethods.get(baseClass);
         if (methods != null && methods.size() != 0) {
             String key;
-            for(Iterator<String> keys = methods.keySet().iterator(); keys.hasNext(); dynamicHookTypes.get(key).add(id)) {
+            for (Iterator<String> keys = methods.keySet().iterator();
+                    keys.hasNext();
+                    dynamicHookTypes.get(key).add(id)) {
                 key = keys.next();
                 if (!dynamicHookTypes.containsKey(key)) {
                     dynamicHookTypes.put(key, new ArrayList<>(1));
                 }
             }
-
         }
     }
 
@@ -2586,225 +3776,1011 @@ public final class ClientPlayerAPI {
     }
 
     private static void initialize() {
-        sortBases(beforeLocalConstructingHookTypes, allBaseBeforeLocalConstructingSuperiors, allBaseBeforeLocalConstructingInferiors, "beforeLocalConstructing");
-        sortBases(afterLocalConstructingHookTypes, allBaseAfterLocalConstructingSuperiors, allBaseAfterLocalConstructingInferiors, "afterLocalConstructing");
+        sortBases(
+                beforeLocalConstructingHookTypes,
+                allBaseBeforeLocalConstructingSuperiors,
+                allBaseBeforeLocalConstructingInferiors,
+                "beforeLocalConstructing");
+        sortBases(
+                afterLocalConstructingHookTypes,
+                allBaseAfterLocalConstructingSuperiors,
+                allBaseAfterLocalConstructingInferiors,
+                "afterLocalConstructing");
 
         for (String key : keys) {
             sortDynamicBases(beforeDynamicHookTypes, allBaseBeforeDynamicSuperiors, allBaseBeforeDynamicInferiors, key);
-            sortDynamicBases(overrideDynamicHookTypes, allBaseOverrideDynamicSuperiors, allBaseOverrideDynamicInferiors, key);
+            sortDynamicBases(
+                    overrideDynamicHookTypes, allBaseOverrideDynamicSuperiors, allBaseOverrideDynamicInferiors, key);
             sortDynamicBases(afterDynamicHookTypes, allBaseAfterDynamicSuperiors, allBaseAfterDynamicInferiors, key);
         }
 
-        sortBases(beforeAddExhaustionHookTypes, allBaseBeforeAddExhaustionSuperiors, allBaseBeforeAddExhaustionInferiors, "beforeAddExhaustion");
-        sortBases(overrideAddExhaustionHookTypes, allBaseOverrideAddExhaustionSuperiors, allBaseOverrideAddExhaustionInferiors, "overrideAddExhaustion");
-        sortBases(afterAddExhaustionHookTypes, allBaseAfterAddExhaustionSuperiors, allBaseAfterAddExhaustionInferiors, "afterAddExhaustion");
-        sortBases(beforeAddMovementStatHookTypes, allBaseBeforeAddMovementStatSuperiors, allBaseBeforeAddMovementStatInferiors, "beforeAddMovementStat");
-        sortBases(overrideAddMovementStatHookTypes, allBaseOverrideAddMovementStatSuperiors, allBaseOverrideAddMovementStatInferiors, "overrideAddMovementStat");
-        sortBases(afterAddMovementStatHookTypes, allBaseAfterAddMovementStatSuperiors, allBaseAfterAddMovementStatInferiors, "afterAddMovementStat");
-        sortBases(beforeAddStatHookTypes, allBaseBeforeAddStatSuperiors, allBaseBeforeAddStatInferiors, "beforeAddStat");
-        sortBases(overrideAddStatHookTypes, allBaseOverrideAddStatSuperiors, allBaseOverrideAddStatInferiors, "overrideAddStat");
+        sortBases(
+                beforeAddExhaustionHookTypes,
+                allBaseBeforeAddExhaustionSuperiors,
+                allBaseBeforeAddExhaustionInferiors,
+                "beforeAddExhaustion");
+        sortBases(
+                overrideAddExhaustionHookTypes,
+                allBaseOverrideAddExhaustionSuperiors,
+                allBaseOverrideAddExhaustionInferiors,
+                "overrideAddExhaustion");
+        sortBases(
+                afterAddExhaustionHookTypes,
+                allBaseAfterAddExhaustionSuperiors,
+                allBaseAfterAddExhaustionInferiors,
+                "afterAddExhaustion");
+        sortBases(
+                beforeAddMovementStatHookTypes,
+                allBaseBeforeAddMovementStatSuperiors,
+                allBaseBeforeAddMovementStatInferiors,
+                "beforeAddMovementStat");
+        sortBases(
+                overrideAddMovementStatHookTypes,
+                allBaseOverrideAddMovementStatSuperiors,
+                allBaseOverrideAddMovementStatInferiors,
+                "overrideAddMovementStat");
+        sortBases(
+                afterAddMovementStatHookTypes,
+                allBaseAfterAddMovementStatSuperiors,
+                allBaseAfterAddMovementStatInferiors,
+                "afterAddMovementStat");
+        sortBases(
+                beforeAddStatHookTypes, allBaseBeforeAddStatSuperiors, allBaseBeforeAddStatInferiors, "beforeAddStat");
+        sortBases(
+                overrideAddStatHookTypes,
+                allBaseOverrideAddStatSuperiors,
+                allBaseOverrideAddStatInferiors,
+                "overrideAddStat");
         sortBases(afterAddStatHookTypes, allBaseAfterAddStatSuperiors, allBaseAfterAddStatInferiors, "afterAddStat");
-        sortBases(beforeAttackEntityFromHookTypes, allBaseBeforeAttackEntityFromSuperiors, allBaseBeforeAttackEntityFromInferiors, "beforeAttackEntityFrom");
-        sortBases(overrideAttackEntityFromHookTypes, allBaseOverrideAttackEntityFromSuperiors, allBaseOverrideAttackEntityFromInferiors, "overrideAttackEntityFrom");
-        sortBases(afterAttackEntityFromHookTypes, allBaseAfterAttackEntityFromSuperiors, allBaseAfterAttackEntityFromInferiors, "afterAttackEntityFrom");
-        sortBases(beforeAttackTargetEntityWithCurrentItemHookTypes, allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors, allBaseBeforeAttackTargetEntityWithCurrentItemInferiors, "beforeAttackTargetEntityWithCurrentItem");
-        sortBases(overrideAttackTargetEntityWithCurrentItemHookTypes, allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors, allBaseOverrideAttackTargetEntityWithCurrentItemInferiors, "overrideAttackTargetEntityWithCurrentItem");
-        sortBases(afterAttackTargetEntityWithCurrentItemHookTypes, allBaseAfterAttackTargetEntityWithCurrentItemSuperiors, allBaseAfterAttackTargetEntityWithCurrentItemInferiors, "afterAttackTargetEntityWithCurrentItem");
-        sortBases(beforeCanBreatheUnderwaterHookTypes, allBaseBeforeCanBreatheUnderwaterSuperiors, allBaseBeforeCanBreatheUnderwaterInferiors, "beforeCanBreatheUnderwater");
-        sortBases(overrideCanBreatheUnderwaterHookTypes, allBaseOverrideCanBreatheUnderwaterSuperiors, allBaseOverrideCanBreatheUnderwaterInferiors, "overrideCanBreatheUnderwater");
-        sortBases(afterCanBreatheUnderwaterHookTypes, allBaseAfterCanBreatheUnderwaterSuperiors, allBaseAfterCanBreatheUnderwaterInferiors, "afterCanBreatheUnderwater");
-        sortBases(beforeCanHarvestBlockHookTypes, allBaseBeforeCanHarvestBlockSuperiors, allBaseBeforeCanHarvestBlockInferiors, "beforeCanHarvestBlock");
-        sortBases(overrideCanHarvestBlockHookTypes, allBaseOverrideCanHarvestBlockSuperiors, allBaseOverrideCanHarvestBlockInferiors, "overrideCanHarvestBlock");
-        sortBases(afterCanHarvestBlockHookTypes, allBaseAfterCanHarvestBlockSuperiors, allBaseAfterCanHarvestBlockInferiors, "afterCanHarvestBlock");
-        sortBases(beforeCanPlayerEditHookTypes, allBaseBeforeCanPlayerEditSuperiors, allBaseBeforeCanPlayerEditInferiors, "beforeCanPlayerEdit");
-        sortBases(overrideCanPlayerEditHookTypes, allBaseOverrideCanPlayerEditSuperiors, allBaseOverrideCanPlayerEditInferiors, "overrideCanPlayerEdit");
-        sortBases(afterCanPlayerEditHookTypes, allBaseAfterCanPlayerEditSuperiors, allBaseAfterCanPlayerEditInferiors, "afterCanPlayerEdit");
-        sortBases(beforeCanTriggerWalkingHookTypes, allBaseBeforeCanTriggerWalkingSuperiors, allBaseBeforeCanTriggerWalkingInferiors, "beforeCanTriggerWalking");
-        sortBases(overrideCanTriggerWalkingHookTypes, allBaseOverrideCanTriggerWalkingSuperiors, allBaseOverrideCanTriggerWalkingInferiors, "overrideCanTriggerWalking");
-        sortBases(afterCanTriggerWalkingHookTypes, allBaseAfterCanTriggerWalkingSuperiors, allBaseAfterCanTriggerWalkingInferiors, "afterCanTriggerWalking");
-        sortBases(beforeCloseScreenHookTypes, allBaseBeforeCloseScreenSuperiors, allBaseBeforeCloseScreenInferiors, "beforeCloseScreen");
-        sortBases(overrideCloseScreenHookTypes, allBaseOverrideCloseScreenSuperiors, allBaseOverrideCloseScreenInferiors, "overrideCloseScreen");
-        sortBases(afterCloseScreenHookTypes, allBaseAfterCloseScreenSuperiors, allBaseAfterCloseScreenInferiors, "afterCloseScreen");
-        sortBases(beforeDamageEntityHookTypes, allBaseBeforeDamageEntitySuperiors, allBaseBeforeDamageEntityInferiors, "beforeDamageEntity");
-        sortBases(overrideDamageEntityHookTypes, allBaseOverrideDamageEntitySuperiors, allBaseOverrideDamageEntityInferiors, "overrideDamageEntity");
-        sortBases(afterDamageEntityHookTypes, allBaseAfterDamageEntitySuperiors, allBaseAfterDamageEntityInferiors, "afterDamageEntity");
-        sortBases(beforeDisplayGUIBrewingStandHookTypes, allBaseBeforeDisplayGUIBrewingStandSuperiors, allBaseBeforeDisplayGUIBrewingStandInferiors, "beforeDisplayGUIBrewingStand");
-        sortBases(overrideDisplayGUIBrewingStandHookTypes, allBaseOverrideDisplayGUIBrewingStandSuperiors, allBaseOverrideDisplayGUIBrewingStandInferiors, "overrideDisplayGUIBrewingStand");
-        sortBases(afterDisplayGUIBrewingStandHookTypes, allBaseAfterDisplayGUIBrewingStandSuperiors, allBaseAfterDisplayGUIBrewingStandInferiors, "afterDisplayGUIBrewingStand");
-        sortBases(beforeDisplayGUIChestHookTypes, allBaseBeforeDisplayGUIChestSuperiors, allBaseBeforeDisplayGUIChestInferiors, "beforeDisplayGUIChest");
-        sortBases(overrideDisplayGUIChestHookTypes, allBaseOverrideDisplayGUIChestSuperiors, allBaseOverrideDisplayGUIChestInferiors, "overrideDisplayGUIChest");
-        sortBases(afterDisplayGUIChestHookTypes, allBaseAfterDisplayGUIChestSuperiors, allBaseAfterDisplayGUIChestInferiors, "afterDisplayGUIChest");
-        sortBases(beforeDisplayGUIDispenserHookTypes, allBaseBeforeDisplayGUIDispenserSuperiors, allBaseBeforeDisplayGUIDispenserInferiors, "beforeDisplayGUIDispenser");
-        sortBases(overrideDisplayGUIDispenserHookTypes, allBaseOverrideDisplayGUIDispenserSuperiors, allBaseOverrideDisplayGUIDispenserInferiors, "overrideDisplayGUIDispenser");
-        sortBases(afterDisplayGUIDispenserHookTypes, allBaseAfterDisplayGUIDispenserSuperiors, allBaseAfterDisplayGUIDispenserInferiors, "afterDisplayGUIDispenser");
-        sortBases(beforeDisplayGUIEditSignHookTypes, allBaseBeforeDisplayGUIEditSignSuperiors, allBaseBeforeDisplayGUIEditSignInferiors, "beforeDisplayGUIEditSign");
-        sortBases(overrideDisplayGUIEditSignHookTypes, allBaseOverrideDisplayGUIEditSignSuperiors, allBaseOverrideDisplayGUIEditSignInferiors, "overrideDisplayGUIEditSign");
-        sortBases(afterDisplayGUIEditSignHookTypes, allBaseAfterDisplayGUIEditSignSuperiors, allBaseAfterDisplayGUIEditSignInferiors, "afterDisplayGUIEditSign");
-        sortBases(beforeDisplayGUIEnchantmentHookTypes, allBaseBeforeDisplayGUIEnchantmentSuperiors, allBaseBeforeDisplayGUIEnchantmentInferiors, "beforeDisplayGUIEnchantment");
-        sortBases(overrideDisplayGUIEnchantmentHookTypes, allBaseOverrideDisplayGUIEnchantmentSuperiors, allBaseOverrideDisplayGUIEnchantmentInferiors, "overrideDisplayGUIEnchantment");
-        sortBases(afterDisplayGUIEnchantmentHookTypes, allBaseAfterDisplayGUIEnchantmentSuperiors, allBaseAfterDisplayGUIEnchantmentInferiors, "afterDisplayGUIEnchantment");
-        sortBases(beforeDisplayGUIFurnaceHookTypes, allBaseBeforeDisplayGUIFurnaceSuperiors, allBaseBeforeDisplayGUIFurnaceInferiors, "beforeDisplayGUIFurnace");
-        sortBases(overrideDisplayGUIFurnaceHookTypes, allBaseOverrideDisplayGUIFurnaceSuperiors, allBaseOverrideDisplayGUIFurnaceInferiors, "overrideDisplayGUIFurnace");
-        sortBases(afterDisplayGUIFurnaceHookTypes, allBaseAfterDisplayGUIFurnaceSuperiors, allBaseAfterDisplayGUIFurnaceInferiors, "afterDisplayGUIFurnace");
-        sortBases(beforeDisplayGUIWorkbenchHookTypes, allBaseBeforeDisplayGUIWorkbenchSuperiors, allBaseBeforeDisplayGUIWorkbenchInferiors, "beforeDisplayGUIWorkbench");
-        sortBases(overrideDisplayGUIWorkbenchHookTypes, allBaseOverrideDisplayGUIWorkbenchSuperiors, allBaseOverrideDisplayGUIWorkbenchInferiors, "overrideDisplayGUIWorkbench");
-        sortBases(afterDisplayGUIWorkbenchHookTypes, allBaseAfterDisplayGUIWorkbenchSuperiors, allBaseAfterDisplayGUIWorkbenchInferiors, "afterDisplayGUIWorkbench");
-        sortBases(beforeDropOneItemHookTypes, allBaseBeforeDropOneItemSuperiors, allBaseBeforeDropOneItemInferiors, "beforeDropOneItem");
-        sortBases(overrideDropOneItemHookTypes, allBaseOverrideDropOneItemSuperiors, allBaseOverrideDropOneItemInferiors, "overrideDropOneItem");
-        sortBases(afterDropOneItemHookTypes, allBaseAfterDropOneItemSuperiors, allBaseAfterDropOneItemInferiors, "afterDropOneItem");
-        sortBases(beforeDropPlayerItemHookTypes, allBaseBeforeDropPlayerItemSuperiors, allBaseBeforeDropPlayerItemInferiors, "beforeDropPlayerItem");
-        sortBases(overrideDropPlayerItemHookTypes, allBaseOverrideDropPlayerItemSuperiors, allBaseOverrideDropPlayerItemInferiors, "overrideDropPlayerItem");
-        sortBases(afterDropPlayerItemHookTypes, allBaseAfterDropPlayerItemSuperiors, allBaseAfterDropPlayerItemInferiors, "afterDropPlayerItem");
-        sortBases(beforeDropPlayerItemWithRandomChoiceHookTypes, allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors, allBaseBeforeDropPlayerItemWithRandomChoiceInferiors, "beforeDropPlayerItemWithRandomChoice");
-        sortBases(overrideDropPlayerItemWithRandomChoiceHookTypes, allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors, allBaseOverrideDropPlayerItemWithRandomChoiceInferiors, "overrideDropPlayerItemWithRandomChoice");
-        sortBases(afterDropPlayerItemWithRandomChoiceHookTypes, allBaseAfterDropPlayerItemWithRandomChoiceSuperiors, allBaseAfterDropPlayerItemWithRandomChoiceInferiors, "afterDropPlayerItemWithRandomChoice");
+        sortBases(
+                beforeAttackEntityFromHookTypes,
+                allBaseBeforeAttackEntityFromSuperiors,
+                allBaseBeforeAttackEntityFromInferiors,
+                "beforeAttackEntityFrom");
+        sortBases(
+                overrideAttackEntityFromHookTypes,
+                allBaseOverrideAttackEntityFromSuperiors,
+                allBaseOverrideAttackEntityFromInferiors,
+                "overrideAttackEntityFrom");
+        sortBases(
+                afterAttackEntityFromHookTypes,
+                allBaseAfterAttackEntityFromSuperiors,
+                allBaseAfterAttackEntityFromInferiors,
+                "afterAttackEntityFrom");
+        sortBases(
+                beforeAttackTargetEntityWithCurrentItemHookTypes,
+                allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors,
+                allBaseBeforeAttackTargetEntityWithCurrentItemInferiors,
+                "beforeAttackTargetEntityWithCurrentItem");
+        sortBases(
+                overrideAttackTargetEntityWithCurrentItemHookTypes,
+                allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors,
+                allBaseOverrideAttackTargetEntityWithCurrentItemInferiors,
+                "overrideAttackTargetEntityWithCurrentItem");
+        sortBases(
+                afterAttackTargetEntityWithCurrentItemHookTypes,
+                allBaseAfterAttackTargetEntityWithCurrentItemSuperiors,
+                allBaseAfterAttackTargetEntityWithCurrentItemInferiors,
+                "afterAttackTargetEntityWithCurrentItem");
+        sortBases(
+                beforeCanBreatheUnderwaterHookTypes,
+                allBaseBeforeCanBreatheUnderwaterSuperiors,
+                allBaseBeforeCanBreatheUnderwaterInferiors,
+                "beforeCanBreatheUnderwater");
+        sortBases(
+                overrideCanBreatheUnderwaterHookTypes,
+                allBaseOverrideCanBreatheUnderwaterSuperiors,
+                allBaseOverrideCanBreatheUnderwaterInferiors,
+                "overrideCanBreatheUnderwater");
+        sortBases(
+                afterCanBreatheUnderwaterHookTypes,
+                allBaseAfterCanBreatheUnderwaterSuperiors,
+                allBaseAfterCanBreatheUnderwaterInferiors,
+                "afterCanBreatheUnderwater");
+        sortBases(
+                beforeCanHarvestBlockHookTypes,
+                allBaseBeforeCanHarvestBlockSuperiors,
+                allBaseBeforeCanHarvestBlockInferiors,
+                "beforeCanHarvestBlock");
+        sortBases(
+                overrideCanHarvestBlockHookTypes,
+                allBaseOverrideCanHarvestBlockSuperiors,
+                allBaseOverrideCanHarvestBlockInferiors,
+                "overrideCanHarvestBlock");
+        sortBases(
+                afterCanHarvestBlockHookTypes,
+                allBaseAfterCanHarvestBlockSuperiors,
+                allBaseAfterCanHarvestBlockInferiors,
+                "afterCanHarvestBlock");
+        sortBases(
+                beforeCanPlayerEditHookTypes,
+                allBaseBeforeCanPlayerEditSuperiors,
+                allBaseBeforeCanPlayerEditInferiors,
+                "beforeCanPlayerEdit");
+        sortBases(
+                overrideCanPlayerEditHookTypes,
+                allBaseOverrideCanPlayerEditSuperiors,
+                allBaseOverrideCanPlayerEditInferiors,
+                "overrideCanPlayerEdit");
+        sortBases(
+                afterCanPlayerEditHookTypes,
+                allBaseAfterCanPlayerEditSuperiors,
+                allBaseAfterCanPlayerEditInferiors,
+                "afterCanPlayerEdit");
+        sortBases(
+                beforeCanTriggerWalkingHookTypes,
+                allBaseBeforeCanTriggerWalkingSuperiors,
+                allBaseBeforeCanTriggerWalkingInferiors,
+                "beforeCanTriggerWalking");
+        sortBases(
+                overrideCanTriggerWalkingHookTypes,
+                allBaseOverrideCanTriggerWalkingSuperiors,
+                allBaseOverrideCanTriggerWalkingInferiors,
+                "overrideCanTriggerWalking");
+        sortBases(
+                afterCanTriggerWalkingHookTypes,
+                allBaseAfterCanTriggerWalkingSuperiors,
+                allBaseAfterCanTriggerWalkingInferiors,
+                "afterCanTriggerWalking");
+        sortBases(
+                beforeCloseScreenHookTypes,
+                allBaseBeforeCloseScreenSuperiors,
+                allBaseBeforeCloseScreenInferiors,
+                "beforeCloseScreen");
+        sortBases(
+                overrideCloseScreenHookTypes,
+                allBaseOverrideCloseScreenSuperiors,
+                allBaseOverrideCloseScreenInferiors,
+                "overrideCloseScreen");
+        sortBases(
+                afterCloseScreenHookTypes,
+                allBaseAfterCloseScreenSuperiors,
+                allBaseAfterCloseScreenInferiors,
+                "afterCloseScreen");
+        sortBases(
+                beforeDamageEntityHookTypes,
+                allBaseBeforeDamageEntitySuperiors,
+                allBaseBeforeDamageEntityInferiors,
+                "beforeDamageEntity");
+        sortBases(
+                overrideDamageEntityHookTypes,
+                allBaseOverrideDamageEntitySuperiors,
+                allBaseOverrideDamageEntityInferiors,
+                "overrideDamageEntity");
+        sortBases(
+                afterDamageEntityHookTypes,
+                allBaseAfterDamageEntitySuperiors,
+                allBaseAfterDamageEntityInferiors,
+                "afterDamageEntity");
+        sortBases(
+                beforeDisplayGUIBrewingStandHookTypes,
+                allBaseBeforeDisplayGUIBrewingStandSuperiors,
+                allBaseBeforeDisplayGUIBrewingStandInferiors,
+                "beforeDisplayGUIBrewingStand");
+        sortBases(
+                overrideDisplayGUIBrewingStandHookTypes,
+                allBaseOverrideDisplayGUIBrewingStandSuperiors,
+                allBaseOverrideDisplayGUIBrewingStandInferiors,
+                "overrideDisplayGUIBrewingStand");
+        sortBases(
+                afterDisplayGUIBrewingStandHookTypes,
+                allBaseAfterDisplayGUIBrewingStandSuperiors,
+                allBaseAfterDisplayGUIBrewingStandInferiors,
+                "afterDisplayGUIBrewingStand");
+        sortBases(
+                beforeDisplayGUIChestHookTypes,
+                allBaseBeforeDisplayGUIChestSuperiors,
+                allBaseBeforeDisplayGUIChestInferiors,
+                "beforeDisplayGUIChest");
+        sortBases(
+                overrideDisplayGUIChestHookTypes,
+                allBaseOverrideDisplayGUIChestSuperiors,
+                allBaseOverrideDisplayGUIChestInferiors,
+                "overrideDisplayGUIChest");
+        sortBases(
+                afterDisplayGUIChestHookTypes,
+                allBaseAfterDisplayGUIChestSuperiors,
+                allBaseAfterDisplayGUIChestInferiors,
+                "afterDisplayGUIChest");
+        sortBases(
+                beforeDisplayGUIDispenserHookTypes,
+                allBaseBeforeDisplayGUIDispenserSuperiors,
+                allBaseBeforeDisplayGUIDispenserInferiors,
+                "beforeDisplayGUIDispenser");
+        sortBases(
+                overrideDisplayGUIDispenserHookTypes,
+                allBaseOverrideDisplayGUIDispenserSuperiors,
+                allBaseOverrideDisplayGUIDispenserInferiors,
+                "overrideDisplayGUIDispenser");
+        sortBases(
+                afterDisplayGUIDispenserHookTypes,
+                allBaseAfterDisplayGUIDispenserSuperiors,
+                allBaseAfterDisplayGUIDispenserInferiors,
+                "afterDisplayGUIDispenser");
+        sortBases(
+                beforeDisplayGUIEditSignHookTypes,
+                allBaseBeforeDisplayGUIEditSignSuperiors,
+                allBaseBeforeDisplayGUIEditSignInferiors,
+                "beforeDisplayGUIEditSign");
+        sortBases(
+                overrideDisplayGUIEditSignHookTypes,
+                allBaseOverrideDisplayGUIEditSignSuperiors,
+                allBaseOverrideDisplayGUIEditSignInferiors,
+                "overrideDisplayGUIEditSign");
+        sortBases(
+                afterDisplayGUIEditSignHookTypes,
+                allBaseAfterDisplayGUIEditSignSuperiors,
+                allBaseAfterDisplayGUIEditSignInferiors,
+                "afterDisplayGUIEditSign");
+        sortBases(
+                beforeDisplayGUIEnchantmentHookTypes,
+                allBaseBeforeDisplayGUIEnchantmentSuperiors,
+                allBaseBeforeDisplayGUIEnchantmentInferiors,
+                "beforeDisplayGUIEnchantment");
+        sortBases(
+                overrideDisplayGUIEnchantmentHookTypes,
+                allBaseOverrideDisplayGUIEnchantmentSuperiors,
+                allBaseOverrideDisplayGUIEnchantmentInferiors,
+                "overrideDisplayGUIEnchantment");
+        sortBases(
+                afterDisplayGUIEnchantmentHookTypes,
+                allBaseAfterDisplayGUIEnchantmentSuperiors,
+                allBaseAfterDisplayGUIEnchantmentInferiors,
+                "afterDisplayGUIEnchantment");
+        sortBases(
+                beforeDisplayGUIFurnaceHookTypes,
+                allBaseBeforeDisplayGUIFurnaceSuperiors,
+                allBaseBeforeDisplayGUIFurnaceInferiors,
+                "beforeDisplayGUIFurnace");
+        sortBases(
+                overrideDisplayGUIFurnaceHookTypes,
+                allBaseOverrideDisplayGUIFurnaceSuperiors,
+                allBaseOverrideDisplayGUIFurnaceInferiors,
+                "overrideDisplayGUIFurnace");
+        sortBases(
+                afterDisplayGUIFurnaceHookTypes,
+                allBaseAfterDisplayGUIFurnaceSuperiors,
+                allBaseAfterDisplayGUIFurnaceInferiors,
+                "afterDisplayGUIFurnace");
+        sortBases(
+                beforeDisplayGUIWorkbenchHookTypes,
+                allBaseBeforeDisplayGUIWorkbenchSuperiors,
+                allBaseBeforeDisplayGUIWorkbenchInferiors,
+                "beforeDisplayGUIWorkbench");
+        sortBases(
+                overrideDisplayGUIWorkbenchHookTypes,
+                allBaseOverrideDisplayGUIWorkbenchSuperiors,
+                allBaseOverrideDisplayGUIWorkbenchInferiors,
+                "overrideDisplayGUIWorkbench");
+        sortBases(
+                afterDisplayGUIWorkbenchHookTypes,
+                allBaseAfterDisplayGUIWorkbenchSuperiors,
+                allBaseAfterDisplayGUIWorkbenchInferiors,
+                "afterDisplayGUIWorkbench");
+        sortBases(
+                beforeDropOneItemHookTypes,
+                allBaseBeforeDropOneItemSuperiors,
+                allBaseBeforeDropOneItemInferiors,
+                "beforeDropOneItem");
+        sortBases(
+                overrideDropOneItemHookTypes,
+                allBaseOverrideDropOneItemSuperiors,
+                allBaseOverrideDropOneItemInferiors,
+                "overrideDropOneItem");
+        sortBases(
+                afterDropOneItemHookTypes,
+                allBaseAfterDropOneItemSuperiors,
+                allBaseAfterDropOneItemInferiors,
+                "afterDropOneItem");
+        sortBases(
+                beforeDropPlayerItemHookTypes,
+                allBaseBeforeDropPlayerItemSuperiors,
+                allBaseBeforeDropPlayerItemInferiors,
+                "beforeDropPlayerItem");
+        sortBases(
+                overrideDropPlayerItemHookTypes,
+                allBaseOverrideDropPlayerItemSuperiors,
+                allBaseOverrideDropPlayerItemInferiors,
+                "overrideDropPlayerItem");
+        sortBases(
+                afterDropPlayerItemHookTypes,
+                allBaseAfterDropPlayerItemSuperiors,
+                allBaseAfterDropPlayerItemInferiors,
+                "afterDropPlayerItem");
+        sortBases(
+                beforeDropPlayerItemWithRandomChoiceHookTypes,
+                allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors,
+                allBaseBeforeDropPlayerItemWithRandomChoiceInferiors,
+                "beforeDropPlayerItemWithRandomChoice");
+        sortBases(
+                overrideDropPlayerItemWithRandomChoiceHookTypes,
+                allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors,
+                allBaseOverrideDropPlayerItemWithRandomChoiceInferiors,
+                "overrideDropPlayerItemWithRandomChoice");
+        sortBases(
+                afterDropPlayerItemWithRandomChoiceHookTypes,
+                allBaseAfterDropPlayerItemWithRandomChoiceSuperiors,
+                allBaseAfterDropPlayerItemWithRandomChoiceInferiors,
+                "afterDropPlayerItemWithRandomChoice");
         sortBases(beforeFallHookTypes, allBaseBeforeFallSuperiors, allBaseBeforeFallInferiors, "beforeFall");
         sortBases(overrideFallHookTypes, allBaseOverrideFallSuperiors, allBaseOverrideFallInferiors, "overrideFall");
         sortBases(afterFallHookTypes, allBaseAfterFallSuperiors, allBaseAfterFallInferiors, "afterFall");
-        sortBases(beforeGetAIMoveSpeedHookTypes, allBaseBeforeGetAIMoveSpeedSuperiors, allBaseBeforeGetAIMoveSpeedInferiors, "beforeGetAIMoveSpeed");
-        sortBases(overrideGetAIMoveSpeedHookTypes, allBaseOverrideGetAIMoveSpeedSuperiors, allBaseOverrideGetAIMoveSpeedInferiors, "overrideGetAIMoveSpeed");
-        sortBases(afterGetAIMoveSpeedHookTypes, allBaseAfterGetAIMoveSpeedSuperiors, allBaseAfterGetAIMoveSpeedInferiors, "afterGetAIMoveSpeed");
-        sortBases(beforeGetBedOrientationInDegreesHookTypes, allBaseBeforeGetBedOrientationInDegreesSuperiors, allBaseBeforeGetBedOrientationInDegreesInferiors, "beforeGetBedOrientationInDegrees");
-        sortBases(overrideGetBedOrientationInDegreesHookTypes, allBaseOverrideGetBedOrientationInDegreesSuperiors, allBaseOverrideGetBedOrientationInDegreesInferiors, "overrideGetBedOrientationInDegrees");
-        sortBases(afterGetBedOrientationInDegreesHookTypes, allBaseAfterGetBedOrientationInDegreesSuperiors, allBaseAfterGetBedOrientationInDegreesInferiors, "afterGetBedOrientationInDegrees");
-        sortBases(beforeGetBrightnessHookTypes, allBaseBeforeGetBrightnessSuperiors, allBaseBeforeGetBrightnessInferiors, "beforeGetBrightness");
-        sortBases(overrideGetBrightnessHookTypes, allBaseOverrideGetBrightnessSuperiors, allBaseOverrideGetBrightnessInferiors, "overrideGetBrightness");
-        sortBases(afterGetBrightnessHookTypes, allBaseAfterGetBrightnessSuperiors, allBaseAfterGetBrightnessInferiors, "afterGetBrightness");
-        sortBases(beforeGetBrightnessForRenderHookTypes, allBaseBeforeGetBrightnessForRenderSuperiors, allBaseBeforeGetBrightnessForRenderInferiors, "beforeGetBrightnessForRender");
-        sortBases(overrideGetBrightnessForRenderHookTypes, allBaseOverrideGetBrightnessForRenderSuperiors, allBaseOverrideGetBrightnessForRenderInferiors, "overrideGetBrightnessForRender");
-        sortBases(afterGetBrightnessForRenderHookTypes, allBaseAfterGetBrightnessForRenderSuperiors, allBaseAfterGetBrightnessForRenderInferiors, "afterGetBrightnessForRender");
-        sortBases(beforeGetCurrentPlayerStrVsBlockHookTypes, allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors, allBaseBeforeGetCurrentPlayerStrVsBlockInferiors, "beforeGetCurrentPlayerStrVsBlock");
-        sortBases(overrideGetCurrentPlayerStrVsBlockHookTypes, allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors, allBaseOverrideGetCurrentPlayerStrVsBlockInferiors, "overrideGetCurrentPlayerStrVsBlock");
-        sortBases(afterGetCurrentPlayerStrVsBlockHookTypes, allBaseAfterGetCurrentPlayerStrVsBlockSuperiors, allBaseAfterGetCurrentPlayerStrVsBlockInferiors, "afterGetCurrentPlayerStrVsBlock");
-        sortBases(beforeGetCurrentPlayerStrVsBlockForgeHookTypes, allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors, allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors, "beforeGetCurrentPlayerStrVsBlockForge");
-        sortBases(overrideGetCurrentPlayerStrVsBlockForgeHookTypes, allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors, allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors, "overrideGetCurrentPlayerStrVsBlockForge");
-        sortBases(afterGetCurrentPlayerStrVsBlockForgeHookTypes, allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors, allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors, "afterGetCurrentPlayerStrVsBlockForge");
-        sortBases(beforeGetDistanceSqHookTypes, allBaseBeforeGetDistanceSqSuperiors, allBaseBeforeGetDistanceSqInferiors, "beforeGetDistanceSq");
-        sortBases(overrideGetDistanceSqHookTypes, allBaseOverrideGetDistanceSqSuperiors, allBaseOverrideGetDistanceSqInferiors, "overrideGetDistanceSq");
-        sortBases(afterGetDistanceSqHookTypes, allBaseAfterGetDistanceSqSuperiors, allBaseAfterGetDistanceSqInferiors, "afterGetDistanceSq");
-        sortBases(beforeGetDistanceSqToEntityHookTypes, allBaseBeforeGetDistanceSqToEntitySuperiors, allBaseBeforeGetDistanceSqToEntityInferiors, "beforeGetDistanceSqToEntity");
-        sortBases(overrideGetDistanceSqToEntityHookTypes, allBaseOverrideGetDistanceSqToEntitySuperiors, allBaseOverrideGetDistanceSqToEntityInferiors, "overrideGetDistanceSqToEntity");
-        sortBases(afterGetDistanceSqToEntityHookTypes, allBaseAfterGetDistanceSqToEntitySuperiors, allBaseAfterGetDistanceSqToEntityInferiors, "afterGetDistanceSqToEntity");
-        sortBases(beforeGetFOVMultiplierHookTypes, allBaseBeforeGetFOVMultiplierSuperiors, allBaseBeforeGetFOVMultiplierInferiors, "beforeGetFOVMultiplier");
-        sortBases(overrideGetFOVMultiplierHookTypes, allBaseOverrideGetFOVMultiplierSuperiors, allBaseOverrideGetFOVMultiplierInferiors, "overrideGetFOVMultiplier");
-        sortBases(afterGetFOVMultiplierHookTypes, allBaseAfterGetFOVMultiplierSuperiors, allBaseAfterGetFOVMultiplierInferiors, "afterGetFOVMultiplier");
-        sortBases(beforeGetHurtSoundHookTypes, allBaseBeforeGetHurtSoundSuperiors, allBaseBeforeGetHurtSoundInferiors, "beforeGetHurtSound");
-        sortBases(overrideGetHurtSoundHookTypes, allBaseOverrideGetHurtSoundSuperiors, allBaseOverrideGetHurtSoundInferiors, "overrideGetHurtSound");
-        sortBases(afterGetHurtSoundHookTypes, allBaseAfterGetHurtSoundSuperiors, allBaseAfterGetHurtSoundInferiors, "afterGetHurtSound");
-        sortBases(beforeGetItemIconHookTypes, allBaseBeforeGetItemIconSuperiors, allBaseBeforeGetItemIconInferiors, "beforeGetItemIcon");
-        sortBases(overrideGetItemIconHookTypes, allBaseOverrideGetItemIconSuperiors, allBaseOverrideGetItemIconInferiors, "overrideGetItemIcon");
-        sortBases(afterGetItemIconHookTypes, allBaseAfterGetItemIconSuperiors, allBaseAfterGetItemIconInferiors, "afterGetItemIcon");
-        sortBases(beforeGetSleepTimerHookTypes, allBaseBeforeGetSleepTimerSuperiors, allBaseBeforeGetSleepTimerInferiors, "beforeGetSleepTimer");
-        sortBases(overrideGetSleepTimerHookTypes, allBaseOverrideGetSleepTimerSuperiors, allBaseOverrideGetSleepTimerInferiors, "overrideGetSleepTimer");
-        sortBases(afterGetSleepTimerHookTypes, allBaseAfterGetSleepTimerSuperiors, allBaseAfterGetSleepTimerInferiors, "afterGetSleepTimer");
-        sortBases(beforeHandleLavaMovementHookTypes, allBaseBeforeHandleLavaMovementSuperiors, allBaseBeforeHandleLavaMovementInferiors, "beforeHandleLavaMovement");
-        sortBases(overrideHandleLavaMovementHookTypes, allBaseOverrideHandleLavaMovementSuperiors, allBaseOverrideHandleLavaMovementInferiors, "overrideHandleLavaMovement");
-        sortBases(afterHandleLavaMovementHookTypes, allBaseAfterHandleLavaMovementSuperiors, allBaseAfterHandleLavaMovementInferiors, "afterHandleLavaMovement");
-        sortBases(beforeHandleWaterMovementHookTypes, allBaseBeforeHandleWaterMovementSuperiors, allBaseBeforeHandleWaterMovementInferiors, "beforeHandleWaterMovement");
-        sortBases(overrideHandleWaterMovementHookTypes, allBaseOverrideHandleWaterMovementSuperiors, allBaseOverrideHandleWaterMovementInferiors, "overrideHandleWaterMovement");
-        sortBases(afterHandleWaterMovementHookTypes, allBaseAfterHandleWaterMovementSuperiors, allBaseAfterHandleWaterMovementInferiors, "afterHandleWaterMovement");
+        sortBases(
+                beforeGetAIMoveSpeedHookTypes,
+                allBaseBeforeGetAIMoveSpeedSuperiors,
+                allBaseBeforeGetAIMoveSpeedInferiors,
+                "beforeGetAIMoveSpeed");
+        sortBases(
+                overrideGetAIMoveSpeedHookTypes,
+                allBaseOverrideGetAIMoveSpeedSuperiors,
+                allBaseOverrideGetAIMoveSpeedInferiors,
+                "overrideGetAIMoveSpeed");
+        sortBases(
+                afterGetAIMoveSpeedHookTypes,
+                allBaseAfterGetAIMoveSpeedSuperiors,
+                allBaseAfterGetAIMoveSpeedInferiors,
+                "afterGetAIMoveSpeed");
+        sortBases(
+                beforeGetBedOrientationInDegreesHookTypes,
+                allBaseBeforeGetBedOrientationInDegreesSuperiors,
+                allBaseBeforeGetBedOrientationInDegreesInferiors,
+                "beforeGetBedOrientationInDegrees");
+        sortBases(
+                overrideGetBedOrientationInDegreesHookTypes,
+                allBaseOverrideGetBedOrientationInDegreesSuperiors,
+                allBaseOverrideGetBedOrientationInDegreesInferiors,
+                "overrideGetBedOrientationInDegrees");
+        sortBases(
+                afterGetBedOrientationInDegreesHookTypes,
+                allBaseAfterGetBedOrientationInDegreesSuperiors,
+                allBaseAfterGetBedOrientationInDegreesInferiors,
+                "afterGetBedOrientationInDegrees");
+        sortBases(
+                beforeGetBrightnessHookTypes,
+                allBaseBeforeGetBrightnessSuperiors,
+                allBaseBeforeGetBrightnessInferiors,
+                "beforeGetBrightness");
+        sortBases(
+                overrideGetBrightnessHookTypes,
+                allBaseOverrideGetBrightnessSuperiors,
+                allBaseOverrideGetBrightnessInferiors,
+                "overrideGetBrightness");
+        sortBases(
+                afterGetBrightnessHookTypes,
+                allBaseAfterGetBrightnessSuperiors,
+                allBaseAfterGetBrightnessInferiors,
+                "afterGetBrightness");
+        sortBases(
+                beforeGetBrightnessForRenderHookTypes,
+                allBaseBeforeGetBrightnessForRenderSuperiors,
+                allBaseBeforeGetBrightnessForRenderInferiors,
+                "beforeGetBrightnessForRender");
+        sortBases(
+                overrideGetBrightnessForRenderHookTypes,
+                allBaseOverrideGetBrightnessForRenderSuperiors,
+                allBaseOverrideGetBrightnessForRenderInferiors,
+                "overrideGetBrightnessForRender");
+        sortBases(
+                afterGetBrightnessForRenderHookTypes,
+                allBaseAfterGetBrightnessForRenderSuperiors,
+                allBaseAfterGetBrightnessForRenderInferiors,
+                "afterGetBrightnessForRender");
+        sortBases(
+                beforeGetCurrentPlayerStrVsBlockHookTypes,
+                allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors,
+                allBaseBeforeGetCurrentPlayerStrVsBlockInferiors,
+                "beforeGetCurrentPlayerStrVsBlock");
+        sortBases(
+                overrideGetCurrentPlayerStrVsBlockHookTypes,
+                allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors,
+                allBaseOverrideGetCurrentPlayerStrVsBlockInferiors,
+                "overrideGetCurrentPlayerStrVsBlock");
+        sortBases(
+                afterGetCurrentPlayerStrVsBlockHookTypes,
+                allBaseAfterGetCurrentPlayerStrVsBlockSuperiors,
+                allBaseAfterGetCurrentPlayerStrVsBlockInferiors,
+                "afterGetCurrentPlayerStrVsBlock");
+        sortBases(
+                beforeGetCurrentPlayerStrVsBlockForgeHookTypes,
+                allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors,
+                allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors,
+                "beforeGetCurrentPlayerStrVsBlockForge");
+        sortBases(
+                overrideGetCurrentPlayerStrVsBlockForgeHookTypes,
+                allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors,
+                allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors,
+                "overrideGetCurrentPlayerStrVsBlockForge");
+        sortBases(
+                afterGetCurrentPlayerStrVsBlockForgeHookTypes,
+                allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors,
+                allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors,
+                "afterGetCurrentPlayerStrVsBlockForge");
+        sortBases(
+                beforeGetDistanceSqHookTypes,
+                allBaseBeforeGetDistanceSqSuperiors,
+                allBaseBeforeGetDistanceSqInferiors,
+                "beforeGetDistanceSq");
+        sortBases(
+                overrideGetDistanceSqHookTypes,
+                allBaseOverrideGetDistanceSqSuperiors,
+                allBaseOverrideGetDistanceSqInferiors,
+                "overrideGetDistanceSq");
+        sortBases(
+                afterGetDistanceSqHookTypes,
+                allBaseAfterGetDistanceSqSuperiors,
+                allBaseAfterGetDistanceSqInferiors,
+                "afterGetDistanceSq");
+        sortBases(
+                beforeGetDistanceSqToEntityHookTypes,
+                allBaseBeforeGetDistanceSqToEntitySuperiors,
+                allBaseBeforeGetDistanceSqToEntityInferiors,
+                "beforeGetDistanceSqToEntity");
+        sortBases(
+                overrideGetDistanceSqToEntityHookTypes,
+                allBaseOverrideGetDistanceSqToEntitySuperiors,
+                allBaseOverrideGetDistanceSqToEntityInferiors,
+                "overrideGetDistanceSqToEntity");
+        sortBases(
+                afterGetDistanceSqToEntityHookTypes,
+                allBaseAfterGetDistanceSqToEntitySuperiors,
+                allBaseAfterGetDistanceSqToEntityInferiors,
+                "afterGetDistanceSqToEntity");
+        sortBases(
+                beforeGetFOVMultiplierHookTypes,
+                allBaseBeforeGetFOVMultiplierSuperiors,
+                allBaseBeforeGetFOVMultiplierInferiors,
+                "beforeGetFOVMultiplier");
+        sortBases(
+                overrideGetFOVMultiplierHookTypes,
+                allBaseOverrideGetFOVMultiplierSuperiors,
+                allBaseOverrideGetFOVMultiplierInferiors,
+                "overrideGetFOVMultiplier");
+        sortBases(
+                afterGetFOVMultiplierHookTypes,
+                allBaseAfterGetFOVMultiplierSuperiors,
+                allBaseAfterGetFOVMultiplierInferiors,
+                "afterGetFOVMultiplier");
+        sortBases(
+                beforeGetHurtSoundHookTypes,
+                allBaseBeforeGetHurtSoundSuperiors,
+                allBaseBeforeGetHurtSoundInferiors,
+                "beforeGetHurtSound");
+        sortBases(
+                overrideGetHurtSoundHookTypes,
+                allBaseOverrideGetHurtSoundSuperiors,
+                allBaseOverrideGetHurtSoundInferiors,
+                "overrideGetHurtSound");
+        sortBases(
+                afterGetHurtSoundHookTypes,
+                allBaseAfterGetHurtSoundSuperiors,
+                allBaseAfterGetHurtSoundInferiors,
+                "afterGetHurtSound");
+        sortBases(
+                beforeGetItemIconHookTypes,
+                allBaseBeforeGetItemIconSuperiors,
+                allBaseBeforeGetItemIconInferiors,
+                "beforeGetItemIcon");
+        sortBases(
+                overrideGetItemIconHookTypes,
+                allBaseOverrideGetItemIconSuperiors,
+                allBaseOverrideGetItemIconInferiors,
+                "overrideGetItemIcon");
+        sortBases(
+                afterGetItemIconHookTypes,
+                allBaseAfterGetItemIconSuperiors,
+                allBaseAfterGetItemIconInferiors,
+                "afterGetItemIcon");
+        sortBases(
+                beforeGetSleepTimerHookTypes,
+                allBaseBeforeGetSleepTimerSuperiors,
+                allBaseBeforeGetSleepTimerInferiors,
+                "beforeGetSleepTimer");
+        sortBases(
+                overrideGetSleepTimerHookTypes,
+                allBaseOverrideGetSleepTimerSuperiors,
+                allBaseOverrideGetSleepTimerInferiors,
+                "overrideGetSleepTimer");
+        sortBases(
+                afterGetSleepTimerHookTypes,
+                allBaseAfterGetSleepTimerSuperiors,
+                allBaseAfterGetSleepTimerInferiors,
+                "afterGetSleepTimer");
+        sortBases(
+                beforeHandleLavaMovementHookTypes,
+                allBaseBeforeHandleLavaMovementSuperiors,
+                allBaseBeforeHandleLavaMovementInferiors,
+                "beforeHandleLavaMovement");
+        sortBases(
+                overrideHandleLavaMovementHookTypes,
+                allBaseOverrideHandleLavaMovementSuperiors,
+                allBaseOverrideHandleLavaMovementInferiors,
+                "overrideHandleLavaMovement");
+        sortBases(
+                afterHandleLavaMovementHookTypes,
+                allBaseAfterHandleLavaMovementSuperiors,
+                allBaseAfterHandleLavaMovementInferiors,
+                "afterHandleLavaMovement");
+        sortBases(
+                beforeHandleWaterMovementHookTypes,
+                allBaseBeforeHandleWaterMovementSuperiors,
+                allBaseBeforeHandleWaterMovementInferiors,
+                "beforeHandleWaterMovement");
+        sortBases(
+                overrideHandleWaterMovementHookTypes,
+                allBaseOverrideHandleWaterMovementSuperiors,
+                allBaseOverrideHandleWaterMovementInferiors,
+                "overrideHandleWaterMovement");
+        sortBases(
+                afterHandleWaterMovementHookTypes,
+                allBaseAfterHandleWaterMovementSuperiors,
+                allBaseAfterHandleWaterMovementInferiors,
+                "afterHandleWaterMovement");
         sortBases(beforeHealHookTypes, allBaseBeforeHealSuperiors, allBaseBeforeHealInferiors, "beforeHeal");
         sortBases(overrideHealHookTypes, allBaseOverrideHealSuperiors, allBaseOverrideHealInferiors, "overrideHeal");
         sortBases(afterHealHookTypes, allBaseAfterHealSuperiors, allBaseAfterHealInferiors, "afterHeal");
-        sortBases(beforeIsEntityInsideOpaqueBlockHookTypes, allBaseBeforeIsEntityInsideOpaqueBlockSuperiors, allBaseBeforeIsEntityInsideOpaqueBlockInferiors, "beforeIsEntityInsideOpaqueBlock");
-        sortBases(overrideIsEntityInsideOpaqueBlockHookTypes, allBaseOverrideIsEntityInsideOpaqueBlockSuperiors, allBaseOverrideIsEntityInsideOpaqueBlockInferiors, "overrideIsEntityInsideOpaqueBlock");
-        sortBases(afterIsEntityInsideOpaqueBlockHookTypes, allBaseAfterIsEntityInsideOpaqueBlockSuperiors, allBaseAfterIsEntityInsideOpaqueBlockInferiors, "afterIsEntityInsideOpaqueBlock");
-        sortBases(beforeIsInWaterHookTypes, allBaseBeforeIsInWaterSuperiors, allBaseBeforeIsInWaterInferiors, "beforeIsInWater");
-        sortBases(overrideIsInWaterHookTypes, allBaseOverrideIsInWaterSuperiors, allBaseOverrideIsInWaterInferiors, "overrideIsInWater");
-        sortBases(afterIsInWaterHookTypes, allBaseAfterIsInWaterSuperiors, allBaseAfterIsInWaterInferiors, "afterIsInWater");
-        sortBases(beforeIsInsideOfMaterialHookTypes, allBaseBeforeIsInsideOfMaterialSuperiors, allBaseBeforeIsInsideOfMaterialInferiors, "beforeIsInsideOfMaterial");
-        sortBases(overrideIsInsideOfMaterialHookTypes, allBaseOverrideIsInsideOfMaterialSuperiors, allBaseOverrideIsInsideOfMaterialInferiors, "overrideIsInsideOfMaterial");
-        sortBases(afterIsInsideOfMaterialHookTypes, allBaseAfterIsInsideOfMaterialSuperiors, allBaseAfterIsInsideOfMaterialInferiors, "afterIsInsideOfMaterial");
-        sortBases(beforeIsOnLadderHookTypes, allBaseBeforeIsOnLadderSuperiors, allBaseBeforeIsOnLadderInferiors, "beforeIsOnLadder");
-        sortBases(overrideIsOnLadderHookTypes, allBaseOverrideIsOnLadderSuperiors, allBaseOverrideIsOnLadderInferiors, "overrideIsOnLadder");
-        sortBases(afterIsOnLadderHookTypes, allBaseAfterIsOnLadderSuperiors, allBaseAfterIsOnLadderInferiors, "afterIsOnLadder");
-        sortBases(beforeIsPlayerSleepingHookTypes, allBaseBeforeIsPlayerSleepingSuperiors, allBaseBeforeIsPlayerSleepingInferiors, "beforeIsPlayerSleeping");
-        sortBases(overrideIsPlayerSleepingHookTypes, allBaseOverrideIsPlayerSleepingSuperiors, allBaseOverrideIsPlayerSleepingInferiors, "overrideIsPlayerSleeping");
-        sortBases(afterIsPlayerSleepingHookTypes, allBaseAfterIsPlayerSleepingSuperiors, allBaseAfterIsPlayerSleepingInferiors, "afterIsPlayerSleeping");
-        sortBases(beforeIsSneakingHookTypes, allBaseBeforeIsSneakingSuperiors, allBaseBeforeIsSneakingInferiors, "beforeIsSneaking");
-        sortBases(overrideIsSneakingHookTypes, allBaseOverrideIsSneakingSuperiors, allBaseOverrideIsSneakingInferiors, "overrideIsSneaking");
-        sortBases(afterIsSneakingHookTypes, allBaseAfterIsSneakingSuperiors, allBaseAfterIsSneakingInferiors, "afterIsSneaking");
-        sortBases(beforeIsSprintingHookTypes, allBaseBeforeIsSprintingSuperiors, allBaseBeforeIsSprintingInferiors, "beforeIsSprinting");
-        sortBases(overrideIsSprintingHookTypes, allBaseOverrideIsSprintingSuperiors, allBaseOverrideIsSprintingInferiors, "overrideIsSprinting");
-        sortBases(afterIsSprintingHookTypes, allBaseAfterIsSprintingSuperiors, allBaseAfterIsSprintingInferiors, "afterIsSprinting");
+        sortBases(
+                beforeIsEntityInsideOpaqueBlockHookTypes,
+                allBaseBeforeIsEntityInsideOpaqueBlockSuperiors,
+                allBaseBeforeIsEntityInsideOpaqueBlockInferiors,
+                "beforeIsEntityInsideOpaqueBlock");
+        sortBases(
+                overrideIsEntityInsideOpaqueBlockHookTypes,
+                allBaseOverrideIsEntityInsideOpaqueBlockSuperiors,
+                allBaseOverrideIsEntityInsideOpaqueBlockInferiors,
+                "overrideIsEntityInsideOpaqueBlock");
+        sortBases(
+                afterIsEntityInsideOpaqueBlockHookTypes,
+                allBaseAfterIsEntityInsideOpaqueBlockSuperiors,
+                allBaseAfterIsEntityInsideOpaqueBlockInferiors,
+                "afterIsEntityInsideOpaqueBlock");
+        sortBases(
+                beforeIsInWaterHookTypes,
+                allBaseBeforeIsInWaterSuperiors,
+                allBaseBeforeIsInWaterInferiors,
+                "beforeIsInWater");
+        sortBases(
+                overrideIsInWaterHookTypes,
+                allBaseOverrideIsInWaterSuperiors,
+                allBaseOverrideIsInWaterInferiors,
+                "overrideIsInWater");
+        sortBases(
+                afterIsInWaterHookTypes,
+                allBaseAfterIsInWaterSuperiors,
+                allBaseAfterIsInWaterInferiors,
+                "afterIsInWater");
+        sortBases(
+                beforeIsInsideOfMaterialHookTypes,
+                allBaseBeforeIsInsideOfMaterialSuperiors,
+                allBaseBeforeIsInsideOfMaterialInferiors,
+                "beforeIsInsideOfMaterial");
+        sortBases(
+                overrideIsInsideOfMaterialHookTypes,
+                allBaseOverrideIsInsideOfMaterialSuperiors,
+                allBaseOverrideIsInsideOfMaterialInferiors,
+                "overrideIsInsideOfMaterial");
+        sortBases(
+                afterIsInsideOfMaterialHookTypes,
+                allBaseAfterIsInsideOfMaterialSuperiors,
+                allBaseAfterIsInsideOfMaterialInferiors,
+                "afterIsInsideOfMaterial");
+        sortBases(
+                beforeIsOnLadderHookTypes,
+                allBaseBeforeIsOnLadderSuperiors,
+                allBaseBeforeIsOnLadderInferiors,
+                "beforeIsOnLadder");
+        sortBases(
+                overrideIsOnLadderHookTypes,
+                allBaseOverrideIsOnLadderSuperiors,
+                allBaseOverrideIsOnLadderInferiors,
+                "overrideIsOnLadder");
+        sortBases(
+                afterIsOnLadderHookTypes,
+                allBaseAfterIsOnLadderSuperiors,
+                allBaseAfterIsOnLadderInferiors,
+                "afterIsOnLadder");
+        sortBases(
+                beforeIsPlayerSleepingHookTypes,
+                allBaseBeforeIsPlayerSleepingSuperiors,
+                allBaseBeforeIsPlayerSleepingInferiors,
+                "beforeIsPlayerSleeping");
+        sortBases(
+                overrideIsPlayerSleepingHookTypes,
+                allBaseOverrideIsPlayerSleepingSuperiors,
+                allBaseOverrideIsPlayerSleepingInferiors,
+                "overrideIsPlayerSleeping");
+        sortBases(
+                afterIsPlayerSleepingHookTypes,
+                allBaseAfterIsPlayerSleepingSuperiors,
+                allBaseAfterIsPlayerSleepingInferiors,
+                "afterIsPlayerSleeping");
+        sortBases(
+                beforeIsSneakingHookTypes,
+                allBaseBeforeIsSneakingSuperiors,
+                allBaseBeforeIsSneakingInferiors,
+                "beforeIsSneaking");
+        sortBases(
+                overrideIsSneakingHookTypes,
+                allBaseOverrideIsSneakingSuperiors,
+                allBaseOverrideIsSneakingInferiors,
+                "overrideIsSneaking");
+        sortBases(
+                afterIsSneakingHookTypes,
+                allBaseAfterIsSneakingSuperiors,
+                allBaseAfterIsSneakingInferiors,
+                "afterIsSneaking");
+        sortBases(
+                beforeIsSprintingHookTypes,
+                allBaseBeforeIsSprintingSuperiors,
+                allBaseBeforeIsSprintingInferiors,
+                "beforeIsSprinting");
+        sortBases(
+                overrideIsSprintingHookTypes,
+                allBaseOverrideIsSprintingSuperiors,
+                allBaseOverrideIsSprintingInferiors,
+                "overrideIsSprinting");
+        sortBases(
+                afterIsSprintingHookTypes,
+                allBaseAfterIsSprintingSuperiors,
+                allBaseAfterIsSprintingInferiors,
+                "afterIsSprinting");
         sortBases(beforeJumpHookTypes, allBaseBeforeJumpSuperiors, allBaseBeforeJumpInferiors, "beforeJump");
         sortBases(overrideJumpHookTypes, allBaseOverrideJumpSuperiors, allBaseOverrideJumpInferiors, "overrideJump");
         sortBases(afterJumpHookTypes, allBaseAfterJumpSuperiors, allBaseAfterJumpInferiors, "afterJump");
-        sortBases(beforeKnockBackHookTypes, allBaseBeforeKnockBackSuperiors, allBaseBeforeKnockBackInferiors, "beforeKnockBack");
-        sortBases(overrideKnockBackHookTypes, allBaseOverrideKnockBackSuperiors, allBaseOverrideKnockBackInferiors, "overrideKnockBack");
-        sortBases(afterKnockBackHookTypes, allBaseAfterKnockBackSuperiors, allBaseAfterKnockBackInferiors, "afterKnockBack");
-        sortBases(beforeMoveEntityHookTypes, allBaseBeforeMoveEntitySuperiors, allBaseBeforeMoveEntityInferiors, "beforeMoveEntity");
-        sortBases(overrideMoveEntityHookTypes, allBaseOverrideMoveEntitySuperiors, allBaseOverrideMoveEntityInferiors, "overrideMoveEntity");
-        sortBases(afterMoveEntityHookTypes, allBaseAfterMoveEntitySuperiors, allBaseAfterMoveEntityInferiors, "afterMoveEntity");
-        sortBases(beforeMoveEntityWithHeadingHookTypes, allBaseBeforeMoveEntityWithHeadingSuperiors, allBaseBeforeMoveEntityWithHeadingInferiors, "beforeMoveEntityWithHeading");
-        sortBases(overrideMoveEntityWithHeadingHookTypes, allBaseOverrideMoveEntityWithHeadingSuperiors, allBaseOverrideMoveEntityWithHeadingInferiors, "overrideMoveEntityWithHeading");
-        sortBases(afterMoveEntityWithHeadingHookTypes, allBaseAfterMoveEntityWithHeadingSuperiors, allBaseAfterMoveEntityWithHeadingInferiors, "afterMoveEntityWithHeading");
-        sortBases(beforeMoveFlyingHookTypes, allBaseBeforeMoveFlyingSuperiors, allBaseBeforeMoveFlyingInferiors, "beforeMoveFlying");
-        sortBases(overrideMoveFlyingHookTypes, allBaseOverrideMoveFlyingSuperiors, allBaseOverrideMoveFlyingInferiors, "overrideMoveFlying");
-        sortBases(afterMoveFlyingHookTypes, allBaseAfterMoveFlyingSuperiors, allBaseAfterMoveFlyingInferiors, "afterMoveFlying");
-        sortBases(beforeOnDeathHookTypes, allBaseBeforeOnDeathSuperiors, allBaseBeforeOnDeathInferiors, "beforeOnDeath");
-        sortBases(overrideOnDeathHookTypes, allBaseOverrideOnDeathSuperiors, allBaseOverrideOnDeathInferiors, "overrideOnDeath");
+        sortBases(
+                beforeKnockBackHookTypes,
+                allBaseBeforeKnockBackSuperiors,
+                allBaseBeforeKnockBackInferiors,
+                "beforeKnockBack");
+        sortBases(
+                overrideKnockBackHookTypes,
+                allBaseOverrideKnockBackSuperiors,
+                allBaseOverrideKnockBackInferiors,
+                "overrideKnockBack");
+        sortBases(
+                afterKnockBackHookTypes,
+                allBaseAfterKnockBackSuperiors,
+                allBaseAfterKnockBackInferiors,
+                "afterKnockBack");
+        sortBases(
+                beforeMoveEntityHookTypes,
+                allBaseBeforeMoveEntitySuperiors,
+                allBaseBeforeMoveEntityInferiors,
+                "beforeMoveEntity");
+        sortBases(
+                overrideMoveEntityHookTypes,
+                allBaseOverrideMoveEntitySuperiors,
+                allBaseOverrideMoveEntityInferiors,
+                "overrideMoveEntity");
+        sortBases(
+                afterMoveEntityHookTypes,
+                allBaseAfterMoveEntitySuperiors,
+                allBaseAfterMoveEntityInferiors,
+                "afterMoveEntity");
+        sortBases(
+                beforeMoveEntityWithHeadingHookTypes,
+                allBaseBeforeMoveEntityWithHeadingSuperiors,
+                allBaseBeforeMoveEntityWithHeadingInferiors,
+                "beforeMoveEntityWithHeading");
+        sortBases(
+                overrideMoveEntityWithHeadingHookTypes,
+                allBaseOverrideMoveEntityWithHeadingSuperiors,
+                allBaseOverrideMoveEntityWithHeadingInferiors,
+                "overrideMoveEntityWithHeading");
+        sortBases(
+                afterMoveEntityWithHeadingHookTypes,
+                allBaseAfterMoveEntityWithHeadingSuperiors,
+                allBaseAfterMoveEntityWithHeadingInferiors,
+                "afterMoveEntityWithHeading");
+        sortBases(
+                beforeMoveFlyingHookTypes,
+                allBaseBeforeMoveFlyingSuperiors,
+                allBaseBeforeMoveFlyingInferiors,
+                "beforeMoveFlying");
+        sortBases(
+                overrideMoveFlyingHookTypes,
+                allBaseOverrideMoveFlyingSuperiors,
+                allBaseOverrideMoveFlyingInferiors,
+                "overrideMoveFlying");
+        sortBases(
+                afterMoveFlyingHookTypes,
+                allBaseAfterMoveFlyingSuperiors,
+                allBaseAfterMoveFlyingInferiors,
+                "afterMoveFlying");
+        sortBases(
+                beforeOnDeathHookTypes, allBaseBeforeOnDeathSuperiors, allBaseBeforeOnDeathInferiors, "beforeOnDeath");
+        sortBases(
+                overrideOnDeathHookTypes,
+                allBaseOverrideOnDeathSuperiors,
+                allBaseOverrideOnDeathInferiors,
+                "overrideOnDeath");
         sortBases(afterOnDeathHookTypes, allBaseAfterOnDeathSuperiors, allBaseAfterOnDeathInferiors, "afterOnDeath");
-        sortBases(beforeOnLivingUpdateHookTypes, allBaseBeforeOnLivingUpdateSuperiors, allBaseBeforeOnLivingUpdateInferiors, "beforeOnLivingUpdate");
-        sortBases(overrideOnLivingUpdateHookTypes, allBaseOverrideOnLivingUpdateSuperiors, allBaseOverrideOnLivingUpdateInferiors, "overrideOnLivingUpdate");
-        sortBases(afterOnLivingUpdateHookTypes, allBaseAfterOnLivingUpdateSuperiors, allBaseAfterOnLivingUpdateInferiors, "afterOnLivingUpdate");
-        sortBases(beforeOnKillEntityHookTypes, allBaseBeforeOnKillEntitySuperiors, allBaseBeforeOnKillEntityInferiors, "beforeOnKillEntity");
-        sortBases(overrideOnKillEntityHookTypes, allBaseOverrideOnKillEntitySuperiors, allBaseOverrideOnKillEntityInferiors, "overrideOnKillEntity");
-        sortBases(afterOnKillEntityHookTypes, allBaseAfterOnKillEntitySuperiors, allBaseAfterOnKillEntityInferiors, "afterOnKillEntity");
-        sortBases(beforeOnStruckByLightningHookTypes, allBaseBeforeOnStruckByLightningSuperiors, allBaseBeforeOnStruckByLightningInferiors, "beforeOnStruckByLightning");
-        sortBases(overrideOnStruckByLightningHookTypes, allBaseOverrideOnStruckByLightningSuperiors, allBaseOverrideOnStruckByLightningInferiors, "overrideOnStruckByLightning");
-        sortBases(afterOnStruckByLightningHookTypes, allBaseAfterOnStruckByLightningSuperiors, allBaseAfterOnStruckByLightningInferiors, "afterOnStruckByLightning");
-        sortBases(beforeOnUpdateHookTypes, allBaseBeforeOnUpdateSuperiors, allBaseBeforeOnUpdateInferiors, "beforeOnUpdate");
-        sortBases(overrideOnUpdateHookTypes, allBaseOverrideOnUpdateSuperiors, allBaseOverrideOnUpdateInferiors, "overrideOnUpdate");
-        sortBases(afterOnUpdateHookTypes, allBaseAfterOnUpdateSuperiors, allBaseAfterOnUpdateInferiors, "afterOnUpdate");
-        sortBases(beforePlayStepSoundHookTypes, allBaseBeforePlayStepSoundSuperiors, allBaseBeforePlayStepSoundInferiors, "beforePlayStepSound");
-        sortBases(overridePlayStepSoundHookTypes, allBaseOverridePlayStepSoundSuperiors, allBaseOverridePlayStepSoundInferiors, "overridePlayStepSound");
-        sortBases(afterPlayStepSoundHookTypes, allBaseAfterPlayStepSoundSuperiors, allBaseAfterPlayStepSoundInferiors, "afterPlayStepSound");
-        sortBases(beforePushOutOfBlocksHookTypes, allBaseBeforePushOutOfBlocksSuperiors, allBaseBeforePushOutOfBlocksInferiors, "beforePushOutOfBlocks");
-        sortBases(overridePushOutOfBlocksHookTypes, allBaseOverridePushOutOfBlocksSuperiors, allBaseOverridePushOutOfBlocksInferiors, "overridePushOutOfBlocks");
-        sortBases(afterPushOutOfBlocksHookTypes, allBaseAfterPushOutOfBlocksSuperiors, allBaseAfterPushOutOfBlocksInferiors, "afterPushOutOfBlocks");
-        sortBases(beforeRayTraceHookTypes, allBaseBeforeRayTraceSuperiors, allBaseBeforeRayTraceInferiors, "beforeRayTrace");
-        sortBases(overrideRayTraceHookTypes, allBaseOverrideRayTraceSuperiors, allBaseOverrideRayTraceInferiors, "overrideRayTrace");
-        sortBases(afterRayTraceHookTypes, allBaseAfterRayTraceSuperiors, allBaseAfterRayTraceInferiors, "afterRayTrace");
-        sortBases(beforeReadEntityFromNBTHookTypes, allBaseBeforeReadEntityFromNBTSuperiors, allBaseBeforeReadEntityFromNBTInferiors, "beforeReadEntityFromNBT");
-        sortBases(overrideReadEntityFromNBTHookTypes, allBaseOverrideReadEntityFromNBTSuperiors, allBaseOverrideReadEntityFromNBTInferiors, "overrideReadEntityFromNBT");
-        sortBases(afterReadEntityFromNBTHookTypes, allBaseAfterReadEntityFromNBTSuperiors, allBaseAfterReadEntityFromNBTInferiors, "afterReadEntityFromNBT");
-        sortBases(beforeRespawnPlayerHookTypes, allBaseBeforeRespawnPlayerSuperiors, allBaseBeforeRespawnPlayerInferiors, "beforeRespawnPlayer");
-        sortBases(overrideRespawnPlayerHookTypes, allBaseOverrideRespawnPlayerSuperiors, allBaseOverrideRespawnPlayerInferiors, "overrideRespawnPlayer");
-        sortBases(afterRespawnPlayerHookTypes, allBaseAfterRespawnPlayerSuperiors, allBaseAfterRespawnPlayerInferiors, "afterRespawnPlayer");
-        sortBases(beforeSetDeadHookTypes, allBaseBeforeSetDeadSuperiors, allBaseBeforeSetDeadInferiors, "beforeSetDead");
-        sortBases(overrideSetDeadHookTypes, allBaseOverrideSetDeadSuperiors, allBaseOverrideSetDeadInferiors, "overrideSetDead");
+        sortBases(
+                beforeOnLivingUpdateHookTypes,
+                allBaseBeforeOnLivingUpdateSuperiors,
+                allBaseBeforeOnLivingUpdateInferiors,
+                "beforeOnLivingUpdate");
+        sortBases(
+                overrideOnLivingUpdateHookTypes,
+                allBaseOverrideOnLivingUpdateSuperiors,
+                allBaseOverrideOnLivingUpdateInferiors,
+                "overrideOnLivingUpdate");
+        sortBases(
+                afterOnLivingUpdateHookTypes,
+                allBaseAfterOnLivingUpdateSuperiors,
+                allBaseAfterOnLivingUpdateInferiors,
+                "afterOnLivingUpdate");
+        sortBases(
+                beforeOnKillEntityHookTypes,
+                allBaseBeforeOnKillEntitySuperiors,
+                allBaseBeforeOnKillEntityInferiors,
+                "beforeOnKillEntity");
+        sortBases(
+                overrideOnKillEntityHookTypes,
+                allBaseOverrideOnKillEntitySuperiors,
+                allBaseOverrideOnKillEntityInferiors,
+                "overrideOnKillEntity");
+        sortBases(
+                afterOnKillEntityHookTypes,
+                allBaseAfterOnKillEntitySuperiors,
+                allBaseAfterOnKillEntityInferiors,
+                "afterOnKillEntity");
+        sortBases(
+                beforeOnStruckByLightningHookTypes,
+                allBaseBeforeOnStruckByLightningSuperiors,
+                allBaseBeforeOnStruckByLightningInferiors,
+                "beforeOnStruckByLightning");
+        sortBases(
+                overrideOnStruckByLightningHookTypes,
+                allBaseOverrideOnStruckByLightningSuperiors,
+                allBaseOverrideOnStruckByLightningInferiors,
+                "overrideOnStruckByLightning");
+        sortBases(
+                afterOnStruckByLightningHookTypes,
+                allBaseAfterOnStruckByLightningSuperiors,
+                allBaseAfterOnStruckByLightningInferiors,
+                "afterOnStruckByLightning");
+        sortBases(
+                beforeOnUpdateHookTypes,
+                allBaseBeforeOnUpdateSuperiors,
+                allBaseBeforeOnUpdateInferiors,
+                "beforeOnUpdate");
+        sortBases(
+                overrideOnUpdateHookTypes,
+                allBaseOverrideOnUpdateSuperiors,
+                allBaseOverrideOnUpdateInferiors,
+                "overrideOnUpdate");
+        sortBases(
+                afterOnUpdateHookTypes, allBaseAfterOnUpdateSuperiors, allBaseAfterOnUpdateInferiors, "afterOnUpdate");
+        sortBases(
+                beforePlayStepSoundHookTypes,
+                allBaseBeforePlayStepSoundSuperiors,
+                allBaseBeforePlayStepSoundInferiors,
+                "beforePlayStepSound");
+        sortBases(
+                overridePlayStepSoundHookTypes,
+                allBaseOverridePlayStepSoundSuperiors,
+                allBaseOverridePlayStepSoundInferiors,
+                "overridePlayStepSound");
+        sortBases(
+                afterPlayStepSoundHookTypes,
+                allBaseAfterPlayStepSoundSuperiors,
+                allBaseAfterPlayStepSoundInferiors,
+                "afterPlayStepSound");
+        sortBases(
+                beforePushOutOfBlocksHookTypes,
+                allBaseBeforePushOutOfBlocksSuperiors,
+                allBaseBeforePushOutOfBlocksInferiors,
+                "beforePushOutOfBlocks");
+        sortBases(
+                overridePushOutOfBlocksHookTypes,
+                allBaseOverridePushOutOfBlocksSuperiors,
+                allBaseOverridePushOutOfBlocksInferiors,
+                "overridePushOutOfBlocks");
+        sortBases(
+                afterPushOutOfBlocksHookTypes,
+                allBaseAfterPushOutOfBlocksSuperiors,
+                allBaseAfterPushOutOfBlocksInferiors,
+                "afterPushOutOfBlocks");
+        sortBases(
+                beforeRayTraceHookTypes,
+                allBaseBeforeRayTraceSuperiors,
+                allBaseBeforeRayTraceInferiors,
+                "beforeRayTrace");
+        sortBases(
+                overrideRayTraceHookTypes,
+                allBaseOverrideRayTraceSuperiors,
+                allBaseOverrideRayTraceInferiors,
+                "overrideRayTrace");
+        sortBases(
+                afterRayTraceHookTypes, allBaseAfterRayTraceSuperiors, allBaseAfterRayTraceInferiors, "afterRayTrace");
+        sortBases(
+                beforeReadEntityFromNBTHookTypes,
+                allBaseBeforeReadEntityFromNBTSuperiors,
+                allBaseBeforeReadEntityFromNBTInferiors,
+                "beforeReadEntityFromNBT");
+        sortBases(
+                overrideReadEntityFromNBTHookTypes,
+                allBaseOverrideReadEntityFromNBTSuperiors,
+                allBaseOverrideReadEntityFromNBTInferiors,
+                "overrideReadEntityFromNBT");
+        sortBases(
+                afterReadEntityFromNBTHookTypes,
+                allBaseAfterReadEntityFromNBTSuperiors,
+                allBaseAfterReadEntityFromNBTInferiors,
+                "afterReadEntityFromNBT");
+        sortBases(
+                beforeRespawnPlayerHookTypes,
+                allBaseBeforeRespawnPlayerSuperiors,
+                allBaseBeforeRespawnPlayerInferiors,
+                "beforeRespawnPlayer");
+        sortBases(
+                overrideRespawnPlayerHookTypes,
+                allBaseOverrideRespawnPlayerSuperiors,
+                allBaseOverrideRespawnPlayerInferiors,
+                "overrideRespawnPlayer");
+        sortBases(
+                afterRespawnPlayerHookTypes,
+                allBaseAfterRespawnPlayerSuperiors,
+                allBaseAfterRespawnPlayerInferiors,
+                "afterRespawnPlayer");
+        sortBases(
+                beforeSetDeadHookTypes, allBaseBeforeSetDeadSuperiors, allBaseBeforeSetDeadInferiors, "beforeSetDead");
+        sortBases(
+                overrideSetDeadHookTypes,
+                allBaseOverrideSetDeadSuperiors,
+                allBaseOverrideSetDeadInferiors,
+                "overrideSetDead");
         sortBases(afterSetDeadHookTypes, allBaseAfterSetDeadSuperiors, allBaseAfterSetDeadInferiors, "afterSetDead");
-        sortBases(beforeSetPlayerSPHealthHookTypes, allBaseBeforeSetPlayerSPHealthSuperiors, allBaseBeforeSetPlayerSPHealthInferiors, "beforeSetPlayerSPHealth");
-        sortBases(overrideSetPlayerSPHealthHookTypes, allBaseOverrideSetPlayerSPHealthSuperiors, allBaseOverrideSetPlayerSPHealthInferiors, "overrideSetPlayerSPHealth");
-        sortBases(afterSetPlayerSPHealthHookTypes, allBaseAfterSetPlayerSPHealthSuperiors, allBaseAfterSetPlayerSPHealthInferiors, "afterSetPlayerSPHealth");
-        sortBases(beforeSetPositionAndRotationHookTypes, allBaseBeforeSetPositionAndRotationSuperiors, allBaseBeforeSetPositionAndRotationInferiors, "beforeSetPositionAndRotation");
-        sortBases(overrideSetPositionAndRotationHookTypes, allBaseOverrideSetPositionAndRotationSuperiors, allBaseOverrideSetPositionAndRotationInferiors, "overrideSetPositionAndRotation");
-        sortBases(afterSetPositionAndRotationHookTypes, allBaseAfterSetPositionAndRotationSuperiors, allBaseAfterSetPositionAndRotationInferiors, "afterSetPositionAndRotation");
-        sortBases(beforeSetSneakingHookTypes, allBaseBeforeSetSneakingSuperiors, allBaseBeforeSetSneakingInferiors, "beforeSetSneaking");
-        sortBases(overrideSetSneakingHookTypes, allBaseOverrideSetSneakingSuperiors, allBaseOverrideSetSneakingInferiors, "overrideSetSneaking");
-        sortBases(afterSetSneakingHookTypes, allBaseAfterSetSneakingSuperiors, allBaseAfterSetSneakingInferiors, "afterSetSneaking");
-        sortBases(beforeSetSprintingHookTypes, allBaseBeforeSetSprintingSuperiors, allBaseBeforeSetSprintingInferiors, "beforeSetSprinting");
-        sortBases(overrideSetSprintingHookTypes, allBaseOverrideSetSprintingSuperiors, allBaseOverrideSetSprintingInferiors, "overrideSetSprinting");
-        sortBases(afterSetSprintingHookTypes, allBaseAfterSetSprintingSuperiors, allBaseAfterSetSprintingInferiors, "afterSetSprinting");
-        sortBases(beforeSleepInBedAtHookTypes, allBaseBeforeSleepInBedAtSuperiors, allBaseBeforeSleepInBedAtInferiors, "beforeSleepInBedAt");
-        sortBases(overrideSleepInBedAtHookTypes, allBaseOverrideSleepInBedAtSuperiors, allBaseOverrideSleepInBedAtInferiors, "overrideSleepInBedAt");
-        sortBases(afterSleepInBedAtHookTypes, allBaseAfterSleepInBedAtSuperiors, allBaseAfterSleepInBedAtInferiors, "afterSleepInBedAt");
-        sortBases(beforeSwingItemHookTypes, allBaseBeforeSwingItemSuperiors, allBaseBeforeSwingItemInferiors, "beforeSwingItem");
-        sortBases(overrideSwingItemHookTypes, allBaseOverrideSwingItemSuperiors, allBaseOverrideSwingItemInferiors, "overrideSwingItem");
-        sortBases(afterSwingItemHookTypes, allBaseAfterSwingItemSuperiors, allBaseAfterSwingItemInferiors, "afterSwingItem");
-        sortBases(beforeUpdateEntityActionStateHookTypes, allBaseBeforeUpdateEntityActionStateSuperiors, allBaseBeforeUpdateEntityActionStateInferiors, "beforeUpdateEntityActionState");
-        sortBases(overrideUpdateEntityActionStateHookTypes, allBaseOverrideUpdateEntityActionStateSuperiors, allBaseOverrideUpdateEntityActionStateInferiors, "overrideUpdateEntityActionState");
-        sortBases(afterUpdateEntityActionStateHookTypes, allBaseAfterUpdateEntityActionStateSuperiors, allBaseAfterUpdateEntityActionStateInferiors, "afterUpdateEntityActionState");
-        sortBases(beforeUpdateRiddenHookTypes, allBaseBeforeUpdateRiddenSuperiors, allBaseBeforeUpdateRiddenInferiors, "beforeUpdateRidden");
-        sortBases(overrideUpdateRiddenHookTypes, allBaseOverrideUpdateRiddenSuperiors, allBaseOverrideUpdateRiddenInferiors, "overrideUpdateRidden");
-        sortBases(afterUpdateRiddenHookTypes, allBaseAfterUpdateRiddenSuperiors, allBaseAfterUpdateRiddenInferiors, "afterUpdateRidden");
-        sortBases(beforeWakeUpPlayerHookTypes, allBaseBeforeWakeUpPlayerSuperiors, allBaseBeforeWakeUpPlayerInferiors, "beforeWakeUpPlayer");
-        sortBases(overrideWakeUpPlayerHookTypes, allBaseOverrideWakeUpPlayerSuperiors, allBaseOverrideWakeUpPlayerInferiors, "overrideWakeUpPlayer");
-        sortBases(afterWakeUpPlayerHookTypes, allBaseAfterWakeUpPlayerSuperiors, allBaseAfterWakeUpPlayerInferiors, "afterWakeUpPlayer");
-        sortBases(beforeWriteEntityToNBTHookTypes, allBaseBeforeWriteEntityToNBTSuperiors, allBaseBeforeWriteEntityToNBTInferiors, "beforeWriteEntityToNBT");
-        sortBases(overrideWriteEntityToNBTHookTypes, allBaseOverrideWriteEntityToNBTSuperiors, allBaseOverrideWriteEntityToNBTInferiors, "overrideWriteEntityToNBT");
-        sortBases(afterWriteEntityToNBTHookTypes, allBaseAfterWriteEntityToNBTSuperiors, allBaseAfterWriteEntityToNBTInferiors, "afterWriteEntityToNBT");
+        sortBases(
+                beforeSetPlayerSPHealthHookTypes,
+                allBaseBeforeSetPlayerSPHealthSuperiors,
+                allBaseBeforeSetPlayerSPHealthInferiors,
+                "beforeSetPlayerSPHealth");
+        sortBases(
+                overrideSetPlayerSPHealthHookTypes,
+                allBaseOverrideSetPlayerSPHealthSuperiors,
+                allBaseOverrideSetPlayerSPHealthInferiors,
+                "overrideSetPlayerSPHealth");
+        sortBases(
+                afterSetPlayerSPHealthHookTypes,
+                allBaseAfterSetPlayerSPHealthSuperiors,
+                allBaseAfterSetPlayerSPHealthInferiors,
+                "afterSetPlayerSPHealth");
+        sortBases(
+                beforeSetPositionAndRotationHookTypes,
+                allBaseBeforeSetPositionAndRotationSuperiors,
+                allBaseBeforeSetPositionAndRotationInferiors,
+                "beforeSetPositionAndRotation");
+        sortBases(
+                overrideSetPositionAndRotationHookTypes,
+                allBaseOverrideSetPositionAndRotationSuperiors,
+                allBaseOverrideSetPositionAndRotationInferiors,
+                "overrideSetPositionAndRotation");
+        sortBases(
+                afterSetPositionAndRotationHookTypes,
+                allBaseAfterSetPositionAndRotationSuperiors,
+                allBaseAfterSetPositionAndRotationInferiors,
+                "afterSetPositionAndRotation");
+        sortBases(
+                beforeSetSneakingHookTypes,
+                allBaseBeforeSetSneakingSuperiors,
+                allBaseBeforeSetSneakingInferiors,
+                "beforeSetSneaking");
+        sortBases(
+                overrideSetSneakingHookTypes,
+                allBaseOverrideSetSneakingSuperiors,
+                allBaseOverrideSetSneakingInferiors,
+                "overrideSetSneaking");
+        sortBases(
+                afterSetSneakingHookTypes,
+                allBaseAfterSetSneakingSuperiors,
+                allBaseAfterSetSneakingInferiors,
+                "afterSetSneaking");
+        sortBases(
+                beforeSetSprintingHookTypes,
+                allBaseBeforeSetSprintingSuperiors,
+                allBaseBeforeSetSprintingInferiors,
+                "beforeSetSprinting");
+        sortBases(
+                overrideSetSprintingHookTypes,
+                allBaseOverrideSetSprintingSuperiors,
+                allBaseOverrideSetSprintingInferiors,
+                "overrideSetSprinting");
+        sortBases(
+                afterSetSprintingHookTypes,
+                allBaseAfterSetSprintingSuperiors,
+                allBaseAfterSetSprintingInferiors,
+                "afterSetSprinting");
+        sortBases(
+                beforeSleepInBedAtHookTypes,
+                allBaseBeforeSleepInBedAtSuperiors,
+                allBaseBeforeSleepInBedAtInferiors,
+                "beforeSleepInBedAt");
+        sortBases(
+                overrideSleepInBedAtHookTypes,
+                allBaseOverrideSleepInBedAtSuperiors,
+                allBaseOverrideSleepInBedAtInferiors,
+                "overrideSleepInBedAt");
+        sortBases(
+                afterSleepInBedAtHookTypes,
+                allBaseAfterSleepInBedAtSuperiors,
+                allBaseAfterSleepInBedAtInferiors,
+                "afterSleepInBedAt");
+        sortBases(
+                beforeSwingItemHookTypes,
+                allBaseBeforeSwingItemSuperiors,
+                allBaseBeforeSwingItemInferiors,
+                "beforeSwingItem");
+        sortBases(
+                overrideSwingItemHookTypes,
+                allBaseOverrideSwingItemSuperiors,
+                allBaseOverrideSwingItemInferiors,
+                "overrideSwingItem");
+        sortBases(
+                afterSwingItemHookTypes,
+                allBaseAfterSwingItemSuperiors,
+                allBaseAfterSwingItemInferiors,
+                "afterSwingItem");
+        sortBases(
+                beforeUpdateEntityActionStateHookTypes,
+                allBaseBeforeUpdateEntityActionStateSuperiors,
+                allBaseBeforeUpdateEntityActionStateInferiors,
+                "beforeUpdateEntityActionState");
+        sortBases(
+                overrideUpdateEntityActionStateHookTypes,
+                allBaseOverrideUpdateEntityActionStateSuperiors,
+                allBaseOverrideUpdateEntityActionStateInferiors,
+                "overrideUpdateEntityActionState");
+        sortBases(
+                afterUpdateEntityActionStateHookTypes,
+                allBaseAfterUpdateEntityActionStateSuperiors,
+                allBaseAfterUpdateEntityActionStateInferiors,
+                "afterUpdateEntityActionState");
+        sortBases(
+                beforeUpdateRiddenHookTypes,
+                allBaseBeforeUpdateRiddenSuperiors,
+                allBaseBeforeUpdateRiddenInferiors,
+                "beforeUpdateRidden");
+        sortBases(
+                overrideUpdateRiddenHookTypes,
+                allBaseOverrideUpdateRiddenSuperiors,
+                allBaseOverrideUpdateRiddenInferiors,
+                "overrideUpdateRidden");
+        sortBases(
+                afterUpdateRiddenHookTypes,
+                allBaseAfterUpdateRiddenSuperiors,
+                allBaseAfterUpdateRiddenInferiors,
+                "afterUpdateRidden");
+        sortBases(
+                beforeWakeUpPlayerHookTypes,
+                allBaseBeforeWakeUpPlayerSuperiors,
+                allBaseBeforeWakeUpPlayerInferiors,
+                "beforeWakeUpPlayer");
+        sortBases(
+                overrideWakeUpPlayerHookTypes,
+                allBaseOverrideWakeUpPlayerSuperiors,
+                allBaseOverrideWakeUpPlayerInferiors,
+                "overrideWakeUpPlayer");
+        sortBases(
+                afterWakeUpPlayerHookTypes,
+                allBaseAfterWakeUpPlayerSuperiors,
+                allBaseAfterWakeUpPlayerInferiors,
+                "afterWakeUpPlayer");
+        sortBases(
+                beforeWriteEntityToNBTHookTypes,
+                allBaseBeforeWriteEntityToNBTSuperiors,
+                allBaseBeforeWriteEntityToNBTInferiors,
+                "beforeWriteEntityToNBT");
+        sortBases(
+                overrideWriteEntityToNBTHookTypes,
+                allBaseOverrideWriteEntityToNBTSuperiors,
+                allBaseOverrideWriteEntityToNBTInferiors,
+                "overrideWriteEntityToNBT");
+        sortBases(
+                afterWriteEntityToNBTHookTypes,
+                allBaseAfterWriteEntityToNBTSuperiors,
+                allBaseAfterWriteEntityToNBTInferiors,
+                "afterWriteEntityToNBT");
         initialized = true;
     }
 
@@ -2814,11 +4790,15 @@ public final class ClientPlayerAPI {
         Object player;
         try {
             Object minecraft = Minecraft.class.getMethod("func_71410_x").invoke(null);
-            player = minecraft != null ? Minecraft.class.getField("field_71439_g").get(minecraft) : null;
+            player = minecraft != null
+                    ? Minecraft.class.getField("field_71439_g").get(minecraft)
+                    : null;
         } catch (Exception obfuscatedException) {
             try {
                 Object minecraft = Minecraft.class.getMethod("getMinecraft").invoke(null);
-                player = minecraft != null ? Minecraft.class.getField("thePlayer").get(minecraft) : null;
+                player = minecraft != null
+                        ? Minecraft.class.getField("thePlayer").get(minecraft)
+                        : null;
             } catch (Exception var4) {
                 throw new RuntimeException("Unable to aquire list of current server players.", obfuscatedException);
             }
@@ -2836,7 +4816,12 @@ public final class ClientPlayerAPI {
         return allInstances.toArray(new EntityPlayerSP[allInstances.size()]);
     }
 
-    public static void beforeLocalConstructing(IClientPlayerAPI clientPlayer, Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
+    public static void beforeLocalConstructing(
+            IClientPlayerAPI clientPlayer,
+            Minecraft paramMinecraft,
+            World paramWorld,
+            Session paramSession,
+            int paramInt) {
         ClientPlayerAPI clientPlayerAPI = clientPlayer.getClientPlayerAPI();
         if (clientPlayerAPI != null) {
             clientPlayerAPI.load();
@@ -2845,15 +4830,18 @@ public final class ClientPlayerAPI {
         if (clientPlayerAPI != null) {
             clientPlayerAPI.beforeLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
         }
-
     }
 
-    public static void afterLocalConstructing(IClientPlayerAPI clientPlayer, Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
+    public static void afterLocalConstructing(
+            IClientPlayerAPI clientPlayer,
+            Minecraft paramMinecraft,
+            World paramWorld,
+            Session paramSession,
+            int paramInt) {
         ClientPlayerAPI clientPlayerAPI = clientPlayer.getClientPlayerAPI();
         if (clientPlayerAPI != null) {
             clientPlayerAPI.afterLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
         }
-
     }
 
     public static ClientPlayerBase getClientPlayerBase(IClientPlayerAPI clientPlayer, String baseId) {
@@ -2878,19 +4866,31 @@ public final class ClientPlayerAPI {
         return clientPlayerAPI != null ? clientPlayerAPI.dynamic(key, parameters) : null;
     }
 
-    private static void sortBases(List<String> list, Map<String, String[]> allBaseSuperiors, Map<String, String[]> allBaseInferiors, String methodName) {
+    private static void sortBases(
+            List<String> list,
+            Map<String, String[]> allBaseSuperiors,
+            Map<String, String[]> allBaseInferiors,
+            String methodName) {
         new ClientPlayerBaseSorter(list, allBaseSuperiors, allBaseInferiors, methodName).Sort();
     }
 
-    private static void sortDynamicBases(Map<String, List<String>> lists, Map<String, Map<String, String[]>> allBaseSuperiors, Map<String, Map<String, String[]>> allBaseInferiors, String key) {
+    private static void sortDynamicBases(
+            Map<String, List<String>> lists,
+            Map<String, Map<String, String[]>> allBaseSuperiors,
+            Map<String, Map<String, String[]>> allBaseInferiors,
+            String key) {
         List<String> types = lists.get(key);
         if (types != null && types.size() > 1) {
-            sortBases(types, getDynamicSorters(key, types, allBaseSuperiors), getDynamicSorters(key, types, allBaseInferiors), key);
+            sortBases(
+                    types,
+                    getDynamicSorters(key, types, allBaseSuperiors),
+                    getDynamicSorters(key, types, allBaseInferiors),
+                    key);
         }
-
     }
 
-    private static Map<String, String[]> getDynamicSorters(String key, List<String> toSort, Map<String, Map<String, String[]>> allBaseValues) {
+    private static Map<String, String[]> getDynamicSorters(
+            String key, List<String> toSort, Map<String, Map<String, String[]>> allBaseValues) {
         HashMap<String, String[]> superiors = null;
 
         for (String id : toSort) {
@@ -2918,7 +4918,7 @@ public final class ClientPlayerAPI {
     private void load() {
         Iterator<String> iterator = allBaseConstructors.keySet().iterator();
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             String id = iterator.next();
             ClientPlayerBase toAttach = this.createClientPlayerBase(id);
             toAttach.beforeBaseAttach(false);
@@ -2931,10 +4931,9 @@ public final class ClientPlayerAPI {
         this.updateClientPlayerBases();
         iterator = this.allBaseObjects.keySet().iterator();
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             this.allBaseObjects.get(iterator.next()).afterBaseAttach(false);
         }
-
     }
 
     private ClientPlayerBase createClientPlayerBase(String id) {
@@ -2943,14 +4942,15 @@ public final class ClientPlayerAPI {
         try {
             ClientPlayerBase base;
             if (constructor.getParameterTypes().length == 1) {
-                base = (ClientPlayerBase)constructor.newInstance(this);
+                base = (ClientPlayerBase) constructor.newInstance(this);
             } else {
-                base = (ClientPlayerBase)constructor.newInstance(this, id);
+                base = (ClientPlayerBase) constructor.newInstance(this, id);
             }
 
             return base;
         } catch (Exception e) {
-            throw new RuntimeException("Exception while creating a ClientPlayerBase of type '" + constructor.getDeclaringClass() + "'", e);
+            throw new RuntimeException(
+                    "Exception while creating a ClientPlayerBase of type '" + constructor.getDeclaringClass() + "'", e);
         }
     }
 
@@ -2958,283 +4958,420 @@ public final class ClientPlayerAPI {
         this.beforeAddExhaustionHooks = this.create(beforeAddExhaustionHookTypes);
         this.overrideAddExhaustionHooks = this.create(overrideAddExhaustionHookTypes);
         this.afterAddExhaustionHooks = this.create(afterAddExhaustionHookTypes);
-        this.isAddExhaustionModded = this.beforeAddExhaustionHooks != null || this.overrideAddExhaustionHooks != null || this.afterAddExhaustionHooks != null;
+        this.isAddExhaustionModded = this.beforeAddExhaustionHooks != null
+                || this.overrideAddExhaustionHooks != null
+                || this.afterAddExhaustionHooks != null;
         this.beforeAddMovementStatHooks = this.create(beforeAddMovementStatHookTypes);
         this.overrideAddMovementStatHooks = this.create(overrideAddMovementStatHookTypes);
         this.afterAddMovementStatHooks = this.create(afterAddMovementStatHookTypes);
-        this.isAddMovementStatModded = this.beforeAddMovementStatHooks != null || this.overrideAddMovementStatHooks != null || this.afterAddMovementStatHooks != null;
+        this.isAddMovementStatModded = this.beforeAddMovementStatHooks != null
+                || this.overrideAddMovementStatHooks != null
+                || this.afterAddMovementStatHooks != null;
         this.beforeAddStatHooks = this.create(beforeAddStatHookTypes);
         this.overrideAddStatHooks = this.create(overrideAddStatHookTypes);
         this.afterAddStatHooks = this.create(afterAddStatHookTypes);
-        this.isAddStatModded = this.beforeAddStatHooks != null || this.overrideAddStatHooks != null || this.afterAddStatHooks != null;
+        this.isAddStatModded =
+                this.beforeAddStatHooks != null || this.overrideAddStatHooks != null || this.afterAddStatHooks != null;
         this.beforeAttackEntityFromHooks = this.create(beforeAttackEntityFromHookTypes);
         this.overrideAttackEntityFromHooks = this.create(overrideAttackEntityFromHookTypes);
         this.afterAttackEntityFromHooks = this.create(afterAttackEntityFromHookTypes);
-        this.isAttackEntityFromModded = this.beforeAttackEntityFromHooks != null || this.overrideAttackEntityFromHooks != null || this.afterAttackEntityFromHooks != null;
-        this.beforeAttackTargetEntityWithCurrentItemHooks = this.create(beforeAttackTargetEntityWithCurrentItemHookTypes);
-        this.overrideAttackTargetEntityWithCurrentItemHooks = this.create(overrideAttackTargetEntityWithCurrentItemHookTypes);
+        this.isAttackEntityFromModded = this.beforeAttackEntityFromHooks != null
+                || this.overrideAttackEntityFromHooks != null
+                || this.afterAttackEntityFromHooks != null;
+        this.beforeAttackTargetEntityWithCurrentItemHooks =
+                this.create(beforeAttackTargetEntityWithCurrentItemHookTypes);
+        this.overrideAttackTargetEntityWithCurrentItemHooks =
+                this.create(overrideAttackTargetEntityWithCurrentItemHookTypes);
         this.afterAttackTargetEntityWithCurrentItemHooks = this.create(afterAttackTargetEntityWithCurrentItemHookTypes);
-        this.isAttackTargetEntityWithCurrentItemModded = this.beforeAttackTargetEntityWithCurrentItemHooks != null || this.overrideAttackTargetEntityWithCurrentItemHooks != null || this.afterAttackTargetEntityWithCurrentItemHooks != null;
+        this.isAttackTargetEntityWithCurrentItemModded = this.beforeAttackTargetEntityWithCurrentItemHooks != null
+                || this.overrideAttackTargetEntityWithCurrentItemHooks != null
+                || this.afterAttackTargetEntityWithCurrentItemHooks != null;
         this.beforeCanBreatheUnderwaterHooks = this.create(beforeCanBreatheUnderwaterHookTypes);
         this.overrideCanBreatheUnderwaterHooks = this.create(overrideCanBreatheUnderwaterHookTypes);
         this.afterCanBreatheUnderwaterHooks = this.create(afterCanBreatheUnderwaterHookTypes);
-        this.isCanBreatheUnderwaterModded = this.beforeCanBreatheUnderwaterHooks != null || this.overrideCanBreatheUnderwaterHooks != null || this.afterCanBreatheUnderwaterHooks != null;
+        this.isCanBreatheUnderwaterModded = this.beforeCanBreatheUnderwaterHooks != null
+                || this.overrideCanBreatheUnderwaterHooks != null
+                || this.afterCanBreatheUnderwaterHooks != null;
         this.beforeCanHarvestBlockHooks = this.create(beforeCanHarvestBlockHookTypes);
         this.overrideCanHarvestBlockHooks = this.create(overrideCanHarvestBlockHookTypes);
         this.afterCanHarvestBlockHooks = this.create(afterCanHarvestBlockHookTypes);
-        this.isCanHarvestBlockModded = this.beforeCanHarvestBlockHooks != null || this.overrideCanHarvestBlockHooks != null || this.afterCanHarvestBlockHooks != null;
+        this.isCanHarvestBlockModded = this.beforeCanHarvestBlockHooks != null
+                || this.overrideCanHarvestBlockHooks != null
+                || this.afterCanHarvestBlockHooks != null;
         this.beforeCanPlayerEditHooks = this.create(beforeCanPlayerEditHookTypes);
         this.overrideCanPlayerEditHooks = this.create(overrideCanPlayerEditHookTypes);
         this.afterCanPlayerEditHooks = this.create(afterCanPlayerEditHookTypes);
-        this.isCanPlayerEditModded = this.beforeCanPlayerEditHooks != null || this.overrideCanPlayerEditHooks != null || this.afterCanPlayerEditHooks != null;
+        this.isCanPlayerEditModded = this.beforeCanPlayerEditHooks != null
+                || this.overrideCanPlayerEditHooks != null
+                || this.afterCanPlayerEditHooks != null;
         this.beforeCanTriggerWalkingHooks = this.create(beforeCanTriggerWalkingHookTypes);
         this.overrideCanTriggerWalkingHooks = this.create(overrideCanTriggerWalkingHookTypes);
         this.afterCanTriggerWalkingHooks = this.create(afterCanTriggerWalkingHookTypes);
-        this.isCanTriggerWalkingModded = this.beforeCanTriggerWalkingHooks != null || this.overrideCanTriggerWalkingHooks != null || this.afterCanTriggerWalkingHooks != null;
+        this.isCanTriggerWalkingModded = this.beforeCanTriggerWalkingHooks != null
+                || this.overrideCanTriggerWalkingHooks != null
+                || this.afterCanTriggerWalkingHooks != null;
         this.beforeCloseScreenHooks = this.create(beforeCloseScreenHookTypes);
         this.overrideCloseScreenHooks = this.create(overrideCloseScreenHookTypes);
         this.afterCloseScreenHooks = this.create(afterCloseScreenHookTypes);
-        this.isCloseScreenModded = this.beforeCloseScreenHooks != null || this.overrideCloseScreenHooks != null || this.afterCloseScreenHooks != null;
+        this.isCloseScreenModded = this.beforeCloseScreenHooks != null
+                || this.overrideCloseScreenHooks != null
+                || this.afterCloseScreenHooks != null;
         this.beforeDamageEntityHooks = this.create(beforeDamageEntityHookTypes);
         this.overrideDamageEntityHooks = this.create(overrideDamageEntityHookTypes);
         this.afterDamageEntityHooks = this.create(afterDamageEntityHookTypes);
-        this.isDamageEntityModded = this.beforeDamageEntityHooks != null || this.overrideDamageEntityHooks != null || this.afterDamageEntityHooks != null;
+        this.isDamageEntityModded = this.beforeDamageEntityHooks != null
+                || this.overrideDamageEntityHooks != null
+                || this.afterDamageEntityHooks != null;
         this.beforeDisplayGUIBrewingStandHooks = this.create(beforeDisplayGUIBrewingStandHookTypes);
         this.overrideDisplayGUIBrewingStandHooks = this.create(overrideDisplayGUIBrewingStandHookTypes);
         this.afterDisplayGUIBrewingStandHooks = this.create(afterDisplayGUIBrewingStandHookTypes);
-        this.isDisplayGUIBrewingStandModded = this.beforeDisplayGUIBrewingStandHooks != null || this.overrideDisplayGUIBrewingStandHooks != null || this.afterDisplayGUIBrewingStandHooks != null;
+        this.isDisplayGUIBrewingStandModded = this.beforeDisplayGUIBrewingStandHooks != null
+                || this.overrideDisplayGUIBrewingStandHooks != null
+                || this.afterDisplayGUIBrewingStandHooks != null;
         this.beforeDisplayGUIChestHooks = this.create(beforeDisplayGUIChestHookTypes);
         this.overrideDisplayGUIChestHooks = this.create(overrideDisplayGUIChestHookTypes);
         this.afterDisplayGUIChestHooks = this.create(afterDisplayGUIChestHookTypes);
-        this.isDisplayGUIChestModded = this.beforeDisplayGUIChestHooks != null || this.overrideDisplayGUIChestHooks != null || this.afterDisplayGUIChestHooks != null;
+        this.isDisplayGUIChestModded = this.beforeDisplayGUIChestHooks != null
+                || this.overrideDisplayGUIChestHooks != null
+                || this.afterDisplayGUIChestHooks != null;
         this.beforeDisplayGUIDispenserHooks = this.create(beforeDisplayGUIDispenserHookTypes);
         this.overrideDisplayGUIDispenserHooks = this.create(overrideDisplayGUIDispenserHookTypes);
         this.afterDisplayGUIDispenserHooks = this.create(afterDisplayGUIDispenserHookTypes);
-        this.isDisplayGUIDispenserModded = this.beforeDisplayGUIDispenserHooks != null || this.overrideDisplayGUIDispenserHooks != null || this.afterDisplayGUIDispenserHooks != null;
+        this.isDisplayGUIDispenserModded = this.beforeDisplayGUIDispenserHooks != null
+                || this.overrideDisplayGUIDispenserHooks != null
+                || this.afterDisplayGUIDispenserHooks != null;
         this.beforeDisplayGUIEditSignHooks = this.create(beforeDisplayGUIEditSignHookTypes);
         this.overrideDisplayGUIEditSignHooks = this.create(overrideDisplayGUIEditSignHookTypes);
         this.afterDisplayGUIEditSignHooks = this.create(afterDisplayGUIEditSignHookTypes);
-        this.isDisplayGUIEditSignModded = this.beforeDisplayGUIEditSignHooks != null || this.overrideDisplayGUIEditSignHooks != null || this.afterDisplayGUIEditSignHooks != null;
+        this.isDisplayGUIEditSignModded = this.beforeDisplayGUIEditSignHooks != null
+                || this.overrideDisplayGUIEditSignHooks != null
+                || this.afterDisplayGUIEditSignHooks != null;
         this.beforeDisplayGUIEnchantmentHooks = this.create(beforeDisplayGUIEnchantmentHookTypes);
         this.overrideDisplayGUIEnchantmentHooks = this.create(overrideDisplayGUIEnchantmentHookTypes);
         this.afterDisplayGUIEnchantmentHooks = this.create(afterDisplayGUIEnchantmentHookTypes);
-        this.isDisplayGUIEnchantmentModded = this.beforeDisplayGUIEnchantmentHooks != null || this.overrideDisplayGUIEnchantmentHooks != null || this.afterDisplayGUIEnchantmentHooks != null;
+        this.isDisplayGUIEnchantmentModded = this.beforeDisplayGUIEnchantmentHooks != null
+                || this.overrideDisplayGUIEnchantmentHooks != null
+                || this.afterDisplayGUIEnchantmentHooks != null;
         this.beforeDisplayGUIFurnaceHooks = this.create(beforeDisplayGUIFurnaceHookTypes);
         this.overrideDisplayGUIFurnaceHooks = this.create(overrideDisplayGUIFurnaceHookTypes);
         this.afterDisplayGUIFurnaceHooks = this.create(afterDisplayGUIFurnaceHookTypes);
-        this.isDisplayGUIFurnaceModded = this.beforeDisplayGUIFurnaceHooks != null || this.overrideDisplayGUIFurnaceHooks != null || this.afterDisplayGUIFurnaceHooks != null;
+        this.isDisplayGUIFurnaceModded = this.beforeDisplayGUIFurnaceHooks != null
+                || this.overrideDisplayGUIFurnaceHooks != null
+                || this.afterDisplayGUIFurnaceHooks != null;
         this.beforeDisplayGUIWorkbenchHooks = this.create(beforeDisplayGUIWorkbenchHookTypes);
         this.overrideDisplayGUIWorkbenchHooks = this.create(overrideDisplayGUIWorkbenchHookTypes);
         this.afterDisplayGUIWorkbenchHooks = this.create(afterDisplayGUIWorkbenchHookTypes);
-        this.isDisplayGUIWorkbenchModded = this.beforeDisplayGUIWorkbenchHooks != null || this.overrideDisplayGUIWorkbenchHooks != null || this.afterDisplayGUIWorkbenchHooks != null;
+        this.isDisplayGUIWorkbenchModded = this.beforeDisplayGUIWorkbenchHooks != null
+                || this.overrideDisplayGUIWorkbenchHooks != null
+                || this.afterDisplayGUIWorkbenchHooks != null;
         this.beforeDropOneItemHooks = this.create(beforeDropOneItemHookTypes);
         this.overrideDropOneItemHooks = this.create(overrideDropOneItemHookTypes);
         this.afterDropOneItemHooks = this.create(afterDropOneItemHookTypes);
-        this.isDropOneItemModded = this.beforeDropOneItemHooks != null || this.overrideDropOneItemHooks != null || this.afterDropOneItemHooks != null;
+        this.isDropOneItemModded = this.beforeDropOneItemHooks != null
+                || this.overrideDropOneItemHooks != null
+                || this.afterDropOneItemHooks != null;
         this.beforeDropPlayerItemHooks = this.create(beforeDropPlayerItemHookTypes);
         this.overrideDropPlayerItemHooks = this.create(overrideDropPlayerItemHookTypes);
         this.afterDropPlayerItemHooks = this.create(afterDropPlayerItemHookTypes);
-        this.isDropPlayerItemModded = this.beforeDropPlayerItemHooks != null || this.overrideDropPlayerItemHooks != null || this.afterDropPlayerItemHooks != null;
+        this.isDropPlayerItemModded = this.beforeDropPlayerItemHooks != null
+                || this.overrideDropPlayerItemHooks != null
+                || this.afterDropPlayerItemHooks != null;
         this.beforeDropPlayerItemWithRandomChoiceHooks = this.create(beforeDropPlayerItemWithRandomChoiceHookTypes);
         this.overrideDropPlayerItemWithRandomChoiceHooks = this.create(overrideDropPlayerItemWithRandomChoiceHookTypes);
         this.afterDropPlayerItemWithRandomChoiceHooks = this.create(afterDropPlayerItemWithRandomChoiceHookTypes);
-        this.isDropPlayerItemWithRandomChoiceModded = this.beforeDropPlayerItemWithRandomChoiceHooks != null || this.overrideDropPlayerItemWithRandomChoiceHooks != null || this.afterDropPlayerItemWithRandomChoiceHooks != null;
+        this.isDropPlayerItemWithRandomChoiceModded = this.beforeDropPlayerItemWithRandomChoiceHooks != null
+                || this.overrideDropPlayerItemWithRandomChoiceHooks != null
+                || this.afterDropPlayerItemWithRandomChoiceHooks != null;
         this.beforeFallHooks = this.create(beforeFallHookTypes);
         this.overrideFallHooks = this.create(overrideFallHookTypes);
         this.afterFallHooks = this.create(afterFallHookTypes);
-        this.isFallModded = this.beforeFallHooks != null || this.overrideFallHooks != null || this.afterFallHooks != null;
+        this.isFallModded =
+                this.beforeFallHooks != null || this.overrideFallHooks != null || this.afterFallHooks != null;
         this.beforeGetAIMoveSpeedHooks = this.create(beforeGetAIMoveSpeedHookTypes);
         this.overrideGetAIMoveSpeedHooks = this.create(overrideGetAIMoveSpeedHookTypes);
         this.afterGetAIMoveSpeedHooks = this.create(afterGetAIMoveSpeedHookTypes);
-        this.isGetAIMoveSpeedModded = this.beforeGetAIMoveSpeedHooks != null || this.overrideGetAIMoveSpeedHooks != null || this.afterGetAIMoveSpeedHooks != null;
+        this.isGetAIMoveSpeedModded = this.beforeGetAIMoveSpeedHooks != null
+                || this.overrideGetAIMoveSpeedHooks != null
+                || this.afterGetAIMoveSpeedHooks != null;
         this.beforeGetBedOrientationInDegreesHooks = this.create(beforeGetBedOrientationInDegreesHookTypes);
         this.overrideGetBedOrientationInDegreesHooks = this.create(overrideGetBedOrientationInDegreesHookTypes);
         this.afterGetBedOrientationInDegreesHooks = this.create(afterGetBedOrientationInDegreesHookTypes);
-        this.isGetBedOrientationInDegreesModded = this.beforeGetBedOrientationInDegreesHooks != null || this.overrideGetBedOrientationInDegreesHooks != null || this.afterGetBedOrientationInDegreesHooks != null;
+        this.isGetBedOrientationInDegreesModded = this.beforeGetBedOrientationInDegreesHooks != null
+                || this.overrideGetBedOrientationInDegreesHooks != null
+                || this.afterGetBedOrientationInDegreesHooks != null;
         this.beforeGetBrightnessHooks = this.create(beforeGetBrightnessHookTypes);
         this.overrideGetBrightnessHooks = this.create(overrideGetBrightnessHookTypes);
         this.afterGetBrightnessHooks = this.create(afterGetBrightnessHookTypes);
-        this.isGetBrightnessModded = this.beforeGetBrightnessHooks != null || this.overrideGetBrightnessHooks != null || this.afterGetBrightnessHooks != null;
+        this.isGetBrightnessModded = this.beforeGetBrightnessHooks != null
+                || this.overrideGetBrightnessHooks != null
+                || this.afterGetBrightnessHooks != null;
         this.beforeGetBrightnessForRenderHooks = this.create(beforeGetBrightnessForRenderHookTypes);
         this.overrideGetBrightnessForRenderHooks = this.create(overrideGetBrightnessForRenderHookTypes);
         this.afterGetBrightnessForRenderHooks = this.create(afterGetBrightnessForRenderHookTypes);
-        this.isGetBrightnessForRenderModded = this.beforeGetBrightnessForRenderHooks != null || this.overrideGetBrightnessForRenderHooks != null || this.afterGetBrightnessForRenderHooks != null;
+        this.isGetBrightnessForRenderModded = this.beforeGetBrightnessForRenderHooks != null
+                || this.overrideGetBrightnessForRenderHooks != null
+                || this.afterGetBrightnessForRenderHooks != null;
         this.beforeGetCurrentPlayerStrVsBlockHooks = this.create(beforeGetCurrentPlayerStrVsBlockHookTypes);
         this.overrideGetCurrentPlayerStrVsBlockHooks = this.create(overrideGetCurrentPlayerStrVsBlockHookTypes);
         this.afterGetCurrentPlayerStrVsBlockHooks = this.create(afterGetCurrentPlayerStrVsBlockHookTypes);
-        this.isGetCurrentPlayerStrVsBlockModded = this.beforeGetCurrentPlayerStrVsBlockHooks != null || this.overrideGetCurrentPlayerStrVsBlockHooks != null || this.afterGetCurrentPlayerStrVsBlockHooks != null;
+        this.isGetCurrentPlayerStrVsBlockModded = this.beforeGetCurrentPlayerStrVsBlockHooks != null
+                || this.overrideGetCurrentPlayerStrVsBlockHooks != null
+                || this.afterGetCurrentPlayerStrVsBlockHooks != null;
         this.beforeGetCurrentPlayerStrVsBlockForgeHooks = this.create(beforeGetCurrentPlayerStrVsBlockForgeHookTypes);
-        this.overrideGetCurrentPlayerStrVsBlockForgeHooks = this.create(overrideGetCurrentPlayerStrVsBlockForgeHookTypes);
+        this.overrideGetCurrentPlayerStrVsBlockForgeHooks =
+                this.create(overrideGetCurrentPlayerStrVsBlockForgeHookTypes);
         this.afterGetCurrentPlayerStrVsBlockForgeHooks = this.create(afterGetCurrentPlayerStrVsBlockForgeHookTypes);
-        this.isGetCurrentPlayerStrVsBlockForgeModded = this.beforeGetCurrentPlayerStrVsBlockForgeHooks != null || this.overrideGetCurrentPlayerStrVsBlockForgeHooks != null || this.afterGetCurrentPlayerStrVsBlockForgeHooks != null;
+        this.isGetCurrentPlayerStrVsBlockForgeModded = this.beforeGetCurrentPlayerStrVsBlockForgeHooks != null
+                || this.overrideGetCurrentPlayerStrVsBlockForgeHooks != null
+                || this.afterGetCurrentPlayerStrVsBlockForgeHooks != null;
         this.beforeGetDistanceSqHooks = this.create(beforeGetDistanceSqHookTypes);
         this.overrideGetDistanceSqHooks = this.create(overrideGetDistanceSqHookTypes);
         this.afterGetDistanceSqHooks = this.create(afterGetDistanceSqHookTypes);
-        this.isGetDistanceSqModded = this.beforeGetDistanceSqHooks != null || this.overrideGetDistanceSqHooks != null || this.afterGetDistanceSqHooks != null;
+        this.isGetDistanceSqModded = this.beforeGetDistanceSqHooks != null
+                || this.overrideGetDistanceSqHooks != null
+                || this.afterGetDistanceSqHooks != null;
         this.beforeGetDistanceSqToEntityHooks = this.create(beforeGetDistanceSqToEntityHookTypes);
         this.overrideGetDistanceSqToEntityHooks = this.create(overrideGetDistanceSqToEntityHookTypes);
         this.afterGetDistanceSqToEntityHooks = this.create(afterGetDistanceSqToEntityHookTypes);
-        this.isGetDistanceSqToEntityModded = this.beforeGetDistanceSqToEntityHooks != null || this.overrideGetDistanceSqToEntityHooks != null || this.afterGetDistanceSqToEntityHooks != null;
+        this.isGetDistanceSqToEntityModded = this.beforeGetDistanceSqToEntityHooks != null
+                || this.overrideGetDistanceSqToEntityHooks != null
+                || this.afterGetDistanceSqToEntityHooks != null;
         this.beforeGetFOVMultiplierHooks = this.create(beforeGetFOVMultiplierHookTypes);
         this.overrideGetFOVMultiplierHooks = this.create(overrideGetFOVMultiplierHookTypes);
         this.afterGetFOVMultiplierHooks = this.create(afterGetFOVMultiplierHookTypes);
-        this.isGetFOVMultiplierModded = this.beforeGetFOVMultiplierHooks != null || this.overrideGetFOVMultiplierHooks != null || this.afterGetFOVMultiplierHooks != null;
+        this.isGetFOVMultiplierModded = this.beforeGetFOVMultiplierHooks != null
+                || this.overrideGetFOVMultiplierHooks != null
+                || this.afterGetFOVMultiplierHooks != null;
         this.beforeGetHurtSoundHooks = this.create(beforeGetHurtSoundHookTypes);
         this.overrideGetHurtSoundHooks = this.create(overrideGetHurtSoundHookTypes);
         this.afterGetHurtSoundHooks = this.create(afterGetHurtSoundHookTypes);
-        this.isGetHurtSoundModded = this.beforeGetHurtSoundHooks != null || this.overrideGetHurtSoundHooks != null || this.afterGetHurtSoundHooks != null;
+        this.isGetHurtSoundModded = this.beforeGetHurtSoundHooks != null
+                || this.overrideGetHurtSoundHooks != null
+                || this.afterGetHurtSoundHooks != null;
         this.beforeGetItemIconHooks = this.create(beforeGetItemIconHookTypes);
         this.overrideGetItemIconHooks = this.create(overrideGetItemIconHookTypes);
         this.afterGetItemIconHooks = this.create(afterGetItemIconHookTypes);
-        this.isGetItemIconModded = this.beforeGetItemIconHooks != null || this.overrideGetItemIconHooks != null || this.afterGetItemIconHooks != null;
+        this.isGetItemIconModded = this.beforeGetItemIconHooks != null
+                || this.overrideGetItemIconHooks != null
+                || this.afterGetItemIconHooks != null;
         this.beforeGetSleepTimerHooks = this.create(beforeGetSleepTimerHookTypes);
         this.overrideGetSleepTimerHooks = this.create(overrideGetSleepTimerHookTypes);
         this.afterGetSleepTimerHooks = this.create(afterGetSleepTimerHookTypes);
-        this.isGetSleepTimerModded = this.beforeGetSleepTimerHooks != null || this.overrideGetSleepTimerHooks != null || this.afterGetSleepTimerHooks != null;
+        this.isGetSleepTimerModded = this.beforeGetSleepTimerHooks != null
+                || this.overrideGetSleepTimerHooks != null
+                || this.afterGetSleepTimerHooks != null;
         this.beforeHandleLavaMovementHooks = this.create(beforeHandleLavaMovementHookTypes);
         this.overrideHandleLavaMovementHooks = this.create(overrideHandleLavaMovementHookTypes);
         this.afterHandleLavaMovementHooks = this.create(afterHandleLavaMovementHookTypes);
-        this.isHandleLavaMovementModded = this.beforeHandleLavaMovementHooks != null || this.overrideHandleLavaMovementHooks != null || this.afterHandleLavaMovementHooks != null;
+        this.isHandleLavaMovementModded = this.beforeHandleLavaMovementHooks != null
+                || this.overrideHandleLavaMovementHooks != null
+                || this.afterHandleLavaMovementHooks != null;
         this.beforeHandleWaterMovementHooks = this.create(beforeHandleWaterMovementHookTypes);
         this.overrideHandleWaterMovementHooks = this.create(overrideHandleWaterMovementHookTypes);
         this.afterHandleWaterMovementHooks = this.create(afterHandleWaterMovementHookTypes);
-        this.isHandleWaterMovementModded = this.beforeHandleWaterMovementHooks != null || this.overrideHandleWaterMovementHooks != null || this.afterHandleWaterMovementHooks != null;
+        this.isHandleWaterMovementModded = this.beforeHandleWaterMovementHooks != null
+                || this.overrideHandleWaterMovementHooks != null
+                || this.afterHandleWaterMovementHooks != null;
         this.beforeHealHooks = this.create(beforeHealHookTypes);
         this.overrideHealHooks = this.create(overrideHealHookTypes);
         this.afterHealHooks = this.create(afterHealHookTypes);
-        this.isHealModded = this.beforeHealHooks != null || this.overrideHealHooks != null || this.afterHealHooks != null;
+        this.isHealModded =
+                this.beforeHealHooks != null || this.overrideHealHooks != null || this.afterHealHooks != null;
         this.beforeIsEntityInsideOpaqueBlockHooks = this.create(beforeIsEntityInsideOpaqueBlockHookTypes);
         this.overrideIsEntityInsideOpaqueBlockHooks = this.create(overrideIsEntityInsideOpaqueBlockHookTypes);
         this.afterIsEntityInsideOpaqueBlockHooks = this.create(afterIsEntityInsideOpaqueBlockHookTypes);
-        this.isIsEntityInsideOpaqueBlockModded = this.beforeIsEntityInsideOpaqueBlockHooks != null || this.overrideIsEntityInsideOpaqueBlockHooks != null || this.afterIsEntityInsideOpaqueBlockHooks != null;
+        this.isIsEntityInsideOpaqueBlockModded = this.beforeIsEntityInsideOpaqueBlockHooks != null
+                || this.overrideIsEntityInsideOpaqueBlockHooks != null
+                || this.afterIsEntityInsideOpaqueBlockHooks != null;
         this.beforeIsInWaterHooks = this.create(beforeIsInWaterHookTypes);
         this.overrideIsInWaterHooks = this.create(overrideIsInWaterHookTypes);
         this.afterIsInWaterHooks = this.create(afterIsInWaterHookTypes);
-        this.isIsInWaterModded = this.beforeIsInWaterHooks != null || this.overrideIsInWaterHooks != null || this.afterIsInWaterHooks != null;
+        this.isIsInWaterModded = this.beforeIsInWaterHooks != null
+                || this.overrideIsInWaterHooks != null
+                || this.afterIsInWaterHooks != null;
         this.beforeIsInsideOfMaterialHooks = this.create(beforeIsInsideOfMaterialHookTypes);
         this.overrideIsInsideOfMaterialHooks = this.create(overrideIsInsideOfMaterialHookTypes);
         this.afterIsInsideOfMaterialHooks = this.create(afterIsInsideOfMaterialHookTypes);
-        this.isIsInsideOfMaterialModded = this.beforeIsInsideOfMaterialHooks != null || this.overrideIsInsideOfMaterialHooks != null || this.afterIsInsideOfMaterialHooks != null;
+        this.isIsInsideOfMaterialModded = this.beforeIsInsideOfMaterialHooks != null
+                || this.overrideIsInsideOfMaterialHooks != null
+                || this.afterIsInsideOfMaterialHooks != null;
         this.beforeIsOnLadderHooks = this.create(beforeIsOnLadderHookTypes);
         this.overrideIsOnLadderHooks = this.create(overrideIsOnLadderHookTypes);
         this.afterIsOnLadderHooks = this.create(afterIsOnLadderHookTypes);
-        this.isIsOnLadderModded = this.beforeIsOnLadderHooks != null || this.overrideIsOnLadderHooks != null || this.afterIsOnLadderHooks != null;
+        this.isIsOnLadderModded = this.beforeIsOnLadderHooks != null
+                || this.overrideIsOnLadderHooks != null
+                || this.afterIsOnLadderHooks != null;
         this.beforeIsPlayerSleepingHooks = this.create(beforeIsPlayerSleepingHookTypes);
         this.overrideIsPlayerSleepingHooks = this.create(overrideIsPlayerSleepingHookTypes);
         this.afterIsPlayerSleepingHooks = this.create(afterIsPlayerSleepingHookTypes);
-        this.isIsPlayerSleepingModded = this.beforeIsPlayerSleepingHooks != null || this.overrideIsPlayerSleepingHooks != null || this.afterIsPlayerSleepingHooks != null;
+        this.isIsPlayerSleepingModded = this.beforeIsPlayerSleepingHooks != null
+                || this.overrideIsPlayerSleepingHooks != null
+                || this.afterIsPlayerSleepingHooks != null;
         this.beforeIsSneakingHooks = this.create(beforeIsSneakingHookTypes);
         this.overrideIsSneakingHooks = this.create(overrideIsSneakingHookTypes);
         this.afterIsSneakingHooks = this.create(afterIsSneakingHookTypes);
-        this.isIsSneakingModded = this.beforeIsSneakingHooks != null || this.overrideIsSneakingHooks != null || this.afterIsSneakingHooks != null;
+        this.isIsSneakingModded = this.beforeIsSneakingHooks != null
+                || this.overrideIsSneakingHooks != null
+                || this.afterIsSneakingHooks != null;
         this.beforeIsSprintingHooks = this.create(beforeIsSprintingHookTypes);
         this.overrideIsSprintingHooks = this.create(overrideIsSprintingHookTypes);
         this.afterIsSprintingHooks = this.create(afterIsSprintingHookTypes);
-        this.isIsSprintingModded = this.beforeIsSprintingHooks != null || this.overrideIsSprintingHooks != null || this.afterIsSprintingHooks != null;
+        this.isIsSprintingModded = this.beforeIsSprintingHooks != null
+                || this.overrideIsSprintingHooks != null
+                || this.afterIsSprintingHooks != null;
         this.beforeJumpHooks = this.create(beforeJumpHookTypes);
         this.overrideJumpHooks = this.create(overrideJumpHookTypes);
         this.afterJumpHooks = this.create(afterJumpHookTypes);
-        this.isJumpModded = this.beforeJumpHooks != null || this.overrideJumpHooks != null || this.afterJumpHooks != null;
+        this.isJumpModded =
+                this.beforeJumpHooks != null || this.overrideJumpHooks != null || this.afterJumpHooks != null;
         this.beforeKnockBackHooks = this.create(beforeKnockBackHookTypes);
         this.overrideKnockBackHooks = this.create(overrideKnockBackHookTypes);
         this.afterKnockBackHooks = this.create(afterKnockBackHookTypes);
-        this.isKnockBackModded = this.beforeKnockBackHooks != null || this.overrideKnockBackHooks != null || this.afterKnockBackHooks != null;
+        this.isKnockBackModded = this.beforeKnockBackHooks != null
+                || this.overrideKnockBackHooks != null
+                || this.afterKnockBackHooks != null;
         this.beforeMoveEntityHooks = this.create(beforeMoveEntityHookTypes);
         this.overrideMoveEntityHooks = this.create(overrideMoveEntityHookTypes);
         this.afterMoveEntityHooks = this.create(afterMoveEntityHookTypes);
-        this.isMoveEntityModded = this.beforeMoveEntityHooks != null || this.overrideMoveEntityHooks != null || this.afterMoveEntityHooks != null;
+        this.isMoveEntityModded = this.beforeMoveEntityHooks != null
+                || this.overrideMoveEntityHooks != null
+                || this.afterMoveEntityHooks != null;
         this.beforeMoveEntityWithHeadingHooks = this.create(beforeMoveEntityWithHeadingHookTypes);
         this.overrideMoveEntityWithHeadingHooks = this.create(overrideMoveEntityWithHeadingHookTypes);
         this.afterMoveEntityWithHeadingHooks = this.create(afterMoveEntityWithHeadingHookTypes);
-        this.isMoveEntityWithHeadingModded = this.beforeMoveEntityWithHeadingHooks != null || this.overrideMoveEntityWithHeadingHooks != null || this.afterMoveEntityWithHeadingHooks != null;
+        this.isMoveEntityWithHeadingModded = this.beforeMoveEntityWithHeadingHooks != null
+                || this.overrideMoveEntityWithHeadingHooks != null
+                || this.afterMoveEntityWithHeadingHooks != null;
         this.beforeMoveFlyingHooks = this.create(beforeMoveFlyingHookTypes);
         this.overrideMoveFlyingHooks = this.create(overrideMoveFlyingHookTypes);
         this.afterMoveFlyingHooks = this.create(afterMoveFlyingHookTypes);
-        this.isMoveFlyingModded = this.beforeMoveFlyingHooks != null || this.overrideMoveFlyingHooks != null || this.afterMoveFlyingHooks != null;
+        this.isMoveFlyingModded = this.beforeMoveFlyingHooks != null
+                || this.overrideMoveFlyingHooks != null
+                || this.afterMoveFlyingHooks != null;
         this.beforeOnDeathHooks = this.create(beforeOnDeathHookTypes);
         this.overrideOnDeathHooks = this.create(overrideOnDeathHookTypes);
         this.afterOnDeathHooks = this.create(afterOnDeathHookTypes);
-        this.isOnDeathModded = this.beforeOnDeathHooks != null || this.overrideOnDeathHooks != null || this.afterOnDeathHooks != null;
+        this.isOnDeathModded =
+                this.beforeOnDeathHooks != null || this.overrideOnDeathHooks != null || this.afterOnDeathHooks != null;
         this.beforeOnLivingUpdateHooks = this.create(beforeOnLivingUpdateHookTypes);
         this.overrideOnLivingUpdateHooks = this.create(overrideOnLivingUpdateHookTypes);
         this.afterOnLivingUpdateHooks = this.create(afterOnLivingUpdateHookTypes);
-        this.isOnLivingUpdateModded = this.beforeOnLivingUpdateHooks != null || this.overrideOnLivingUpdateHooks != null || this.afterOnLivingUpdateHooks != null;
+        this.isOnLivingUpdateModded = this.beforeOnLivingUpdateHooks != null
+                || this.overrideOnLivingUpdateHooks != null
+                || this.afterOnLivingUpdateHooks != null;
         this.beforeOnKillEntityHooks = this.create(beforeOnKillEntityHookTypes);
         this.overrideOnKillEntityHooks = this.create(overrideOnKillEntityHookTypes);
         this.afterOnKillEntityHooks = this.create(afterOnKillEntityHookTypes);
-        this.isOnKillEntityModded = this.beforeOnKillEntityHooks != null || this.overrideOnKillEntityHooks != null || this.afterOnKillEntityHooks != null;
+        this.isOnKillEntityModded = this.beforeOnKillEntityHooks != null
+                || this.overrideOnKillEntityHooks != null
+                || this.afterOnKillEntityHooks != null;
         this.beforeOnStruckByLightningHooks = this.create(beforeOnStruckByLightningHookTypes);
         this.overrideOnStruckByLightningHooks = this.create(overrideOnStruckByLightningHookTypes);
         this.afterOnStruckByLightningHooks = this.create(afterOnStruckByLightningHookTypes);
-        this.isOnStruckByLightningModded = this.beforeOnStruckByLightningHooks != null || this.overrideOnStruckByLightningHooks != null || this.afterOnStruckByLightningHooks != null;
+        this.isOnStruckByLightningModded = this.beforeOnStruckByLightningHooks != null
+                || this.overrideOnStruckByLightningHooks != null
+                || this.afterOnStruckByLightningHooks != null;
         this.beforeOnUpdateHooks = this.create(beforeOnUpdateHookTypes);
         this.overrideOnUpdateHooks = this.create(overrideOnUpdateHookTypes);
         this.afterOnUpdateHooks = this.create(afterOnUpdateHookTypes);
-        this.isOnUpdateModded = this.beforeOnUpdateHooks != null || this.overrideOnUpdateHooks != null || this.afterOnUpdateHooks != null;
+        this.isOnUpdateModded = this.beforeOnUpdateHooks != null
+                || this.overrideOnUpdateHooks != null
+                || this.afterOnUpdateHooks != null;
         this.beforePlayStepSoundHooks = this.create(beforePlayStepSoundHookTypes);
         this.overridePlayStepSoundHooks = this.create(overridePlayStepSoundHookTypes);
         this.afterPlayStepSoundHooks = this.create(afterPlayStepSoundHookTypes);
-        this.isPlayStepSoundModded = this.beforePlayStepSoundHooks != null || this.overridePlayStepSoundHooks != null || this.afterPlayStepSoundHooks != null;
+        this.isPlayStepSoundModded = this.beforePlayStepSoundHooks != null
+                || this.overridePlayStepSoundHooks != null
+                || this.afterPlayStepSoundHooks != null;
         this.beforePushOutOfBlocksHooks = this.create(beforePushOutOfBlocksHookTypes);
         this.overridePushOutOfBlocksHooks = this.create(overridePushOutOfBlocksHookTypes);
         this.afterPushOutOfBlocksHooks = this.create(afterPushOutOfBlocksHookTypes);
-        this.isPushOutOfBlocksModded = this.beforePushOutOfBlocksHooks != null || this.overridePushOutOfBlocksHooks != null || this.afterPushOutOfBlocksHooks != null;
+        this.isPushOutOfBlocksModded = this.beforePushOutOfBlocksHooks != null
+                || this.overridePushOutOfBlocksHooks != null
+                || this.afterPushOutOfBlocksHooks != null;
         this.beforeRayTraceHooks = this.create(beforeRayTraceHookTypes);
         this.overrideRayTraceHooks = this.create(overrideRayTraceHookTypes);
         this.afterRayTraceHooks = this.create(afterRayTraceHookTypes);
-        this.isRayTraceModded = this.beforeRayTraceHooks != null || this.overrideRayTraceHooks != null || this.afterRayTraceHooks != null;
+        this.isRayTraceModded = this.beforeRayTraceHooks != null
+                || this.overrideRayTraceHooks != null
+                || this.afterRayTraceHooks != null;
         this.beforeReadEntityFromNBTHooks = this.create(beforeReadEntityFromNBTHookTypes);
         this.overrideReadEntityFromNBTHooks = this.create(overrideReadEntityFromNBTHookTypes);
         this.afterReadEntityFromNBTHooks = this.create(afterReadEntityFromNBTHookTypes);
-        this.isReadEntityFromNBTModded = this.beforeReadEntityFromNBTHooks != null || this.overrideReadEntityFromNBTHooks != null || this.afterReadEntityFromNBTHooks != null;
+        this.isReadEntityFromNBTModded = this.beforeReadEntityFromNBTHooks != null
+                || this.overrideReadEntityFromNBTHooks != null
+                || this.afterReadEntityFromNBTHooks != null;
         this.beforeRespawnPlayerHooks = this.create(beforeRespawnPlayerHookTypes);
         this.overrideRespawnPlayerHooks = this.create(overrideRespawnPlayerHookTypes);
         this.afterRespawnPlayerHooks = this.create(afterRespawnPlayerHookTypes);
-        this.isRespawnPlayerModded = this.beforeRespawnPlayerHooks != null || this.overrideRespawnPlayerHooks != null || this.afterRespawnPlayerHooks != null;
+        this.isRespawnPlayerModded = this.beforeRespawnPlayerHooks != null
+                || this.overrideRespawnPlayerHooks != null
+                || this.afterRespawnPlayerHooks != null;
         this.beforeSetDeadHooks = this.create(beforeSetDeadHookTypes);
         this.overrideSetDeadHooks = this.create(overrideSetDeadHookTypes);
         this.afterSetDeadHooks = this.create(afterSetDeadHookTypes);
-        this.isSetDeadModded = this.beforeSetDeadHooks != null || this.overrideSetDeadHooks != null || this.afterSetDeadHooks != null;
+        this.isSetDeadModded =
+                this.beforeSetDeadHooks != null || this.overrideSetDeadHooks != null || this.afterSetDeadHooks != null;
         this.beforeSetPlayerSPHealthHooks = this.create(beforeSetPlayerSPHealthHookTypes);
         this.overrideSetPlayerSPHealthHooks = this.create(overrideSetPlayerSPHealthHookTypes);
         this.afterSetPlayerSPHealthHooks = this.create(afterSetPlayerSPHealthHookTypes);
-        this.isSetPlayerSPHealthModded = this.beforeSetPlayerSPHealthHooks != null || this.overrideSetPlayerSPHealthHooks != null || this.afterSetPlayerSPHealthHooks != null;
+        this.isSetPlayerSPHealthModded = this.beforeSetPlayerSPHealthHooks != null
+                || this.overrideSetPlayerSPHealthHooks != null
+                || this.afterSetPlayerSPHealthHooks != null;
         this.beforeSetPositionAndRotationHooks = this.create(beforeSetPositionAndRotationHookTypes);
         this.overrideSetPositionAndRotationHooks = this.create(overrideSetPositionAndRotationHookTypes);
         this.afterSetPositionAndRotationHooks = this.create(afterSetPositionAndRotationHookTypes);
-        this.isSetPositionAndRotationModded = this.beforeSetPositionAndRotationHooks != null || this.overrideSetPositionAndRotationHooks != null || this.afterSetPositionAndRotationHooks != null;
+        this.isSetPositionAndRotationModded = this.beforeSetPositionAndRotationHooks != null
+                || this.overrideSetPositionAndRotationHooks != null
+                || this.afterSetPositionAndRotationHooks != null;
         this.beforeSetSneakingHooks = this.create(beforeSetSneakingHookTypes);
         this.overrideSetSneakingHooks = this.create(overrideSetSneakingHookTypes);
         this.afterSetSneakingHooks = this.create(afterSetSneakingHookTypes);
-        this.isSetSneakingModded = this.beforeSetSneakingHooks != null || this.overrideSetSneakingHooks != null || this.afterSetSneakingHooks != null;
+        this.isSetSneakingModded = this.beforeSetSneakingHooks != null
+                || this.overrideSetSneakingHooks != null
+                || this.afterSetSneakingHooks != null;
         this.beforeSetSprintingHooks = this.create(beforeSetSprintingHookTypes);
         this.overrideSetSprintingHooks = this.create(overrideSetSprintingHookTypes);
         this.afterSetSprintingHooks = this.create(afterSetSprintingHookTypes);
-        this.isSetSprintingModded = this.beforeSetSprintingHooks != null || this.overrideSetSprintingHooks != null || this.afterSetSprintingHooks != null;
+        this.isSetSprintingModded = this.beforeSetSprintingHooks != null
+                || this.overrideSetSprintingHooks != null
+                || this.afterSetSprintingHooks != null;
         this.beforeSleepInBedAtHooks = this.create(beforeSleepInBedAtHookTypes);
         this.overrideSleepInBedAtHooks = this.create(overrideSleepInBedAtHookTypes);
         this.afterSleepInBedAtHooks = this.create(afterSleepInBedAtHookTypes);
-        this.isSleepInBedAtModded = this.beforeSleepInBedAtHooks != null || this.overrideSleepInBedAtHooks != null || this.afterSleepInBedAtHooks != null;
+        this.isSleepInBedAtModded = this.beforeSleepInBedAtHooks != null
+                || this.overrideSleepInBedAtHooks != null
+                || this.afterSleepInBedAtHooks != null;
         this.beforeSwingItemHooks = this.create(beforeSwingItemHookTypes);
         this.overrideSwingItemHooks = this.create(overrideSwingItemHookTypes);
         this.afterSwingItemHooks = this.create(afterSwingItemHookTypes);
-        this.isSwingItemModded = this.beforeSwingItemHooks != null || this.overrideSwingItemHooks != null || this.afterSwingItemHooks != null;
+        this.isSwingItemModded = this.beforeSwingItemHooks != null
+                || this.overrideSwingItemHooks != null
+                || this.afterSwingItemHooks != null;
         this.beforeUpdateEntityActionStateHooks = this.create(beforeUpdateEntityActionStateHookTypes);
         this.overrideUpdateEntityActionStateHooks = this.create(overrideUpdateEntityActionStateHookTypes);
         this.afterUpdateEntityActionStateHooks = this.create(afterUpdateEntityActionStateHookTypes);
-        this.isUpdateEntityActionStateModded = this.beforeUpdateEntityActionStateHooks != null || this.overrideUpdateEntityActionStateHooks != null || this.afterUpdateEntityActionStateHooks != null;
+        this.isUpdateEntityActionStateModded = this.beforeUpdateEntityActionStateHooks != null
+                || this.overrideUpdateEntityActionStateHooks != null
+                || this.afterUpdateEntityActionStateHooks != null;
         this.beforeUpdateRiddenHooks = this.create(beforeUpdateRiddenHookTypes);
         this.overrideUpdateRiddenHooks = this.create(overrideUpdateRiddenHookTypes);
         this.afterUpdateRiddenHooks = this.create(afterUpdateRiddenHookTypes);
-        this.isUpdateRiddenModded = this.beforeUpdateRiddenHooks != null || this.overrideUpdateRiddenHooks != null || this.afterUpdateRiddenHooks != null;
+        this.isUpdateRiddenModded = this.beforeUpdateRiddenHooks != null
+                || this.overrideUpdateRiddenHooks != null
+                || this.afterUpdateRiddenHooks != null;
         this.beforeWakeUpPlayerHooks = this.create(beforeWakeUpPlayerHookTypes);
         this.overrideWakeUpPlayerHooks = this.create(overrideWakeUpPlayerHookTypes);
         this.afterWakeUpPlayerHooks = this.create(afterWakeUpPlayerHookTypes);
-        this.isWakeUpPlayerModded = this.beforeWakeUpPlayerHooks != null || this.overrideWakeUpPlayerHooks != null || this.afterWakeUpPlayerHooks != null;
+        this.isWakeUpPlayerModded = this.beforeWakeUpPlayerHooks != null
+                || this.overrideWakeUpPlayerHooks != null
+                || this.afterWakeUpPlayerHooks != null;
         this.beforeWriteEntityToNBTHooks = this.create(beforeWriteEntityToNBTHookTypes);
         this.overrideWriteEntityToNBTHooks = this.create(overrideWriteEntityToNBTHookTypes);
         this.afterWriteEntityToNBTHooks = this.create(afterWriteEntityToNBTHookTypes);
-        this.isWriteEntityToNBTModded = this.beforeWriteEntityToNBTHooks != null || this.overrideWriteEntityToNBTHooks != null || this.afterWriteEntityToNBTHooks != null;
+        this.isWriteEntityToNBTModded = this.beforeWriteEntityToNBTHooks != null
+                || this.overrideWriteEntityToNBTHooks != null
+                || this.afterWriteEntityToNBTHooks != null;
     }
 
     private void attachClientPlayerBase(String id) {
@@ -3258,7 +5395,7 @@ public final class ClientPlayerAPI {
         } else {
             ClientPlayerBase[] result = new ClientPlayerBase[types.size()];
 
-            for(int i = 0; i < result.length; ++i) {
+            for (int i = 0; i < result.length; ++i) {
                 result[i] = this.getClientPlayerBase(types.get(i));
             }
 
@@ -3266,17 +5403,20 @@ public final class ClientPlayerAPI {
         }
     }
 
-    private void beforeLocalConstructing(Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
+    private void beforeLocalConstructing(
+            Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
         if (this.beforeLocalConstructingHooks != null) {
-            for(int i = this.beforeLocalConstructingHooks.length - 1; i >= 0; --i) {
-                this.beforeLocalConstructingHooks[i].beforeLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
+            for (int i = this.beforeLocalConstructingHooks.length - 1; i >= 0; --i) {
+                this.beforeLocalConstructingHooks[i].beforeLocalConstructing(
+                        paramMinecraft, paramWorld, paramSession, paramInt);
             }
         }
 
         this.beforeLocalConstructingHooks = null;
     }
 
-    private void afterLocalConstructing(Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
+    private void afterLocalConstructing(
+            Minecraft paramMinecraft, World paramWorld, Session paramSession, int paramInt) {
         if (this.afterLocalConstructingHooks != null) {
             for (ClientPlayerBase afterLocalConstructingHook : this.afterLocalConstructingHooks) {
                 afterLocalConstructingHook.afterLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
@@ -3340,12 +5480,17 @@ public final class ClientPlayerAPI {
         }
     }
 
-    private void executeAll(String key, Object[] parameters, Map<String, List<String>> dynamicHookTypes, Map<Class<?>, Map<String, Method>> dynamicHookMethods, boolean reverse) {
+    private void executeAll(
+            String key,
+            Object[] parameters,
+            Map<String, List<String>> dynamicHookTypes,
+            Map<Class<?>, Map<String, Method>> dynamicHookMethods,
+            boolean reverse) {
         List<String> beforeIds = dynamicHookTypes.get(key);
         if (beforeIds != null) {
             int i = reverse ? beforeIds.size() - 1 : 0;
 
-            while(true) {
+            while (true) {
                 if (reverse) {
                     if (i < 0) {
                         break;
@@ -3367,7 +5512,6 @@ public final class ClientPlayerAPI {
 
                 i += reverse ? -1 : 1;
             }
-
         }
     }
 
@@ -3386,13 +5530,12 @@ public final class ClientPlayerAPI {
         } else {
             target.localAddExhaustion(paramFloat);
         }
-
     }
 
     private void addExhaustion(float paramFloat) {
         int i;
         if (this.beforeAddExhaustionHooks != null) {
-            for(i = this.beforeAddExhaustionHooks.length - 1; i >= 0; --i) {
+            for (i = this.beforeAddExhaustionHooks.length - 1; i >= 0; --i) {
                 this.beforeAddExhaustionHooks[i].beforeAddExhaustion(paramFloat);
             }
         }
@@ -3404,11 +5547,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterAddExhaustionHooks != null) {
-            for(i = 0; i < this.afterAddExhaustionHooks.length; ++i) {
+            for (i = 0; i < this.afterAddExhaustionHooks.length; ++i) {
                 this.afterAddExhaustionHooks[i].afterAddExhaustion(paramFloat);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenAddExhaustion(ClientPlayerBase overWriter) {
@@ -3422,7 +5564,6 @@ public final class ClientPlayerAPI {
                     return this.overrideAddExhaustionHooks[i - 1];
                 }
             }
-
         }
         return overWriter;
     }
@@ -3434,29 +5575,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localAddMovementStat(var1, var3, var5);
         }
-
     }
 
     private void addMovementStat(double var1, double var3, double var5) {
         int var7;
         if (this.beforeAddMovementStatHooks != null) {
-            for(var7 = this.beforeAddMovementStatHooks.length - 1; var7 >= 0; --var7) {
+            for (var7 = this.beforeAddMovementStatHooks.length - 1; var7 >= 0; --var7) {
                 this.beforeAddMovementStatHooks[var7].beforeAddMovementStat(var1, var3, var5);
             }
         }
 
         if (this.overrideAddMovementStatHooks != null) {
-            this.overrideAddMovementStatHooks[this.overrideAddMovementStatHooks.length - 1].addMovementStat(var1, var3, var5);
+            this.overrideAddMovementStatHooks[this.overrideAddMovementStatHooks.length - 1].addMovementStat(
+                    var1, var3, var5);
         } else {
             this.player.localAddMovementStat(var1, var3, var5);
         }
 
         if (this.afterAddMovementStatHooks != null) {
-            for(var7 = 0; var7 < this.afterAddMovementStatHooks.length; ++var7) {
+            for (var7 = 0; var7 < this.afterAddMovementStatHooks.length; ++var7) {
                 this.afterAddMovementStatHooks[var7].afterAddMovementStat(var1, var3, var5);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenAddMovementStat(ClientPlayerBase var1) {
@@ -3470,7 +5610,6 @@ public final class ClientPlayerAPI {
                     return this.overrideAddMovementStatHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3482,13 +5621,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localAddStat(var1, var2);
         }
-
     }
 
     private void addStat(StatBase var1, int var2) {
         int var3;
         if (this.beforeAddStatHooks != null) {
-            for(var3 = this.beforeAddStatHooks.length - 1; var3 >= 0; --var3) {
+            for (var3 = this.beforeAddStatHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeAddStatHooks[var3].beforeAddStat(var1, var2);
             }
         }
@@ -3500,11 +5638,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterAddStatHooks != null) {
-            for(var3 = 0; var3 < this.afterAddStatHooks.length; ++var3) {
+            for (var3 = 0; var3 < this.afterAddStatHooks.length; ++var3) {
                 this.afterAddStatHooks[var3].afterAddStat(var1, var2);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenAddStat(ClientPlayerBase var1) {
@@ -3518,7 +5655,6 @@ public final class ClientPlayerAPI {
                     return this.overrideAddStatHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3537,14 +5673,15 @@ public final class ClientPlayerAPI {
 
     private boolean attackEntityFrom(DamageSource var1, float var2) {
         if (this.beforeAttackEntityFromHooks != null) {
-            for(int var3 = this.beforeAttackEntityFromHooks.length - 1; var3 >= 0; --var3) {
+            for (int var3 = this.beforeAttackEntityFromHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeAttackEntityFromHooks[var3].beforeAttackEntityFrom(var1, var2);
             }
         }
 
         boolean var5;
         if (this.overrideAttackEntityFromHooks != null) {
-            var5 = this.overrideAttackEntityFromHooks[this.overrideAttackEntityFromHooks.length - 1].attackEntityFrom(var1, var2);
+            var5 = this.overrideAttackEntityFromHooks[this.overrideAttackEntityFromHooks.length - 1].attackEntityFrom(
+                    var1, var2);
         } else {
             var5 = this.player.localAttackEntityFrom(var1, var2);
         }
@@ -3569,7 +5706,6 @@ public final class ClientPlayerAPI {
                     return this.overrideAttackEntityFromHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3581,29 +5717,30 @@ public final class ClientPlayerAPI {
         } else {
             var0.localAttackTargetEntityWithCurrentItem(var1);
         }
-
     }
 
     private void attackTargetEntityWithCurrentItem(Entity var1) {
         int var2;
         if (this.beforeAttackTargetEntityWithCurrentItemHooks != null) {
-            for(var2 = this.beforeAttackTargetEntityWithCurrentItemHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeAttackTargetEntityWithCurrentItemHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeAttackTargetEntityWithCurrentItemHooks[var2].beforeAttackTargetEntityWithCurrentItem(var1);
             }
         }
 
         if (this.overrideAttackTargetEntityWithCurrentItemHooks != null) {
-            this.overrideAttackTargetEntityWithCurrentItemHooks[this.overrideAttackTargetEntityWithCurrentItemHooks.length - 1].attackTargetEntityWithCurrentItem(var1);
+            this
+                    .overrideAttackTargetEntityWithCurrentItemHooks[
+                    this.overrideAttackTargetEntityWithCurrentItemHooks.length - 1]
+                    .attackTargetEntityWithCurrentItem(var1);
         } else {
             this.player.localAttackTargetEntityWithCurrentItem(var1);
         }
 
         if (this.afterAttackTargetEntityWithCurrentItemHooks != null) {
-            for(var2 = 0; var2 < this.afterAttackTargetEntityWithCurrentItemHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterAttackTargetEntityWithCurrentItemHooks.length; ++var2) {
                 this.afterAttackTargetEntityWithCurrentItemHooks[var2].afterAttackTargetEntityWithCurrentItem(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenAttackTargetEntityWithCurrentItem(ClientPlayerBase var1) {
@@ -3617,7 +5754,6 @@ public final class ClientPlayerAPI {
                     return this.overrideAttackTargetEntityWithCurrentItemHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3636,14 +5772,15 @@ public final class ClientPlayerAPI {
 
     private boolean canBreatheUnderwater() {
         if (this.beforeCanBreatheUnderwaterHooks != null) {
-            for(int var1 = this.beforeCanBreatheUnderwaterHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeCanBreatheUnderwaterHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeCanBreatheUnderwaterHooks[var1].beforeCanBreatheUnderwater();
             }
         }
 
         boolean var3;
         if (this.overrideCanBreatheUnderwaterHooks != null) {
-            var3 = this.overrideCanBreatheUnderwaterHooks[this.overrideCanBreatheUnderwaterHooks.length - 1].canBreatheUnderwater();
+            var3 = this.overrideCanBreatheUnderwaterHooks[this.overrideCanBreatheUnderwaterHooks.length - 1]
+                    .canBreatheUnderwater();
         } else {
             var3 = this.player.localCanBreatheUnderwater();
         }
@@ -3668,7 +5805,6 @@ public final class ClientPlayerAPI {
                     return this.overrideCanBreatheUnderwaterHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3687,14 +5823,15 @@ public final class ClientPlayerAPI {
 
     private boolean canHarvestBlock(Block var1) {
         if (this.beforeCanHarvestBlockHooks != null) {
-            for(int var2 = this.beforeCanHarvestBlockHooks.length - 1; var2 >= 0; --var2) {
+            for (int var2 = this.beforeCanHarvestBlockHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeCanHarvestBlockHooks[var2].beforeCanHarvestBlock(var1);
             }
         }
 
         boolean var4;
         if (this.overrideCanHarvestBlockHooks != null) {
-            var4 = this.overrideCanHarvestBlockHooks[this.overrideCanHarvestBlockHooks.length - 1].canHarvestBlock(var1);
+            var4 = this.overrideCanHarvestBlockHooks[this.overrideCanHarvestBlockHooks.length - 1].canHarvestBlock(
+                    var1);
         } else {
             var4 = this.player.localCanHarvestBlock(var1);
         }
@@ -3719,7 +5856,6 @@ public final class ClientPlayerAPI {
                     return this.overrideCanHarvestBlockHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3738,14 +5874,15 @@ public final class ClientPlayerAPI {
 
     private boolean canPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {
         if (this.beforeCanPlayerEditHooks != null) {
-            for(int var6 = this.beforeCanPlayerEditHooks.length - 1; var6 >= 0; --var6) {
+            for (int var6 = this.beforeCanPlayerEditHooks.length - 1; var6 >= 0; --var6) {
                 this.beforeCanPlayerEditHooks[var6].beforeCanPlayerEdit(var1, var2, var3, var4, var5);
             }
         }
 
         boolean var8;
         if (this.overrideCanPlayerEditHooks != null) {
-            var8 = this.overrideCanPlayerEditHooks[this.overrideCanPlayerEditHooks.length - 1].canPlayerEdit(var1, var2, var3, var4, var5);
+            var8 = this.overrideCanPlayerEditHooks[this.overrideCanPlayerEditHooks.length - 1].canPlayerEdit(
+                    var1, var2, var3, var4, var5);
         } else {
             var8 = this.player.localCanPlayerEdit(var1, var2, var3, var4, var5);
         }
@@ -3770,7 +5907,6 @@ public final class ClientPlayerAPI {
                     return this.overrideCanPlayerEditHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3789,14 +5925,16 @@ public final class ClientPlayerAPI {
 
     private boolean canTriggerWalking() {
         if (this.beforeCanTriggerWalkingHooks != null) {
-            for(int var1 = this.beforeCanTriggerWalkingHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeCanTriggerWalkingHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeCanTriggerWalkingHooks[var1].beforeCanTriggerWalking();
             }
         }
 
         boolean var3;
         if (this.overrideCanTriggerWalkingHooks != null) {
-            var3 = this.overrideCanTriggerWalkingHooks[this.overrideCanTriggerWalkingHooks.length - 1].canTriggerWalking();
+            var3 =
+                    this.overrideCanTriggerWalkingHooks[this.overrideCanTriggerWalkingHooks.length - 1]
+                            .canTriggerWalking();
         } else {
             var3 = this.player.localCanTriggerWalking();
         }
@@ -3821,7 +5959,6 @@ public final class ClientPlayerAPI {
                     return this.overrideCanTriggerWalkingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3833,13 +5970,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localCloseScreen();
         }
-
     }
 
     private void closeScreen() {
         int var1;
         if (this.beforeCloseScreenHooks != null) {
-            for(var1 = this.beforeCloseScreenHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeCloseScreenHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeCloseScreenHooks[var1].beforeCloseScreen();
             }
         }
@@ -3851,11 +5987,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterCloseScreenHooks != null) {
-            for(var1 = 0; var1 < this.afterCloseScreenHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterCloseScreenHooks.length; ++var1) {
                 this.afterCloseScreenHooks[var1].afterCloseScreen();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenCloseScreen(ClientPlayerBase var1) {
@@ -3869,7 +6004,6 @@ public final class ClientPlayerAPI {
                     return this.overrideCloseScreenHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3881,13 +6015,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDamageEntity(var1, var2);
         }
-
     }
 
     private void damageEntity(DamageSource var1, float var2) {
         int var3;
         if (this.beforeDamageEntityHooks != null) {
-            for(var3 = this.beforeDamageEntityHooks.length - 1; var3 >= 0; --var3) {
+            for (var3 = this.beforeDamageEntityHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeDamageEntityHooks[var3].beforeDamageEntity(var1, var2);
             }
         }
@@ -3899,11 +6032,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterDamageEntityHooks != null) {
-            for(var3 = 0; var3 < this.afterDamageEntityHooks.length; ++var3) {
+            for (var3 = 0; var3 < this.afterDamageEntityHooks.length; ++var3) {
                 this.afterDamageEntityHooks[var3].afterDamageEntity(var1, var2);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDamageEntity(ClientPlayerBase var1) {
@@ -3917,7 +6049,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDamageEntityHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3929,29 +6060,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIBrewingStand(var1);
         }
-
     }
 
     private void displayGUIBrewingStand(TileEntityBrewingStand var1) {
         int var2;
         if (this.beforeDisplayGUIBrewingStandHooks != null) {
-            for(var2 = this.beforeDisplayGUIBrewingStandHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeDisplayGUIBrewingStandHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDisplayGUIBrewingStandHooks[var2].beforeDisplayGUIBrewingStand(var1);
             }
         }
 
         if (this.overrideDisplayGUIBrewingStandHooks != null) {
-            this.overrideDisplayGUIBrewingStandHooks[this.overrideDisplayGUIBrewingStandHooks.length - 1].displayGUIBrewingStand(var1);
+            this.overrideDisplayGUIBrewingStandHooks[this.overrideDisplayGUIBrewingStandHooks.length - 1]
+                    .displayGUIBrewingStand(var1);
         } else {
             this.player.localDisplayGUIBrewingStand(var1);
         }
 
         if (this.afterDisplayGUIBrewingStandHooks != null) {
-            for(var2 = 0; var2 < this.afterDisplayGUIBrewingStandHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterDisplayGUIBrewingStandHooks.length; ++var2) {
                 this.afterDisplayGUIBrewingStandHooks[var2].afterDisplayGUIBrewingStand(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIBrewingStand(ClientPlayerBase var1) {
@@ -3965,7 +6095,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIBrewingStandHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -3977,13 +6106,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIChest(var1);
         }
-
     }
 
     private void displayGUIChest(IInventory var1) {
         int var2;
         if (this.beforeDisplayGUIChestHooks != null) {
-            for(var2 = this.beforeDisplayGUIChestHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeDisplayGUIChestHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDisplayGUIChestHooks[var2].beforeDisplayGUIChest(var1);
             }
         }
@@ -3995,11 +6123,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterDisplayGUIChestHooks != null) {
-            for(var2 = 0; var2 < this.afterDisplayGUIChestHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterDisplayGUIChestHooks.length; ++var2) {
                 this.afterDisplayGUIChestHooks[var2].afterDisplayGUIChest(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIChest(ClientPlayerBase var1) {
@@ -4013,7 +6140,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIChestHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4025,29 +6151,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIDispenser(var1);
         }
-
     }
 
     private void displayGUIDispenser(TileEntityDispenser var1) {
         int var2;
         if (this.beforeDisplayGUIDispenserHooks != null) {
-            for(var2 = this.beforeDisplayGUIDispenserHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeDisplayGUIDispenserHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDisplayGUIDispenserHooks[var2].beforeDisplayGUIDispenser(var1);
             }
         }
 
         if (this.overrideDisplayGUIDispenserHooks != null) {
-            this.overrideDisplayGUIDispenserHooks[this.overrideDisplayGUIDispenserHooks.length - 1].displayGUIDispenser(var1);
+            this.overrideDisplayGUIDispenserHooks[this.overrideDisplayGUIDispenserHooks.length - 1].displayGUIDispenser(
+                    var1);
         } else {
             this.player.localDisplayGUIDispenser(var1);
         }
 
         if (this.afterDisplayGUIDispenserHooks != null) {
-            for(var2 = 0; var2 < this.afterDisplayGUIDispenserHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterDisplayGUIDispenserHooks.length; ++var2) {
                 this.afterDisplayGUIDispenserHooks[var2].afterDisplayGUIDispenser(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIDispenser(ClientPlayerBase var1) {
@@ -4061,7 +6186,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIDispenserHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4073,29 +6197,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIEditSign(var1);
         }
-
     }
 
     private void displayGUIEditSign(TileEntity var1) {
         int var2;
         if (this.beforeDisplayGUIEditSignHooks != null) {
-            for(var2 = this.beforeDisplayGUIEditSignHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeDisplayGUIEditSignHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDisplayGUIEditSignHooks[var2].beforeDisplayGUIEditSign(var1);
             }
         }
 
         if (this.overrideDisplayGUIEditSignHooks != null) {
-            this.overrideDisplayGUIEditSignHooks[this.overrideDisplayGUIEditSignHooks.length - 1].displayGUIEditSign(var1);
+            this.overrideDisplayGUIEditSignHooks[this.overrideDisplayGUIEditSignHooks.length - 1].displayGUIEditSign(
+                    var1);
         } else {
             this.player.localDisplayGUIEditSign(var1);
         }
 
         if (this.afterDisplayGUIEditSignHooks != null) {
-            for(var2 = 0; var2 < this.afterDisplayGUIEditSignHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterDisplayGUIEditSignHooks.length; ++var2) {
                 this.afterDisplayGUIEditSignHooks[var2].afterDisplayGUIEditSign(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEditSign(ClientPlayerBase var1) {
@@ -4109,7 +6232,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIEditSignHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4121,29 +6243,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIEnchantment(var1, var2, var3, var4);
         }
-
     }
 
     private void displayGUIEnchantment(int var1, int var2, int var3, String var4) {
         int var5;
         if (this.beforeDisplayGUIEnchantmentHooks != null) {
-            for(var5 = this.beforeDisplayGUIEnchantmentHooks.length - 1; var5 >= 0; --var5) {
+            for (var5 = this.beforeDisplayGUIEnchantmentHooks.length - 1; var5 >= 0; --var5) {
                 this.beforeDisplayGUIEnchantmentHooks[var5].beforeDisplayGUIEnchantment(var1, var2, var3, var4);
             }
         }
 
         if (this.overrideDisplayGUIEnchantmentHooks != null) {
-            this.overrideDisplayGUIEnchantmentHooks[this.overrideDisplayGUIEnchantmentHooks.length - 1].displayGUIEnchantment(var1, var2, var3, var4);
+            this.overrideDisplayGUIEnchantmentHooks[this.overrideDisplayGUIEnchantmentHooks.length - 1]
+                    .displayGUIEnchantment(var1, var2, var3, var4);
         } else {
             this.player.localDisplayGUIEnchantment(var1, var2, var3, var4);
         }
 
         if (this.afterDisplayGUIEnchantmentHooks != null) {
-            for(var5 = 0; var5 < this.afterDisplayGUIEnchantmentHooks.length; ++var5) {
+            for (var5 = 0; var5 < this.afterDisplayGUIEnchantmentHooks.length; ++var5) {
                 this.afterDisplayGUIEnchantmentHooks[var5].afterDisplayGUIEnchantment(var1, var2, var3, var4);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEnchantment(ClientPlayerBase var1) {
@@ -4157,7 +6278,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIEnchantmentHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4169,13 +6289,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIFurnace(var1);
         }
-
     }
 
     private void displayGUIFurnace(TileEntityFurnace var1) {
         int var2;
         if (this.beforeDisplayGUIFurnaceHooks != null) {
-            for(var2 = this.beforeDisplayGUIFurnaceHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeDisplayGUIFurnaceHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDisplayGUIFurnaceHooks[var2].beforeDisplayGUIFurnace(var1);
             }
         }
@@ -4187,11 +6306,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterDisplayGUIFurnaceHooks != null) {
-            for(var2 = 0; var2 < this.afterDisplayGUIFurnaceHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterDisplayGUIFurnaceHooks.length; ++var2) {
                 this.afterDisplayGUIFurnaceHooks[var2].afterDisplayGUIFurnace(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIFurnace(ClientPlayerBase var1) {
@@ -4205,7 +6323,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIFurnaceHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4217,29 +6334,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localDisplayGUIWorkbench(var1, var2, var3);
         }
-
     }
 
     private void displayGUIWorkbench(int var1, int var2, int var3) {
         int var4;
         if (this.beforeDisplayGUIWorkbenchHooks != null) {
-            for(var4 = this.beforeDisplayGUIWorkbenchHooks.length - 1; var4 >= 0; --var4) {
+            for (var4 = this.beforeDisplayGUIWorkbenchHooks.length - 1; var4 >= 0; --var4) {
                 this.beforeDisplayGUIWorkbenchHooks[var4].beforeDisplayGUIWorkbench(var1, var2, var3);
             }
         }
 
         if (this.overrideDisplayGUIWorkbenchHooks != null) {
-            this.overrideDisplayGUIWorkbenchHooks[this.overrideDisplayGUIWorkbenchHooks.length - 1].displayGUIWorkbench(var1, var2, var3);
+            this.overrideDisplayGUIWorkbenchHooks[this.overrideDisplayGUIWorkbenchHooks.length - 1].displayGUIWorkbench(
+                    var1, var2, var3);
         } else {
             this.player.localDisplayGUIWorkbench(var1, var2, var3);
         }
 
         if (this.afterDisplayGUIWorkbenchHooks != null) {
-            for(var4 = 0; var4 < this.afterDisplayGUIWorkbenchHooks.length; ++var4) {
+            for (var4 = 0; var4 < this.afterDisplayGUIWorkbenchHooks.length; ++var4) {
                 this.afterDisplayGUIWorkbenchHooks[var4].afterDisplayGUIWorkbench(var1, var2, var3);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIWorkbench(ClientPlayerBase var1) {
@@ -4253,7 +6369,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDisplayGUIWorkbenchHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4272,7 +6387,7 @@ public final class ClientPlayerAPI {
 
     private EntityItem dropOneItem(boolean var1) {
         if (this.beforeDropOneItemHooks != null) {
-            for(int var2 = this.beforeDropOneItemHooks.length - 1; var2 >= 0; --var2) {
+            for (int var2 = this.beforeDropOneItemHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeDropOneItemHooks[var2].beforeDropOneItem(var1);
             }
         }
@@ -4304,7 +6419,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDropOneItemHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4323,14 +6437,15 @@ public final class ClientPlayerAPI {
 
     private EntityItem dropPlayerItem(ItemStack var1, boolean var2) {
         if (this.beforeDropPlayerItemHooks != null) {
-            for(int var3 = this.beforeDropPlayerItemHooks.length - 1; var3 >= 0; --var3) {
+            for (int var3 = this.beforeDropPlayerItemHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeDropPlayerItemHooks[var3].beforeDropPlayerItem(var1, var2);
             }
         }
 
         EntityItem var5;
         if (this.overrideDropPlayerItemHooks != null) {
-            var5 = this.overrideDropPlayerItemHooks[this.overrideDropPlayerItemHooks.length - 1].dropPlayerItem(var1, var2);
+            var5 = this.overrideDropPlayerItemHooks[this.overrideDropPlayerItemHooks.length - 1].dropPlayerItem(
+                    var1, var2);
         } else {
             var5 = this.player.localDropPlayerItem(var1, var2);
         }
@@ -4355,12 +6470,12 @@ public final class ClientPlayerAPI {
                     return this.overrideDropPlayerItemHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
 
-    public static EntityItem dropPlayerItemWithRandomChoice(IClientPlayerAPI var0, ItemStack var1, boolean var2, boolean var3) {
+    public static EntityItem dropPlayerItemWithRandomChoice(
+            IClientPlayerAPI var0, ItemStack var1, boolean var2, boolean var3) {
         ClientPlayerAPI var5 = var0.getClientPlayerAPI();
         EntityItem var4;
         if (var5 != null && var5.isDropPlayerItemWithRandomChoiceModded) {
@@ -4374,20 +6489,25 @@ public final class ClientPlayerAPI {
 
     private EntityItem dropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {
         if (this.beforeDropPlayerItemWithRandomChoiceHooks != null) {
-            for(int var4 = this.beforeDropPlayerItemWithRandomChoiceHooks.length - 1; var4 >= 0; --var4) {
-                this.beforeDropPlayerItemWithRandomChoiceHooks[var4].beforeDropPlayerItemWithRandomChoice(var1, var2, var3);
+            for (int var4 = this.beforeDropPlayerItemWithRandomChoiceHooks.length - 1; var4 >= 0; --var4) {
+                this.beforeDropPlayerItemWithRandomChoiceHooks[var4].beforeDropPlayerItemWithRandomChoice(
+                        var1, var2, var3);
             }
         }
 
         EntityItem var6;
         if (this.overrideDropPlayerItemWithRandomChoiceHooks != null) {
-            var6 = this.overrideDropPlayerItemWithRandomChoiceHooks[this.overrideDropPlayerItemWithRandomChoiceHooks.length - 1].dropPlayerItemWithRandomChoice(var1, var2, var3);
+            var6 = this
+                    .overrideDropPlayerItemWithRandomChoiceHooks[
+                    this.overrideDropPlayerItemWithRandomChoiceHooks.length - 1]
+                    .dropPlayerItemWithRandomChoice(var1, var2, var3);
         } else {
             var6 = this.player.localDropPlayerItemWithRandomChoice(var1, var2, var3);
         }
 
         if (this.afterDropPlayerItemWithRandomChoiceHooks != null) {
-            for (ClientPlayerBase afterDropPlayerItemWithRandomChoiceHook : this.afterDropPlayerItemWithRandomChoiceHooks) {
+            for (ClientPlayerBase afterDropPlayerItemWithRandomChoiceHook :
+                    this.afterDropPlayerItemWithRandomChoiceHooks) {
                 afterDropPlayerItemWithRandomChoiceHook.afterDropPlayerItemWithRandomChoice(var1, var2, var3);
             }
         }
@@ -4406,7 +6526,6 @@ public final class ClientPlayerAPI {
                     return this.overrideDropPlayerItemWithRandomChoiceHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4418,13 +6537,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localFall(var1);
         }
-
     }
 
     private void fall(float var1) {
         int var2;
         if (this.beforeFallHooks != null) {
-            for(var2 = this.beforeFallHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeFallHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeFallHooks[var2].beforeFall(var1);
             }
         }
@@ -4436,11 +6554,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterFallHooks != null) {
-            for(var2 = 0; var2 < this.afterFallHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterFallHooks.length; ++var2) {
                 this.afterFallHooks[var2].afterFall(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenFall(ClientPlayerBase var1) {
@@ -4454,7 +6571,6 @@ public final class ClientPlayerAPI {
                     return this.overrideFallHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4473,7 +6589,7 @@ public final class ClientPlayerAPI {
 
     private float getAIMoveSpeed() {
         if (this.beforeGetAIMoveSpeedHooks != null) {
-            for(int var1 = this.beforeGetAIMoveSpeedHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeGetAIMoveSpeedHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeGetAIMoveSpeedHooks[var1].beforeGetAIMoveSpeed();
             }
         }
@@ -4505,7 +6621,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetAIMoveSpeedHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4524,14 +6639,15 @@ public final class ClientPlayerAPI {
 
     private float getBedOrientationInDegrees() {
         if (this.beforeGetBedOrientationInDegreesHooks != null) {
-            for(int var1 = this.beforeGetBedOrientationInDegreesHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeGetBedOrientationInDegreesHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeGetBedOrientationInDegreesHooks[var1].beforeGetBedOrientationInDegrees();
             }
         }
 
         float var3;
         if (this.overrideGetBedOrientationInDegreesHooks != null) {
-            var3 = this.overrideGetBedOrientationInDegreesHooks[this.overrideGetBedOrientationInDegreesHooks.length - 1].getBedOrientationInDegrees();
+            var3 = this.overrideGetBedOrientationInDegreesHooks[this.overrideGetBedOrientationInDegreesHooks.length - 1]
+                    .getBedOrientationInDegrees();
         } else {
             var3 = this.player.localGetBedOrientationInDegrees();
         }
@@ -4556,7 +6672,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetBedOrientationInDegreesHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4575,7 +6690,7 @@ public final class ClientPlayerAPI {
 
     private float getBrightness(float var1) {
         if (this.beforeGetBrightnessHooks != null) {
-            for(int var2 = this.beforeGetBrightnessHooks.length - 1; var2 >= 0; --var2) {
+            for (int var2 = this.beforeGetBrightnessHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeGetBrightnessHooks[var2].beforeGetBrightness(var1);
             }
         }
@@ -4607,7 +6722,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetBrightnessHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4627,13 +6741,14 @@ public final class ClientPlayerAPI {
     private int getBrightnessForRender(float var1) {
         int var2;
         if (this.beforeGetBrightnessForRenderHooks != null) {
-            for(var2 = this.beforeGetBrightnessForRenderHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeGetBrightnessForRenderHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeGetBrightnessForRenderHooks[var2].beforeGetBrightnessForRender(var1);
             }
         }
 
         if (this.overrideGetBrightnessForRenderHooks != null) {
-            var2 = this.overrideGetBrightnessForRenderHooks[this.overrideGetBrightnessForRenderHooks.length - 1].getBrightnessForRender(var1);
+            var2 = this.overrideGetBrightnessForRenderHooks[this.overrideGetBrightnessForRenderHooks.length - 1]
+                    .getBrightnessForRender(var1);
         } else {
             var2 = this.player.localGetBrightnessForRender(var1);
         }
@@ -4658,7 +6773,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetBrightnessForRenderHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4677,14 +6791,15 @@ public final class ClientPlayerAPI {
 
     private float getCurrentPlayerStrVsBlock(Block var1, boolean var2) {
         if (this.beforeGetCurrentPlayerStrVsBlockHooks != null) {
-            for(int var3 = this.beforeGetCurrentPlayerStrVsBlockHooks.length - 1; var3 >= 0; --var3) {
+            for (int var3 = this.beforeGetCurrentPlayerStrVsBlockHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeGetCurrentPlayerStrVsBlockHooks[var3].beforeGetCurrentPlayerStrVsBlock(var1, var2);
             }
         }
 
         float var5;
         if (this.overrideGetCurrentPlayerStrVsBlockHooks != null) {
-            var5 = this.overrideGetCurrentPlayerStrVsBlockHooks[this.overrideGetCurrentPlayerStrVsBlockHooks.length - 1].getCurrentPlayerStrVsBlock(var1, var2);
+            var5 = this.overrideGetCurrentPlayerStrVsBlockHooks[this.overrideGetCurrentPlayerStrVsBlockHooks.length - 1]
+                    .getCurrentPlayerStrVsBlock(var1, var2);
         } else {
             var5 = this.player.localGetCurrentPlayerStrVsBlock(var1, var2);
         }
@@ -4709,7 +6824,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetCurrentPlayerStrVsBlockHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4728,20 +6842,25 @@ public final class ClientPlayerAPI {
 
     private float getCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {
         if (this.beforeGetCurrentPlayerStrVsBlockForgeHooks != null) {
-            for(int var4 = this.beforeGetCurrentPlayerStrVsBlockForgeHooks.length - 1; var4 >= 0; --var4) {
-                this.beforeGetCurrentPlayerStrVsBlockForgeHooks[var4].beforeGetCurrentPlayerStrVsBlockForge(var1, var2, var3);
+            for (int var4 = this.beforeGetCurrentPlayerStrVsBlockForgeHooks.length - 1; var4 >= 0; --var4) {
+                this.beforeGetCurrentPlayerStrVsBlockForgeHooks[var4].beforeGetCurrentPlayerStrVsBlockForge(
+                        var1, var2, var3);
             }
         }
 
         float var6;
         if (this.overrideGetCurrentPlayerStrVsBlockForgeHooks != null) {
-            var6 = this.overrideGetCurrentPlayerStrVsBlockForgeHooks[this.overrideGetCurrentPlayerStrVsBlockForgeHooks.length - 1].getCurrentPlayerStrVsBlockForge(var1, var2, var3);
+            var6 = this
+                    .overrideGetCurrentPlayerStrVsBlockForgeHooks[
+                    this.overrideGetCurrentPlayerStrVsBlockForgeHooks.length - 1]
+                    .getCurrentPlayerStrVsBlockForge(var1, var2, var3);
         } else {
             var6 = this.player.localGetCurrentPlayerStrVsBlockForge(var1, var2, var3);
         }
 
         if (this.afterGetCurrentPlayerStrVsBlockForgeHooks != null) {
-            for (ClientPlayerBase afterGetCurrentPlayerStrVsBlockForgeHook : this.afterGetCurrentPlayerStrVsBlockForgeHooks) {
+            for (ClientPlayerBase afterGetCurrentPlayerStrVsBlockForgeHook :
+                    this.afterGetCurrentPlayerStrVsBlockForgeHooks) {
                 afterGetCurrentPlayerStrVsBlockForgeHook.afterGetCurrentPlayerStrVsBlockForge(var1, var2, var3);
             }
         }
@@ -4760,7 +6879,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetCurrentPlayerStrVsBlockForgeHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4779,14 +6897,15 @@ public final class ClientPlayerAPI {
 
     private double getDistanceSq(double var1, double var3, double var5) {
         if (this.beforeGetDistanceSqHooks != null) {
-            for(int var7 = this.beforeGetDistanceSqHooks.length - 1; var7 >= 0; --var7) {
+            for (int var7 = this.beforeGetDistanceSqHooks.length - 1; var7 >= 0; --var7) {
                 this.beforeGetDistanceSqHooks[var7].beforeGetDistanceSq(var1, var3, var5);
             }
         }
 
         double var10;
         if (this.overrideGetDistanceSqHooks != null) {
-            var10 = this.overrideGetDistanceSqHooks[this.overrideGetDistanceSqHooks.length - 1].getDistanceSq(var1, var3, var5);
+            var10 = this.overrideGetDistanceSqHooks[this.overrideGetDistanceSqHooks.length - 1].getDistanceSq(
+                    var1, var3, var5);
         } else {
             var10 = this.player.localGetDistanceSq(var1, var3, var5);
         }
@@ -4811,7 +6930,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetDistanceSqHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4830,14 +6948,15 @@ public final class ClientPlayerAPI {
 
     private double getDistanceSqToEntity(Entity var1) {
         if (this.beforeGetDistanceSqToEntityHooks != null) {
-            for(int var2 = this.beforeGetDistanceSqToEntityHooks.length - 1; var2 >= 0; --var2) {
+            for (int var2 = this.beforeGetDistanceSqToEntityHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeGetDistanceSqToEntityHooks[var2].beforeGetDistanceSqToEntity(var1);
             }
         }
 
         double var5;
         if (this.overrideGetDistanceSqToEntityHooks != null) {
-            var5 = this.overrideGetDistanceSqToEntityHooks[this.overrideGetDistanceSqToEntityHooks.length - 1].getDistanceSqToEntity(var1);
+            var5 = this.overrideGetDistanceSqToEntityHooks[this.overrideGetDistanceSqToEntityHooks.length - 1]
+                    .getDistanceSqToEntity(var1);
         } else {
             var5 = this.player.localGetDistanceSqToEntity(var1);
         }
@@ -4862,7 +6981,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetDistanceSqToEntityHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4881,7 +6999,7 @@ public final class ClientPlayerAPI {
 
     private float getFOVMultiplier() {
         if (this.beforeGetFOVMultiplierHooks != null) {
-            for(int var1 = this.beforeGetFOVMultiplierHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeGetFOVMultiplierHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeGetFOVMultiplierHooks[var1].beforeGetFOVMultiplier();
             }
         }
@@ -4913,7 +7031,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetFOVMultiplierHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4932,7 +7049,7 @@ public final class ClientPlayerAPI {
 
     private String getHurtSound() {
         if (this.beforeGetHurtSoundHooks != null) {
-            for(int var1 = this.beforeGetHurtSoundHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeGetHurtSoundHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeGetHurtSoundHooks[var1].beforeGetHurtSound();
             }
         }
@@ -4964,7 +7081,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetHurtSoundHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -4983,7 +7099,7 @@ public final class ClientPlayerAPI {
 
     private IIcon getItemIcon(ItemStack var1, int var2) {
         if (this.beforeGetItemIconHooks != null) {
-            for(int var3 = this.beforeGetItemIconHooks.length - 1; var3 >= 0; --var3) {
+            for (int var3 = this.beforeGetItemIconHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeGetItemIconHooks[var3].beforeGetItemIcon(var1, var2);
             }
         }
@@ -5015,7 +7131,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetItemIconHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5035,7 +7150,7 @@ public final class ClientPlayerAPI {
     private int getSleepTimer() {
         int var1;
         if (this.beforeGetSleepTimerHooks != null) {
-            for(var1 = this.beforeGetSleepTimerHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeGetSleepTimerHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeGetSleepTimerHooks[var1].beforeGetSleepTimer();
             }
         }
@@ -5066,7 +7181,6 @@ public final class ClientPlayerAPI {
                     return this.overrideGetSleepTimerHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5085,14 +7199,16 @@ public final class ClientPlayerAPI {
 
     private boolean handleLavaMovement() {
         if (this.beforeHandleLavaMovementHooks != null) {
-            for(int var1 = this.beforeHandleLavaMovementHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeHandleLavaMovementHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeHandleLavaMovementHooks[var1].beforeHandleLavaMovement();
             }
         }
 
         boolean var3;
         if (this.overrideHandleLavaMovementHooks != null) {
-            var3 = this.overrideHandleLavaMovementHooks[this.overrideHandleLavaMovementHooks.length - 1].handleLavaMovement();
+            var3 =
+                    this.overrideHandleLavaMovementHooks[this.overrideHandleLavaMovementHooks.length - 1]
+                            .handleLavaMovement();
         } else {
             var3 = this.player.localHandleLavaMovement();
         }
@@ -5117,7 +7233,6 @@ public final class ClientPlayerAPI {
                     return this.overrideHandleLavaMovementHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5136,14 +7251,16 @@ public final class ClientPlayerAPI {
 
     private boolean handleWaterMovement() {
         if (this.beforeHandleWaterMovementHooks != null) {
-            for(int var1 = this.beforeHandleWaterMovementHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeHandleWaterMovementHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeHandleWaterMovementHooks[var1].beforeHandleWaterMovement();
             }
         }
 
         boolean var3;
         if (this.overrideHandleWaterMovementHooks != null) {
-            var3 = this.overrideHandleWaterMovementHooks[this.overrideHandleWaterMovementHooks.length - 1].handleWaterMovement();
+            var3 =
+                    this.overrideHandleWaterMovementHooks[this.overrideHandleWaterMovementHooks.length - 1]
+                            .handleWaterMovement();
         } else {
             var3 = this.player.localHandleWaterMovement();
         }
@@ -5168,7 +7285,6 @@ public final class ClientPlayerAPI {
                     return this.overrideHandleWaterMovementHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5180,13 +7296,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localHeal(var1);
         }
-
     }
 
     private void heal(float var1) {
         int var2;
         if (this.beforeHealHooks != null) {
-            for(var2 = this.beforeHealHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeHealHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeHealHooks[var2].beforeHeal(var1);
             }
         }
@@ -5198,11 +7313,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterHealHooks != null) {
-            for(var2 = 0; var2 < this.afterHealHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterHealHooks.length; ++var2) {
                 this.afterHealHooks[var2].afterHeal(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenHeal(ClientPlayerBase var1) {
@@ -5216,7 +7330,6 @@ public final class ClientPlayerAPI {
                     return this.overrideHealHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5235,14 +7348,15 @@ public final class ClientPlayerAPI {
 
     private boolean isEntityInsideOpaqueBlock() {
         if (this.beforeIsEntityInsideOpaqueBlockHooks != null) {
-            for(int var1 = this.beforeIsEntityInsideOpaqueBlockHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsEntityInsideOpaqueBlockHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsEntityInsideOpaqueBlockHooks[var1].beforeIsEntityInsideOpaqueBlock();
             }
         }
 
         boolean var3;
         if (this.overrideIsEntityInsideOpaqueBlockHooks != null) {
-            var3 = this.overrideIsEntityInsideOpaqueBlockHooks[this.overrideIsEntityInsideOpaqueBlockHooks.length - 1].isEntityInsideOpaqueBlock();
+            var3 = this.overrideIsEntityInsideOpaqueBlockHooks[this.overrideIsEntityInsideOpaqueBlockHooks.length - 1]
+                    .isEntityInsideOpaqueBlock();
         } else {
             var3 = this.player.localIsEntityInsideOpaqueBlock();
         }
@@ -5267,7 +7381,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsEntityInsideOpaqueBlockHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5286,7 +7399,7 @@ public final class ClientPlayerAPI {
 
     private boolean isInWater() {
         if (this.beforeIsInWaterHooks != null) {
-            for(int var1 = this.beforeIsInWaterHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsInWaterHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsInWaterHooks[var1].beforeIsInWater();
             }
         }
@@ -5318,7 +7431,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsInWaterHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5337,14 +7449,16 @@ public final class ClientPlayerAPI {
 
     private boolean isInsideOfMaterial(Material var1) {
         if (this.beforeIsInsideOfMaterialHooks != null) {
-            for(int var2 = this.beforeIsInsideOfMaterialHooks.length - 1; var2 >= 0; --var2) {
+            for (int var2 = this.beforeIsInsideOfMaterialHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeIsInsideOfMaterialHooks[var2].beforeIsInsideOfMaterial(var1);
             }
         }
 
         boolean var4;
         if (this.overrideIsInsideOfMaterialHooks != null) {
-            var4 = this.overrideIsInsideOfMaterialHooks[this.overrideIsInsideOfMaterialHooks.length - 1].isInsideOfMaterial(var1);
+            var4 =
+                    this.overrideIsInsideOfMaterialHooks[this.overrideIsInsideOfMaterialHooks.length - 1]
+                            .isInsideOfMaterial(var1);
         } else {
             var4 = this.player.localIsInsideOfMaterial(var1);
         }
@@ -5369,7 +7483,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsInsideOfMaterialHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5388,7 +7501,7 @@ public final class ClientPlayerAPI {
 
     private boolean isOnLadder() {
         if (this.beforeIsOnLadderHooks != null) {
-            for(int var1 = this.beforeIsOnLadderHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsOnLadderHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsOnLadderHooks[var1].beforeIsOnLadder();
             }
         }
@@ -5420,7 +7533,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsOnLadderHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5439,7 +7551,7 @@ public final class ClientPlayerAPI {
 
     private boolean isPlayerSleeping() {
         if (this.beforeIsPlayerSleepingHooks != null) {
-            for(int var1 = this.beforeIsPlayerSleepingHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsPlayerSleepingHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsPlayerSleepingHooks[var1].beforeIsPlayerSleeping();
             }
         }
@@ -5471,7 +7583,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsPlayerSleepingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5490,7 +7601,7 @@ public final class ClientPlayerAPI {
 
     private boolean isSneaking() {
         if (this.beforeIsSneakingHooks != null) {
-            for(int var1 = this.beforeIsSneakingHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsSneakingHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsSneakingHooks[var1].beforeIsSneaking();
             }
         }
@@ -5522,7 +7633,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsSneakingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5541,7 +7651,7 @@ public final class ClientPlayerAPI {
 
     private boolean isSprinting() {
         if (this.beforeIsSprintingHooks != null) {
-            for(int var1 = this.beforeIsSprintingHooks.length - 1; var1 >= 0; --var1) {
+            for (int var1 = this.beforeIsSprintingHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeIsSprintingHooks[var1].beforeIsSprinting();
             }
         }
@@ -5573,7 +7683,6 @@ public final class ClientPlayerAPI {
                     return this.overrideIsSprintingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5585,13 +7694,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localJump();
         }
-
     }
 
     private void jump() {
         int var1;
         if (this.beforeJumpHooks != null) {
-            for(var1 = this.beforeJumpHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeJumpHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeJumpHooks[var1].beforeJump();
             }
         }
@@ -5603,11 +7711,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterJumpHooks != null) {
-            for(var1 = 0; var1 < this.afterJumpHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterJumpHooks.length; ++var1) {
                 this.afterJumpHooks[var1].afterJump();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenJump(ClientPlayerBase var1) {
@@ -5621,7 +7728,6 @@ public final class ClientPlayerAPI {
                     return this.overrideJumpHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5633,13 +7739,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localKnockBack(var1, var2, var3, var5);
         }
-
     }
 
     private void knockBack(Entity var1, float var2, double var3, double var5) {
         int var7;
         if (this.beforeKnockBackHooks != null) {
-            for(var7 = this.beforeKnockBackHooks.length - 1; var7 >= 0; --var7) {
+            for (var7 = this.beforeKnockBackHooks.length - 1; var7 >= 0; --var7) {
                 this.beforeKnockBackHooks[var7].beforeKnockBack(var1, var2, var3, var5);
             }
         }
@@ -5651,11 +7756,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterKnockBackHooks != null) {
-            for(var7 = 0; var7 < this.afterKnockBackHooks.length; ++var7) {
+            for (var7 = 0; var7 < this.afterKnockBackHooks.length; ++var7) {
                 this.afterKnockBackHooks[var7].afterKnockBack(var1, var2, var3, var5);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenKnockBack(ClientPlayerBase var1) {
@@ -5669,7 +7773,6 @@ public final class ClientPlayerAPI {
                     return this.overrideKnockBackHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5681,13 +7784,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localMoveEntity(var1, var3, var5);
         }
-
     }
 
     private void moveEntity(double var1, double var3, double var5) {
         int var7;
         if (this.beforeMoveEntityHooks != null) {
-            for(var7 = this.beforeMoveEntityHooks.length - 1; var7 >= 0; --var7) {
+            for (var7 = this.beforeMoveEntityHooks.length - 1; var7 >= 0; --var7) {
                 this.beforeMoveEntityHooks[var7].beforeMoveEntity(var1, var3, var5);
             }
         }
@@ -5699,11 +7801,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterMoveEntityHooks != null) {
-            for(var7 = 0; var7 < this.afterMoveEntityHooks.length; ++var7) {
+            for (var7 = 0; var7 < this.afterMoveEntityHooks.length; ++var7) {
                 this.afterMoveEntityHooks[var7].afterMoveEntity(var1, var3, var5);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntity(ClientPlayerBase var1) {
@@ -5717,7 +7818,6 @@ public final class ClientPlayerAPI {
                     return this.overrideMoveEntityHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5729,29 +7829,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localMoveEntityWithHeading(var1, var2);
         }
-
     }
 
     private void moveEntityWithHeading(float var1, float var2) {
         int var3;
         if (this.beforeMoveEntityWithHeadingHooks != null) {
-            for(var3 = this.beforeMoveEntityWithHeadingHooks.length - 1; var3 >= 0; --var3) {
+            for (var3 = this.beforeMoveEntityWithHeadingHooks.length - 1; var3 >= 0; --var3) {
                 this.beforeMoveEntityWithHeadingHooks[var3].beforeMoveEntityWithHeading(var1, var2);
             }
         }
 
         if (this.overrideMoveEntityWithHeadingHooks != null) {
-            this.overrideMoveEntityWithHeadingHooks[this.overrideMoveEntityWithHeadingHooks.length - 1].moveEntityWithHeading(var1, var2);
+            this.overrideMoveEntityWithHeadingHooks[this.overrideMoveEntityWithHeadingHooks.length - 1]
+                    .moveEntityWithHeading(var1, var2);
         } else {
             this.player.localMoveEntityWithHeading(var1, var2);
         }
 
         if (this.afterMoveEntityWithHeadingHooks != null) {
-            for(var3 = 0; var3 < this.afterMoveEntityWithHeadingHooks.length; ++var3) {
+            for (var3 = 0; var3 < this.afterMoveEntityWithHeadingHooks.length; ++var3) {
                 this.afterMoveEntityWithHeadingHooks[var3].afterMoveEntityWithHeading(var1, var2);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntityWithHeading(ClientPlayerBase var1) {
@@ -5765,7 +7864,6 @@ public final class ClientPlayerAPI {
                     return this.overrideMoveEntityWithHeadingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5777,13 +7875,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localMoveFlying(var1, var2, var3);
         }
-
     }
 
     private void moveFlying(float var1, float var2, float var3) {
         int var4;
         if (this.beforeMoveFlyingHooks != null) {
-            for(var4 = this.beforeMoveFlyingHooks.length - 1; var4 >= 0; --var4) {
+            for (var4 = this.beforeMoveFlyingHooks.length - 1; var4 >= 0; --var4) {
                 this.beforeMoveFlyingHooks[var4].beforeMoveFlying(var1, var2, var3);
             }
         }
@@ -5795,11 +7892,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterMoveFlyingHooks != null) {
-            for(var4 = 0; var4 < this.afterMoveFlyingHooks.length; ++var4) {
+            for (var4 = 0; var4 < this.afterMoveFlyingHooks.length; ++var4) {
                 this.afterMoveFlyingHooks[var4].afterMoveFlying(var1, var2, var3);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenMoveFlying(ClientPlayerBase var1) {
@@ -5813,7 +7909,6 @@ public final class ClientPlayerAPI {
                     return this.overrideMoveFlyingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5825,13 +7920,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localOnDeath(var1);
         }
-
     }
 
     private void onDeath(DamageSource var1) {
         int var2;
         if (this.beforeOnDeathHooks != null) {
-            for(var2 = this.beforeOnDeathHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeOnDeathHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeOnDeathHooks[var2].beforeOnDeath(var1);
             }
         }
@@ -5843,11 +7937,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterOnDeathHooks != null) {
-            for(var2 = 0; var2 < this.afterOnDeathHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterOnDeathHooks.length; ++var2) {
                 this.afterOnDeathHooks[var2].afterOnDeath(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenOnDeath(ClientPlayerBase var1) {
@@ -5861,7 +7954,6 @@ public final class ClientPlayerAPI {
                     return this.overrideOnDeathHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5873,13 +7965,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localOnLivingUpdate();
         }
-
     }
 
     private void onLivingUpdate() {
         int var1;
         if (this.beforeOnLivingUpdateHooks != null) {
-            for(var1 = this.beforeOnLivingUpdateHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeOnLivingUpdateHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeOnLivingUpdateHooks[var1].beforeOnLivingUpdate();
             }
         }
@@ -5891,11 +7982,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterOnLivingUpdateHooks != null) {
-            for(var1 = 0; var1 < this.afterOnLivingUpdateHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterOnLivingUpdateHooks.length; ++var1) {
                 this.afterOnLivingUpdateHooks[var1].afterOnLivingUpdate();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenOnLivingUpdate(ClientPlayerBase var1) {
@@ -5909,7 +7999,6 @@ public final class ClientPlayerAPI {
                     return this.overrideOnLivingUpdateHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5921,13 +8010,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localOnKillEntity(var1);
         }
-
     }
 
     private void onKillEntity(EntityLivingBase var1) {
         int var2;
         if (this.beforeOnKillEntityHooks != null) {
-            for(var2 = this.beforeOnKillEntityHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeOnKillEntityHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeOnKillEntityHooks[var2].beforeOnKillEntity(var1);
             }
         }
@@ -5939,11 +8027,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterOnKillEntityHooks != null) {
-            for(var2 = 0; var2 < this.afterOnKillEntityHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterOnKillEntityHooks.length; ++var2) {
                 this.afterOnKillEntityHooks[var2].afterOnKillEntity(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenOnKillEntity(ClientPlayerBase var1) {
@@ -5957,7 +8044,6 @@ public final class ClientPlayerAPI {
                     return this.overrideOnKillEntityHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -5969,29 +8055,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localOnStruckByLightning(var1);
         }
-
     }
 
     private void onStruckByLightning(EntityLightningBolt var1) {
         int var2;
         if (this.beforeOnStruckByLightningHooks != null) {
-            for(var2 = this.beforeOnStruckByLightningHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeOnStruckByLightningHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeOnStruckByLightningHooks[var2].beforeOnStruckByLightning(var1);
             }
         }
 
         if (this.overrideOnStruckByLightningHooks != null) {
-            this.overrideOnStruckByLightningHooks[this.overrideOnStruckByLightningHooks.length - 1].onStruckByLightning(var1);
+            this.overrideOnStruckByLightningHooks[this.overrideOnStruckByLightningHooks.length - 1].onStruckByLightning(
+                    var1);
         } else {
             this.player.localOnStruckByLightning(var1);
         }
 
         if (this.afterOnStruckByLightningHooks != null) {
-            for(var2 = 0; var2 < this.afterOnStruckByLightningHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterOnStruckByLightningHooks.length; ++var2) {
                 this.afterOnStruckByLightningHooks[var2].afterOnStruckByLightning(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenOnStruckByLightning(ClientPlayerBase var1) {
@@ -6005,7 +8090,6 @@ public final class ClientPlayerAPI {
                     return this.overrideOnStruckByLightningHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6017,13 +8101,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localOnUpdate();
         }
-
     }
 
     private void onUpdate() {
         int var1;
         if (this.beforeOnUpdateHooks != null) {
-            for(var1 = this.beforeOnUpdateHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeOnUpdateHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeOnUpdateHooks[var1].beforeOnUpdate();
             }
         }
@@ -6035,11 +8118,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterOnUpdateHooks != null) {
-            for(var1 = 0; var1 < this.afterOnUpdateHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterOnUpdateHooks.length; ++var1) {
                 this.afterOnUpdateHooks[var1].afterOnUpdate();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenOnUpdate(ClientPlayerBase var1) {
@@ -6053,7 +8135,6 @@ public final class ClientPlayerAPI {
                     return this.overrideOnUpdateHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6065,29 +8146,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localPlayStepSound(var1, var2, var3, var4);
         }
-
     }
 
     private void playStepSound(int var1, int var2, int var3, Block var4) {
         int var5;
         if (this.beforePlayStepSoundHooks != null) {
-            for(var5 = this.beforePlayStepSoundHooks.length - 1; var5 >= 0; --var5) {
+            for (var5 = this.beforePlayStepSoundHooks.length - 1; var5 >= 0; --var5) {
                 this.beforePlayStepSoundHooks[var5].beforePlayStepSound(var1, var2, var3, var4);
             }
         }
 
         if (this.overridePlayStepSoundHooks != null) {
-            this.overridePlayStepSoundHooks[this.overridePlayStepSoundHooks.length - 1].playStepSound(var1, var2, var3, var4);
+            this.overridePlayStepSoundHooks[this.overridePlayStepSoundHooks.length - 1].playStepSound(
+                    var1, var2, var3, var4);
         } else {
             this.player.localPlayStepSound(var1, var2, var3, var4);
         }
 
         if (this.afterPlayStepSoundHooks != null) {
-            for(var5 = 0; var5 < this.afterPlayStepSoundHooks.length; ++var5) {
+            for (var5 = 0; var5 < this.afterPlayStepSoundHooks.length; ++var5) {
                 this.afterPlayStepSoundHooks[var5].afterPlayStepSound(var1, var2, var3, var4);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenPlayStepSound(ClientPlayerBase var1) {
@@ -6101,7 +8181,6 @@ public final class ClientPlayerAPI {
                     return this.overridePlayStepSoundHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6120,14 +8199,15 @@ public final class ClientPlayerAPI {
 
     private boolean pushOutOfBlocks(double var1, double var3, double var5) {
         if (this.beforePushOutOfBlocksHooks != null) {
-            for(int var7 = this.beforePushOutOfBlocksHooks.length - 1; var7 >= 0; --var7) {
+            for (int var7 = this.beforePushOutOfBlocksHooks.length - 1; var7 >= 0; --var7) {
                 this.beforePushOutOfBlocksHooks[var7].beforePushOutOfBlocks(var1, var3, var5);
             }
         }
 
         boolean var9;
         if (this.overridePushOutOfBlocksHooks != null) {
-            var9 = this.overridePushOutOfBlocksHooks[this.overridePushOutOfBlocksHooks.length - 1].pushOutOfBlocks(var1, var3, var5);
+            var9 = this.overridePushOutOfBlocksHooks[this.overridePushOutOfBlocksHooks.length - 1].pushOutOfBlocks(
+                    var1, var3, var5);
         } else {
             var9 = this.player.localPushOutOfBlocks(var1, var3, var5);
         }
@@ -6152,7 +8232,6 @@ public final class ClientPlayerAPI {
                     return this.overridePushOutOfBlocksHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6171,7 +8250,7 @@ public final class ClientPlayerAPI {
 
     private MovingObjectPosition rayTrace(double var1, float var3) {
         if (this.beforeRayTraceHooks != null) {
-            for(int var4 = this.beforeRayTraceHooks.length - 1; var4 >= 0; --var4) {
+            for (int var4 = this.beforeRayTraceHooks.length - 1; var4 >= 0; --var4) {
                 this.beforeRayTraceHooks[var4].beforeRayTrace(var1, var3);
             }
         }
@@ -6203,7 +8282,6 @@ public final class ClientPlayerAPI {
                     return this.overrideRayTraceHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6215,13 +8293,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localReadEntityFromNBT(var1);
         }
-
     }
 
     private void readEntityFromNBT(NBTTagCompound var1) {
         int var2;
         if (this.beforeReadEntityFromNBTHooks != null) {
-            for(var2 = this.beforeReadEntityFromNBTHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeReadEntityFromNBTHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeReadEntityFromNBTHooks[var2].beforeReadEntityFromNBT(var1);
             }
         }
@@ -6233,11 +8310,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterReadEntityFromNBTHooks != null) {
-            for(var2 = 0; var2 < this.afterReadEntityFromNBTHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterReadEntityFromNBTHooks.length; ++var2) {
                 this.afterReadEntityFromNBTHooks[var2].afterReadEntityFromNBT(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenReadEntityFromNBT(ClientPlayerBase var1) {
@@ -6251,7 +8327,6 @@ public final class ClientPlayerAPI {
                     return this.overrideReadEntityFromNBTHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6263,13 +8338,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localRespawnPlayer();
         }
-
     }
 
     private void respawnPlayer() {
         int var1;
         if (this.beforeRespawnPlayerHooks != null) {
-            for(var1 = this.beforeRespawnPlayerHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeRespawnPlayerHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeRespawnPlayerHooks[var1].beforeRespawnPlayer();
             }
         }
@@ -6281,11 +8355,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterRespawnPlayerHooks != null) {
-            for(var1 = 0; var1 < this.afterRespawnPlayerHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterRespawnPlayerHooks.length; ++var1) {
                 this.afterRespawnPlayerHooks[var1].afterRespawnPlayer();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenRespawnPlayer(ClientPlayerBase var1) {
@@ -6299,7 +8372,6 @@ public final class ClientPlayerAPI {
                     return this.overrideRespawnPlayerHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6311,13 +8383,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localSetDead();
         }
-
     }
 
     private void setDead() {
         int var1;
         if (this.beforeSetDeadHooks != null) {
-            for(var1 = this.beforeSetDeadHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeSetDeadHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeSetDeadHooks[var1].beforeSetDead();
             }
         }
@@ -6329,11 +8400,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterSetDeadHooks != null) {
-            for(var1 = 0; var1 < this.afterSetDeadHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterSetDeadHooks.length; ++var1) {
                 this.afterSetDeadHooks[var1].afterSetDead();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSetDead(ClientPlayerBase var1) {
@@ -6347,7 +8417,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSetDeadHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6359,13 +8428,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localSetPlayerSPHealth(var1);
         }
-
     }
 
     private void setPlayerSPHealth(float var1) {
         int var2;
         if (this.beforeSetPlayerSPHealthHooks != null) {
-            for(var2 = this.beforeSetPlayerSPHealthHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeSetPlayerSPHealthHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeSetPlayerSPHealthHooks[var2].beforeSetPlayerSPHealth(var1);
             }
         }
@@ -6377,11 +8445,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterSetPlayerSPHealthHooks != null) {
-            for(var2 = 0; var2 < this.afterSetPlayerSPHealthHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterSetPlayerSPHealthHooks.length; ++var2) {
                 this.afterSetPlayerSPHealthHooks[var2].afterSetPlayerSPHealth(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSetPlayerSPHealth(ClientPlayerBase var1) {
@@ -6395,41 +8462,40 @@ public final class ClientPlayerAPI {
                     return this.overrideSetPlayerSPHealthHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
 
-    public static void setPositionAndRotation(IClientPlayerAPI var0, double var1, double var3, double var5, float var7, float var8) {
+    public static void setPositionAndRotation(
+            IClientPlayerAPI var0, double var1, double var3, double var5, float var7, float var8) {
         ClientPlayerAPI var9 = var0.getClientPlayerAPI();
         if (var9 != null && var9.isSetPositionAndRotationModded) {
             var9.setPositionAndRotation(var1, var3, var5, var7, var8);
         } else {
             var0.localSetPositionAndRotation(var1, var3, var5, var7, var8);
         }
-
     }
 
     private void setPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {
         int var9;
         if (this.beforeSetPositionAndRotationHooks != null) {
-            for(var9 = this.beforeSetPositionAndRotationHooks.length - 1; var9 >= 0; --var9) {
+            for (var9 = this.beforeSetPositionAndRotationHooks.length - 1; var9 >= 0; --var9) {
                 this.beforeSetPositionAndRotationHooks[var9].beforeSetPositionAndRotation(var1, var3, var5, var7, var8);
             }
         }
 
         if (this.overrideSetPositionAndRotationHooks != null) {
-            this.overrideSetPositionAndRotationHooks[this.overrideSetPositionAndRotationHooks.length - 1].setPositionAndRotation(var1, var3, var5, var7, var8);
+            this.overrideSetPositionAndRotationHooks[this.overrideSetPositionAndRotationHooks.length - 1]
+                    .setPositionAndRotation(var1, var3, var5, var7, var8);
         } else {
             this.player.localSetPositionAndRotation(var1, var3, var5, var7, var8);
         }
 
         if (this.afterSetPositionAndRotationHooks != null) {
-            for(var9 = 0; var9 < this.afterSetPositionAndRotationHooks.length; ++var9) {
+            for (var9 = 0; var9 < this.afterSetPositionAndRotationHooks.length; ++var9) {
                 this.afterSetPositionAndRotationHooks[var9].afterSetPositionAndRotation(var1, var3, var5, var7, var8);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSetPositionAndRotation(ClientPlayerBase var1) {
@@ -6443,7 +8509,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSetPositionAndRotationHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6455,13 +8520,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localSetSneaking(var1);
         }
-
     }
 
     private void setSneaking(boolean var1) {
         int var2;
         if (this.beforeSetSneakingHooks != null) {
-            for(var2 = this.beforeSetSneakingHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeSetSneakingHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeSetSneakingHooks[var2].beforeSetSneaking(var1);
             }
         }
@@ -6473,11 +8537,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterSetSneakingHooks != null) {
-            for(var2 = 0; var2 < this.afterSetSneakingHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterSetSneakingHooks.length; ++var2) {
                 this.afterSetSneakingHooks[var2].afterSetSneaking(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSetSneaking(ClientPlayerBase var1) {
@@ -6491,7 +8554,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSetSneakingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6503,13 +8565,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localSetSprinting(var1);
         }
-
     }
 
     private void setSprinting(boolean var1) {
         int var2;
         if (this.beforeSetSprintingHooks != null) {
-            for(var2 = this.beforeSetSprintingHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeSetSprintingHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeSetSprintingHooks[var2].beforeSetSprinting(var1);
             }
         }
@@ -6521,11 +8582,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterSetSprintingHooks != null) {
-            for(var2 = 0; var2 < this.afterSetSprintingHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterSetSprintingHooks.length; ++var2) {
                 this.afterSetSprintingHooks[var2].afterSetSprinting(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSetSprinting(ClientPlayerBase var1) {
@@ -6539,7 +8599,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSetSprintingHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6558,14 +8617,15 @@ public final class ClientPlayerAPI {
 
     private EnumStatus sleepInBedAt(int var1, int var2, int var3) {
         if (this.beforeSleepInBedAtHooks != null) {
-            for(int var4 = this.beforeSleepInBedAtHooks.length - 1; var4 >= 0; --var4) {
+            for (int var4 = this.beforeSleepInBedAtHooks.length - 1; var4 >= 0; --var4) {
                 this.beforeSleepInBedAtHooks[var4].beforeSleepInBedAt(var1, var2, var3);
             }
         }
 
         EnumStatus var6;
         if (this.overrideSleepInBedAtHooks != null) {
-            var6 = this.overrideSleepInBedAtHooks[this.overrideSleepInBedAtHooks.length - 1].sleepInBedAt(var1, var2, var3);
+            var6 = this.overrideSleepInBedAtHooks[this.overrideSleepInBedAtHooks.length - 1].sleepInBedAt(
+                    var1, var2, var3);
         } else {
             var6 = this.player.localSleepInBedAt(var1, var2, var3);
         }
@@ -6590,7 +8650,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSleepInBedAtHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6602,13 +8661,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localSwingItem();
         }
-
     }
 
     private void swingItem() {
         int var1;
         if (this.beforeSwingItemHooks != null) {
-            for(var1 = this.beforeSwingItemHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeSwingItemHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeSwingItemHooks[var1].beforeSwingItem();
             }
         }
@@ -6620,11 +8678,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterSwingItemHooks != null) {
-            for(var1 = 0; var1 < this.afterSwingItemHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterSwingItemHooks.length; ++var1) {
                 this.afterSwingItemHooks[var1].afterSwingItem();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenSwingItem(ClientPlayerBase var1) {
@@ -6638,7 +8695,6 @@ public final class ClientPlayerAPI {
                     return this.overrideSwingItemHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6650,29 +8706,28 @@ public final class ClientPlayerAPI {
         } else {
             var0.localUpdateEntityActionState();
         }
-
     }
 
     private void updateEntityActionState() {
         int var1;
         if (this.beforeUpdateEntityActionStateHooks != null) {
-            for(var1 = this.beforeUpdateEntityActionStateHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeUpdateEntityActionStateHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeUpdateEntityActionStateHooks[var1].beforeUpdateEntityActionState();
             }
         }
 
         if (this.overrideUpdateEntityActionStateHooks != null) {
-            this.overrideUpdateEntityActionStateHooks[this.overrideUpdateEntityActionStateHooks.length - 1].updateEntityActionState();
+            this.overrideUpdateEntityActionStateHooks[this.overrideUpdateEntityActionStateHooks.length - 1]
+                    .updateEntityActionState();
         } else {
             this.player.localUpdateEntityActionState();
         }
 
         if (this.afterUpdateEntityActionStateHooks != null) {
-            for(var1 = 0; var1 < this.afterUpdateEntityActionStateHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterUpdateEntityActionStateHooks.length; ++var1) {
                 this.afterUpdateEntityActionStateHooks[var1].afterUpdateEntityActionState();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenUpdateEntityActionState(ClientPlayerBase var1) {
@@ -6686,7 +8741,6 @@ public final class ClientPlayerAPI {
                     return this.overrideUpdateEntityActionStateHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6698,13 +8752,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localUpdateRidden();
         }
-
     }
 
     private void updateRidden() {
         int var1;
         if (this.beforeUpdateRiddenHooks != null) {
-            for(var1 = this.beforeUpdateRiddenHooks.length - 1; var1 >= 0; --var1) {
+            for (var1 = this.beforeUpdateRiddenHooks.length - 1; var1 >= 0; --var1) {
                 this.beforeUpdateRiddenHooks[var1].beforeUpdateRidden();
             }
         }
@@ -6716,11 +8769,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterUpdateRiddenHooks != null) {
-            for(var1 = 0; var1 < this.afterUpdateRiddenHooks.length; ++var1) {
+            for (var1 = 0; var1 < this.afterUpdateRiddenHooks.length; ++var1) {
                 this.afterUpdateRiddenHooks[var1].afterUpdateRidden();
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenUpdateRidden(ClientPlayerBase var1) {
@@ -6734,7 +8786,6 @@ public final class ClientPlayerAPI {
                     return this.overrideUpdateRiddenHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6746,13 +8797,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localWakeUpPlayer(var1, var2, var3);
         }
-
     }
 
     private void wakeUpPlayer(boolean var1, boolean var2, boolean var3) {
         int var4;
         if (this.beforeWakeUpPlayerHooks != null) {
-            for(var4 = this.beforeWakeUpPlayerHooks.length - 1; var4 >= 0; --var4) {
+            for (var4 = this.beforeWakeUpPlayerHooks.length - 1; var4 >= 0; --var4) {
                 this.beforeWakeUpPlayerHooks[var4].beforeWakeUpPlayer(var1, var2, var3);
             }
         }
@@ -6764,11 +8814,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterWakeUpPlayerHooks != null) {
-            for(var4 = 0; var4 < this.afterWakeUpPlayerHooks.length; ++var4) {
+            for (var4 = 0; var4 < this.afterWakeUpPlayerHooks.length; ++var4) {
                 this.afterWakeUpPlayerHooks[var4].afterWakeUpPlayer(var1, var2, var3);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenWakeUpPlayer(ClientPlayerBase var1) {
@@ -6782,7 +8831,6 @@ public final class ClientPlayerAPI {
                     return this.overrideWakeUpPlayerHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }
@@ -6794,13 +8842,12 @@ public final class ClientPlayerAPI {
         } else {
             var0.localWriteEntityToNBT(var1);
         }
-
     }
 
     private void writeEntityToNBT(NBTTagCompound var1) {
         int var2;
         if (this.beforeWriteEntityToNBTHooks != null) {
-            for(var2 = this.beforeWriteEntityToNBTHooks.length - 1; var2 >= 0; --var2) {
+            for (var2 = this.beforeWriteEntityToNBTHooks.length - 1; var2 >= 0; --var2) {
                 this.beforeWriteEntityToNBTHooks[var2].beforeWriteEntityToNBT(var1);
             }
         }
@@ -6812,11 +8859,10 @@ public final class ClientPlayerAPI {
         }
 
         if (this.afterWriteEntityToNBTHooks != null) {
-            for(var2 = 0; var2 < this.afterWriteEntityToNBTHooks.length; ++var2) {
+            for (var2 = 0; var2 < this.afterWriteEntityToNBTHooks.length; ++var2) {
                 this.afterWriteEntityToNBTHooks[var2].afterWriteEntityToNBT(var1);
             }
         }
-
     }
 
     protected ClientPlayerBase GetOverwrittenWriteEntityToNBT(ClientPlayerBase var1) {
@@ -6830,7 +8876,6 @@ public final class ClientPlayerAPI {
                     return this.overrideWriteEntityToNBTHooks[var2 - 1];
                 }
             }
-
         }
         return var1;
     }

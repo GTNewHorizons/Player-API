@@ -2,7 +2,6 @@ package api.player.client;
 
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,11 @@ public final class ClientPlayerBaseSorter {
     private final String methodName;
     private static final Set<String> Empty = new HashSet<>();
 
-    public ClientPlayerBaseSorter(List<String> list, Map<String, String[]> allBaseSuperiors, Map<String, String[]> allBaseInferiors, String methodName) {
+    public ClientPlayerBaseSorter(
+            List<String> list,
+            Map<String, String[]> allBaseSuperiors,
+            Map<String, String[]> allBaseInferiors,
+            String methodName) {
         this.list = list;
         this.allBaseSuperiors = allBaseSuperiors;
         this.allBaseInferiors = allBaseInferiors;
@@ -47,7 +50,7 @@ public final class ClientPlayerBaseSorter {
             }
 
             int offset;
-            for(offset = 0; offset < this.list.size(); ++offset) {
+            for (offset = 0; offset < this.list.size(); ++offset) {
                 String baseId = this.list.get(offset);
                 String[] inferiorNames = this.allBaseInferiors.get(baseId);
                 boolean hasInferiors = inferiorNames != null && inferiorNames.length > 0;
@@ -58,19 +61,21 @@ public final class ClientPlayerBaseSorter {
                 }
 
                 if (hasInferiors) {
-                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
+                    this.explicitInferiors =
+                            build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
                 }
 
                 if (hasSuperiors) {
-                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
+                    this.explicitSuperiors =
+                            build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
                 }
             }
 
             int size;
             Set<String> rightInferiors;
             if (this.directInferiorsMap != null) {
-                for(offset = 0; offset < this.list.size() - 1; ++offset) {
-                    for(size = offset + 1; size < this.list.size(); ++size) {
+                for (offset = 0; offset < this.list.size() - 1; ++offset) {
+                    for (size = offset + 1; size < this.list.size(); ++size) {
                         String left = this.list.get(offset);
                         String right = this.list.get(size);
                         Set<String> leftInferiors = null;
@@ -92,19 +97,27 @@ public final class ClientPlayerBaseSorter {
                         boolean rightWantsToBeInferiorToLeft = rightSuperiors != null && rightSuperiors.contains(left);
                         boolean rightWantsToBeSuperiorToLeft = rightInferiors != null && rightInferiors.contains(left);
                         if (leftWantsToBeInferiorToRight && rightWantsToBeInferiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be inferior to '" + right + "' and '" + right + "' wants to be inferior to '" + left + "'");
+                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
+                                    + this.methodName + "'. '" + left + "' wants to be inferior to '" + right
+                                    + "' and '" + right + "' wants to be inferior to '" + left + "'");
                         }
 
                         if (leftWantsToBeSuperiorToRight && rightWantsToBeSuperiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be superior to '" + right + "' and '" + right + "' wants to be superior to '" + left + "'");
+                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
+                                    + this.methodName + "'. '" + left + "' wants to be superior to '" + right
+                                    + "' and '" + right + "' wants to be superior to '" + left + "'");
                         }
 
                         if (leftWantsToBeInferiorToRight && leftWantsToBeSuperiorToRight) {
-                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be superior and inferior to '" + right + "'");
+                            throw new UnsupportedOperationException(
+                                    "Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '"
+                                            + left + "' wants to be superior and inferior to '" + right + "'");
                         }
 
                         if (rightWantsToBeInferiorToLeft && rightWantsToBeSuperiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '" + right + "' wants to be superior and inferior to '" + left + "'");
+                            throw new UnsupportedOperationException(
+                                    "Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. '"
+                                            + right + "' wants to be superior and inferior to '" + left + "'");
                         }
                     }
                 }
@@ -113,7 +126,7 @@ public final class ClientPlayerBaseSorter {
                     this.allInferiors = new Hashtable<>();
                 }
 
-                for(offset = 0; offset < this.list.size(); ++offset) {
+                for (offset = 0; offset < this.list.size(); ++offset) {
                     this.build(this.list.get(offset), null);
                 }
             }
@@ -125,16 +138,16 @@ public final class ClientPlayerBaseSorter {
             offset = 0;
             size = this.list.size();
 
-            while(size > 1) {
+            while (size > 1) {
                 this.withoutSuperiors.clear();
 
                 int i;
-                for(i = offset; i < offset + size; ++i) {
+                for (i = offset; i < offset + size; ++i) {
                     this.withoutSuperiors.add(this.list.get(i));
                 }
 
                 if (this.allInferiors != null) {
-                    for(i = offset; i < offset + size; ++i) {
+                    for (i = offset; i < offset + size; ++i) {
                         Set<String> inferiors = this.allInferiors.get(this.list.get(i));
                         if (inferiors != null) {
                             this.withoutSuperiors.removeAll(inferiors);
@@ -144,7 +157,7 @@ public final class ClientPlayerBaseSorter {
 
                 boolean initial = true;
 
-                for(int j = offset; j < offset + size; ++j) {
+                for (int j = offset; j < offset + size; ++j) {
                     String key = this.list.get(j);
                     if (this.withoutSuperiors.contains(key)) {
                         if (initial) {
@@ -170,7 +183,6 @@ public final class ClientPlayerBaseSorter {
 
                 this.list.addAll(offset + size, this.withoutSuperiors);
             }
-
         }
     }
 
@@ -199,7 +211,8 @@ public final class ClientPlayerBaseSorter {
 
             for (String inferiorType : directInferiors) {
                 if (inferiorType.equals(startType)) {
-                    throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + startType + "'");
+                    throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
+                            + this.methodName + "'. Circular superiosity found including '" + startType + "'");
                 }
 
                 if (this.list.contains(inferiorType)) {
@@ -210,7 +223,10 @@ public final class ClientPlayerBaseSorter {
                 try {
                     inferiorSet = this.build(inferiorType, startType);
                 } catch (UnsupportedOperationException var9) {
-                    throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + inferiorType + "'", var9);
+                    throw new UnsupportedOperationException(
+                            "Can not sort ClientPlayerBase classes for method '" + this.methodName
+                                    + "'. Circular superiosity found including '" + inferiorType + "'",
+                            var9);
                 }
 
                 if (inferiorSet != Empty) {
@@ -222,7 +238,12 @@ public final class ClientPlayerBaseSorter {
         }
     }
 
-    private static Map<String, Set<String>> build(String baseId, Map<String, Set<String>> map, Map<String, Set<String>> directMap, Map<String, Set<String>> otherDirectMap, String[] var4) {
+    private static Map<String, Set<String>> build(
+            String baseId,
+            Map<String, Set<String>> map,
+            Map<String, Set<String>> directMap,
+            Map<String, Set<String>> otherDirectMap,
+            String[] var4) {
         if (map == null) {
             map = new Hashtable<>();
         }

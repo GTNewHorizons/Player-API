@@ -14,7 +14,7 @@ public class PlayerAPIPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{"api.player.forge.PlayerAPITransformer"};
+        return new String[] {"api.player.forge.PlayerAPITransformer"};
     }
 
     @Override
@@ -29,7 +29,7 @@ public class PlayerAPIPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        isObfuscated = (boolean)data.get("runtimeDeobfuscationEnabled");
+        isObfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
     @Override

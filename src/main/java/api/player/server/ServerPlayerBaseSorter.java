@@ -2,7 +2,6 @@ package api.player.server;
 
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,11 @@ public final class ServerPlayerBaseSorter {
     private final String methodName;
     private static final Set<String> Empty = new HashSet<>();
 
-    public ServerPlayerBaseSorter(List<String> list, Map<String, String[]> allBaseSuperiors, Map<String, String[]> allBaseInferiors, String methodName) {
+    public ServerPlayerBaseSorter(
+            List<String> list,
+            Map<String, String[]> allBaseSuperiors,
+            Map<String, String[]> allBaseInferiors,
+            String methodName) {
         this.list = list;
         this.allBaseSuperiors = allBaseSuperiors;
         this.allBaseInferiors = allBaseInferiors;
@@ -55,18 +58,20 @@ public final class ServerPlayerBaseSorter {
                 }
 
                 if (hasInferiors) {
-                    this.explicitInferiors = build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
+                    this.explicitInferiors =
+                            build(baseId, this.explicitInferiors, this.directInferiorsMap, null, inferiorNames);
                 }
 
                 if (hasSuperiors) {
-                    this.explicitSuperiors = build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
+                    this.explicitSuperiors =
+                            build(baseId, this.explicitSuperiors, null, this.directInferiorsMap, superiorNames);
                 }
             }
 
             Set<String> rightInferiors;
             if (this.directInferiorsMap != null) {
-                for(int i = 0; i < this.list.size() - 1; ++i) {
-                    for(int n = i + 1; n < this.list.size(); ++n) {
+                for (int i = 0; i < this.list.size() - 1; ++i) {
+                    for (int n = i + 1; n < this.list.size(); ++n) {
                         String left = this.list.get(i);
                         String right = this.list.get(n);
                         Set<String> leftInferiors = null;
@@ -88,19 +93,27 @@ public final class ServerPlayerBaseSorter {
                         boolean rightWantsToBeInferiorToLeft = rightSuperiors != null && rightSuperiors.contains(left);
                         boolean rightWantsToBeSuperiorToLeft = rightInferiors != null && rightInferiors.contains(left);
                         if (leftWantsToBeInferiorToRight && rightWantsToBeInferiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be inferior to '" + right + "' and '" + right + "' wants to be inferior to '" + left + "'");
+                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '"
+                                    + this.methodName + "'. '" + left + "' wants to be inferior to '" + right
+                                    + "' and '" + right + "' wants to be inferior to '" + left + "'");
                         }
 
                         if (leftWantsToBeSuperiorToRight && rightWantsToBeSuperiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be superior to '" + right + "' and '" + right + "' wants to be superior to '" + left + "'");
+                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '"
+                                    + this.methodName + "'. '" + left + "' wants to be superior to '" + right
+                                    + "' and '" + right + "' wants to be superior to '" + left + "'");
                         }
 
                         if (leftWantsToBeInferiorToRight && leftWantsToBeSuperiorToRight) {
-                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '" + left + "' wants to be superior and inferior to '" + right + "'");
+                            throw new UnsupportedOperationException(
+                                    "Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '"
+                                            + left + "' wants to be superior and inferior to '" + right + "'");
                         }
 
                         if (rightWantsToBeInferiorToLeft && rightWantsToBeSuperiorToLeft) {
-                            throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '" + right + "' wants to be superior and inferior to '" + left + "'");
+                            throw new UnsupportedOperationException(
+                                    "Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. '"
+                                            + right + "' wants to be superior and inferior to '" + left + "'");
                         }
                     }
                 }
@@ -121,15 +134,15 @@ public final class ServerPlayerBaseSorter {
             int offset = 0;
             int size = this.list.size();
 
-            while(size > 1) {
+            while (size > 1) {
                 this.withoutSuperiors.clear();
 
-                for(int i = offset; i < offset + size; ++i) {
+                for (int i = offset; i < offset + size; ++i) {
                     this.withoutSuperiors.add(this.list.get(i));
                 }
 
                 if (this.allInferiors != null) {
-                    for(int i = offset; i < offset + size; ++i) {
+                    for (int i = offset; i < offset + size; ++i) {
                         Set<String> inferiors = this.allInferiors.get(this.list.get(i));
                         if (inferiors != null) {
                             this.withoutSuperiors.removeAll(inferiors);
@@ -139,7 +152,7 @@ public final class ServerPlayerBaseSorter {
 
                 boolean initial = true;
 
-                for(int i = offset; i < offset + size; ++i) {
+                for (int i = offset; i < offset + size; ++i) {
                     String key = this.list.get(i);
                     if (this.withoutSuperiors.contains(key)) {
                         if (initial) {
@@ -165,7 +178,6 @@ public final class ServerPlayerBaseSorter {
 
                 this.list.addAll(offset + size, this.withoutSuperiors);
             }
-
         }
     }
 
@@ -194,7 +206,8 @@ public final class ServerPlayerBaseSorter {
 
             for (String inferiorType : directInferiors) {
                 if (inferiorType.equals(startType)) {
-                    throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + startType + "'");
+                    throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '"
+                            + this.methodName + "'. Circular superiosity found including '" + startType + "'");
                 }
 
                 if (this.list.contains(inferiorType)) {
@@ -205,7 +218,10 @@ public final class ServerPlayerBaseSorter {
                 try {
                     inferiorSet = this.build(inferiorType, startType);
                 } catch (UnsupportedOperationException var9) {
-                    throw new UnsupportedOperationException("Can not sort ServerPlayerBase classes for method '" + this.methodName + "'. Circular superiosity found including '" + inferiorType + "'", var9);
+                    throw new UnsupportedOperationException(
+                            "Can not sort ServerPlayerBase classes for method '" + this.methodName
+                                    + "'. Circular superiosity found including '" + inferiorType + "'",
+                            var9);
                 }
 
                 if (inferiorSet != Empty) {
@@ -217,7 +233,12 @@ public final class ServerPlayerBaseSorter {
         }
     }
 
-    private static Map<String, Set<String>> build(String baseId, Map<String, Set<String>> map, Map<String, Set<String>> directMap, Map<String, Set<String>> otherDirectMap, String[] names) {
+    private static Map<String, Set<String>> build(
+            String baseId,
+            Map<String, Set<String>> map,
+            Map<String, Set<String>> directMap,
+            Map<String, Set<String>> otherDirectMap,
+            String[] names) {
         if (map == null) {
             map = new Hashtable<>();
         }
