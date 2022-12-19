@@ -1,0 +1,21 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "Player API for Minecraft Forge",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "http://www.minecraftforum.net/topic/738498-",
+		"updateUrl": "",
+		"authorList": ["Divisor"],
+		"credits": "",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": true
+	}]
+}
