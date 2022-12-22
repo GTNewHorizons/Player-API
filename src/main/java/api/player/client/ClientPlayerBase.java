@@ -1,34 +1,24 @@
+// ==================================================================
+// This file is part of Player API.
+//
+// Player API is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Player API is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and the GNU General Public License along with Player API.
+// If not, see <http://www.gnu.org/licenses/>.
+// ==================================================================
+
 package api.player.client;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer.EnumStatus;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatBase;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Session;
-import net.minecraft.world.World;
-
 public abstract class ClientPlayerBase {
-
-    protected final EntityPlayerSP player;
-    protected final IClientPlayer playerAPI;
-    private final ClientPlayerAPI internalClientPlayerAPI;
-
     public ClientPlayerBase(ClientPlayerAPI playerAPI) {
         this.internalClientPlayerAPI = playerAPI;
         this.playerAPI = playerAPI.player;
@@ -39,161 +29,150 @@ public abstract class ClientPlayerBase {
 
     public void afterBaseAttach(boolean onTheFly) {}
 
-    public void beforeLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {}
+    public void beforeLocalConstructing(
+            net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld,
+            net.minecraft.util.Session paramSession,
+            int paramInt) {}
 
-    public void afterLocalConstructing(Minecraft var1, World var2, Session var3, int var4) {}
+    public void afterLocalConstructing(
+            net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld,
+            net.minecraft.util.Session paramSession,
+            int paramInt) {}
 
     public void beforeBaseDetach(boolean onTheFly) {}
 
     public void afterBaseDetach(boolean onTheFly) {}
 
     public Object dynamic(String key, Object[] parameters) {
-        return this.internalClientPlayerAPI.dynamicOverwritten(key, parameters, this);
+        return internalClientPlayerAPI.dynamicOverwritten(key, parameters, this);
     }
 
-    @Override
     public final int hashCode() {
         return super.hashCode();
     }
 
-    public void beforeAddExhaustion(float var1) {}
+    public void beforeAddExhaustion(float paramFloat) {}
 
-    public void addExhaustion(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenAddExhaustion(this);
-        if (var2 == null) {
-            this.playerAPI.localAddExhaustion(var1);
-        } else if (var2 != this) {
-            var2.addExhaustion(var1);
-        }
+    public void addExhaustion(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenAddExhaustion(this);
+
+        if (overwritten == null) playerAPI.localAddExhaustion(paramFloat);
+        else if (overwritten != this) overwritten.addExhaustion(paramFloat);
     }
 
-    public void afterAddExhaustion(float var1) {}
+    public void afterAddExhaustion(float paramFloat) {}
 
-    public void beforeAddMovementStat(double var1, double var3, double var5) {}
+    public void beforeAddMovementStat(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void addMovementStat(double var1, double var3, double var5) {
-        ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenAddMovementStat(this);
-        if (var7 == null) {
-            this.playerAPI.localAddMovementStat(var1, var3, var5);
-        } else if (var7 != this) {
-            var7.addMovementStat(var1, var3, var5);
-        }
+    public void addMovementStat(double paramDouble1, double paramDouble2, double paramDouble3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenAddMovementStat(this);
+
+        if (overwritten == null) playerAPI.localAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
+        else if (overwritten != this) overwritten.addMovementStat(paramDouble1, paramDouble2, paramDouble3);
     }
 
-    public void afterAddMovementStat(double var1, double var3, double var5) {}
+    public void afterAddMovementStat(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void beforeAddStat(StatBase var1, int var2) {}
+    public void beforeAddStat(net.minecraft.stats.StatBase paramStatBase, int paramInt) {}
 
-    public void addStat(StatBase var1, int var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenAddStat(this);
-        if (var3 == null) {
-            this.playerAPI.localAddStat(var1, var2);
-        } else if (var3 != this) {
-            var3.addStat(var1, var2);
-        }
+    public void addStat(net.minecraft.stats.StatBase paramStatBase, int paramInt) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenAddStat(this);
+
+        if (overwritten == null) playerAPI.localAddStat(paramStatBase, paramInt);
+        else if (overwritten != this) overwritten.addStat(paramStatBase, paramInt);
     }
 
-    public void afterAddStat(StatBase var1, int var2) {}
+    public void afterAddStat(net.minecraft.stats.StatBase paramStatBase, int paramInt) {}
 
-    public void beforeAttackEntityFrom(DamageSource var1, float var2) {}
+    public void beforeAttackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {}
 
-    public boolean attackEntityFrom(DamageSource var1, float var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenAttackEntityFrom(this);
-        boolean var4;
-        if (var3 == null) {
-            var4 = this.playerAPI.localAttackEntityFrom(var1, var2);
-        } else if (var3 != this) {
-            var4 = var3.attackEntityFrom(var1, var2);
-        } else {
-            var4 = false;
-        }
+    public boolean attackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenAttackEntityFrom(this);
 
-        return var4;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localAttackEntityFrom(paramDamageSource, paramFloat);
+        else if (overwritten != this) _result = overwritten.attackEntityFrom(paramDamageSource, paramFloat);
+        else _result = false;
+
+        return _result;
     }
 
-    public void afterAttackEntityFrom(DamageSource var1, float var2) {}
+    public void afterAttackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {}
 
-    public void beforeAttackTargetEntityWithCurrentItem(Entity var1) {}
+    public void beforeAttackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity) {}
 
-    public void attackTargetEntityWithCurrentItem(Entity var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenAttackTargetEntityWithCurrentItem(this);
-        if (var2 == null) {
-            this.playerAPI.localAttackTargetEntityWithCurrentItem(var1);
-        } else if (var2 != this) {
-            var2.attackTargetEntityWithCurrentItem(var1);
-        }
+    public void attackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenAttackTargetEntityWithCurrentItem(this);
+
+        if (overwritten == null) playerAPI.localAttackTargetEntityWithCurrentItem(paramEntity);
+        else if (overwritten != this) overwritten.attackTargetEntityWithCurrentItem(paramEntity);
     }
 
-    public void afterAttackTargetEntityWithCurrentItem(Entity var1) {}
+    public void afterAttackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity) {}
 
     public void beforeCanBreatheUnderwater() {}
 
     public boolean canBreatheUnderwater() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCanBreatheUnderwater(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localCanBreatheUnderwater();
-        } else if (var1 != this) {
-            var2 = var1.canBreatheUnderwater();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCanBreatheUnderwater(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localCanBreatheUnderwater();
+        else if (overwritten != this) _result = overwritten.canBreatheUnderwater();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterCanBreatheUnderwater() {}
 
-    public void beforeCanHarvestBlock(Block var1) {}
+    public void beforeCanHarvestBlock(net.minecraft.block.Block paramBlock) {}
 
-    public boolean canHarvestBlock(Block var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenCanHarvestBlock(this);
-        boolean var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localCanHarvestBlock(var1);
-        } else if (var2 != this) {
-            var3 = var2.canHarvestBlock(var1);
-        } else {
-            var3 = false;
-        }
+    public boolean canHarvestBlock(net.minecraft.block.Block paramBlock) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCanHarvestBlock(this);
 
-        return var3;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localCanHarvestBlock(paramBlock);
+        else if (overwritten != this) _result = overwritten.canHarvestBlock(paramBlock);
+        else _result = false;
+
+        return _result;
     }
 
-    public void afterCanHarvestBlock(Block var1) {}
+    public void afterCanHarvestBlock(net.minecraft.block.Block paramBlock) {}
 
-    public void beforeCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {}
+    public void beforeCanPlayerEdit(
+            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {}
 
-    public boolean canPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {
-        ClientPlayerBase var6 = this.internalClientPlayerAPI.GetOverwrittenCanPlayerEdit(this);
-        boolean var7;
-        if (var6 == null) {
-            var7 = this.playerAPI.localCanPlayerEdit(var1, var2, var3, var4, var5);
-        } else if (var6 != this) {
-            var7 = var6.canPlayerEdit(var1, var2, var3, var4, var5);
-        } else {
-            var7 = false;
-        }
+    public boolean canPlayerEdit(
+            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCanPlayerEdit(this);
 
-        return var7;
+        boolean _result;
+        if (overwritten == null)
+            _result = playerAPI.localCanPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
+        else if (overwritten != this)
+            _result = overwritten.canPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
+        else _result = false;
+
+        return _result;
     }
 
-    public void afterCanPlayerEdit(int var1, int var2, int var3, int var4, ItemStack var5) {}
+    public void afterCanPlayerEdit(
+            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {}
 
     public void beforeCanTriggerWalking() {}
 
     public boolean canTriggerWalking() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCanTriggerWalking(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localCanTriggerWalking();
-        } else if (var1 != this) {
-            var2 = var1.canTriggerWalking();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCanTriggerWalking(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localCanTriggerWalking();
+        else if (overwritten != this) _result = overwritten.canTriggerWalking();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterCanTriggerWalking() {}
@@ -201,201 +180,177 @@ public abstract class ClientPlayerBase {
     public void beforeCloseScreen() {}
 
     public void closeScreen() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenCloseScreen(this);
-        if (var1 == null) {
-            this.playerAPI.localCloseScreen();
-        } else if (var1 != this) {
-            var1.closeScreen();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCloseScreen(this);
+
+        if (overwritten == null) playerAPI.localCloseScreen();
+        else if (overwritten != this) overwritten.closeScreen();
     }
 
     public void afterCloseScreen() {}
 
-    public void beforeDamageEntity(DamageSource var1, float var2) {}
+    public void beforeDamageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {}
 
-    public void damageEntity(DamageSource var1, float var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenDamageEntity(this);
-        if (var3 == null) {
-            this.playerAPI.localDamageEntity(var1, var2);
-        } else if (var3 != this) {
-            var3.damageEntity(var1, var2);
-        }
+    public void damageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDamageEntity(this);
+
+        if (overwritten == null) playerAPI.localDamageEntity(paramDamageSource, paramFloat);
+        else if (overwritten != this) overwritten.damageEntity(paramDamageSource, paramFloat);
     }
 
-    public void afterDamageEntity(DamageSource var1, float var2) {}
+    public void afterDamageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {}
 
-    public void beforeDisplayGUIBrewingStand(TileEntityBrewingStand var1) {}
+    public void beforeDisplayGUIBrewingStand(
+            net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand) {}
 
-    public void displayGUIBrewingStand(TileEntityBrewingStand var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIBrewingStand(this);
-        if (var2 == null) {
-            this.playerAPI.localDisplayGUIBrewingStand(var1);
-        } else if (var2 != this) {
-            var2.displayGUIBrewingStand(var1);
-        }
+    public void displayGUIBrewingStand(net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIBrewingStand(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIBrewingStand(paramTileEntityBrewingStand);
+        else if (overwritten != this) overwritten.displayGUIBrewingStand(paramTileEntityBrewingStand);
     }
 
-    public void afterDisplayGUIBrewingStand(TileEntityBrewingStand var1) {}
+    public void afterDisplayGUIBrewingStand(
+            net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand) {}
 
-    public void beforeDisplayGUIChest(IInventory var1) {}
+    public void beforeDisplayGUIChest(net.minecraft.inventory.IInventory paramIInventory) {}
 
-    public void displayGUIChest(IInventory var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIChest(this);
-        if (var2 == null) {
-            this.playerAPI.localDisplayGUIChest(var1);
-        } else if (var2 != this) {
-            var2.displayGUIChest(var1);
-        }
+    public void displayGUIChest(net.minecraft.inventory.IInventory paramIInventory) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIChest(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIChest(paramIInventory);
+        else if (overwritten != this) overwritten.displayGUIChest(paramIInventory);
     }
 
-    public void afterDisplayGUIChest(IInventory var1) {}
+    public void afterDisplayGUIChest(net.minecraft.inventory.IInventory paramIInventory) {}
 
-    public void beforeDisplayGUIDispenser(TileEntityDispenser var1) {}
+    public void beforeDisplayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {}
 
-    public void displayGUIDispenser(TileEntityDispenser var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIDispenser(this);
-        if (var2 == null) {
-            this.playerAPI.localDisplayGUIDispenser(var1);
-        } else if (var2 != this) {
-            var2.displayGUIDispenser(var1);
-        }
+    public void displayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIDispenser(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIDispenser(paramTileEntityDispenser);
+        else if (overwritten != this) overwritten.displayGUIDispenser(paramTileEntityDispenser);
     }
 
-    public void afterDisplayGUIDispenser(TileEntityDispenser var1) {}
+    public void afterDisplayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {}
 
-    public void beforeDisplayGUIEditSign(TileEntity var1) {}
+    public void beforeDisplayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity) {}
 
-    public void displayGUIEditSign(TileEntity var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIEditSign(this);
-        if (var2 == null) {
-            this.playerAPI.localDisplayGUIEditSign(var1);
-        } else if (var2 != this) {
-            var2.displayGUIEditSign(var1);
-        }
+    public void displayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIEditSign(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIEditSign(paramTileEntity);
+        else if (overwritten != this) overwritten.displayGUIEditSign(paramTileEntity);
     }
 
-    public void afterDisplayGUIEditSign(TileEntity var1) {}
+    public void afterDisplayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity) {}
 
-    public void beforeDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {}
+    public void beforeDisplayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString) {}
 
-    public void displayGUIEnchantment(int var1, int var2, int var3, String var4) {
-        ClientPlayerBase var5 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIEnchantment(this);
-        if (var5 == null) {
-            this.playerAPI.localDisplayGUIEnchantment(var1, var2, var3, var4);
-        } else if (var5 != this) {
-            var5.displayGUIEnchantment(var1, var2, var3, var4);
-        }
+    public void displayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIEnchantment(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
+        else if (overwritten != this) overwritten.displayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
     }
 
-    public void afterDisplayGUIEnchantment(int var1, int var2, int var3, String var4) {}
+    public void afterDisplayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString) {}
 
-    public void beforeDisplayGUIFurnace(TileEntityFurnace var1) {}
+    public void beforeDisplayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {}
 
-    public void displayGUIFurnace(TileEntityFurnace var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIFurnace(this);
-        if (var2 == null) {
-            this.playerAPI.localDisplayGUIFurnace(var1);
-        } else if (var2 != this) {
-            var2.displayGUIFurnace(var1);
-        }
+    public void displayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIFurnace(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIFurnace(paramTileEntityFurnace);
+        else if (overwritten != this) overwritten.displayGUIFurnace(paramTileEntityFurnace);
     }
 
-    public void afterDisplayGUIFurnace(TileEntityFurnace var1) {}
+    public void afterDisplayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {}
 
-    public void beforeDisplayGUIWorkbench(int var1, int var2, int var3) {}
+    public void beforeDisplayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3) {}
 
-    public void displayGUIWorkbench(int var1, int var2, int var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenDisplayGUIWorkbench(this);
-        if (var4 == null) {
-            this.playerAPI.localDisplayGUIWorkbench(var1, var2, var3);
-        } else if (var4 != this) {
-            var4.displayGUIWorkbench(var1, var2, var3);
-        }
+    public void displayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDisplayGUIWorkbench(this);
+
+        if (overwritten == null) playerAPI.localDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
+        else if (overwritten != this) overwritten.displayGUIWorkbench(paramInt1, paramInt2, paramInt3);
     }
 
-    public void afterDisplayGUIWorkbench(int var1, int var2, int var3) {}
+    public void afterDisplayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3) {}
 
-    public void beforeDropOneItem(boolean var1) {}
+    public void beforeDropOneItem(boolean paramBoolean) {}
 
-    public EntityItem dropOneItem(boolean var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenDropOneItem(this);
-        EntityItem var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localDropOneItem(var1);
-        } else if (var2 != this) {
-            var3 = var2.dropOneItem(var1);
-        } else {
-            var3 = null;
-        }
+    public net.minecraft.entity.item.EntityItem dropOneItem(boolean paramBoolean) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDropOneItem(this);
 
-        return var3;
+        net.minecraft.entity.item.EntityItem _result;
+        if (overwritten == null) _result = playerAPI.localDropOneItem(paramBoolean);
+        else if (overwritten != this) _result = overwritten.dropOneItem(paramBoolean);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterDropOneItem(boolean var1) {}
+    public void afterDropOneItem(boolean paramBoolean) {}
 
-    public void beforeDropPlayerItem(ItemStack var1, boolean var2) {}
+    public void beforeDropPlayerItem(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {}
 
-    public EntityItem dropPlayerItem(ItemStack var1, boolean var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenDropPlayerItem(this);
-        EntityItem var4;
-        if (var3 == null) {
-            var4 = this.playerAPI.localDropPlayerItem(var1, var2);
-        } else if (var3 != this) {
-            var4 = var3.dropPlayerItem(var1, var2);
-        } else {
-            var4 = null;
-        }
+    public net.minecraft.entity.item.EntityItem dropPlayerItem(
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDropPlayerItem(this);
 
-        return var4;
+        net.minecraft.entity.item.EntityItem _result;
+        if (overwritten == null) _result = playerAPI.localDropPlayerItem(paramItemStack, paramBoolean);
+        else if (overwritten != this) _result = overwritten.dropPlayerItem(paramItemStack, paramBoolean);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterDropPlayerItem(ItemStack var1, boolean var2) {}
+    public void afterDropPlayerItem(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {}
 
-    public void beforeDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {}
+    public void beforeDropPlayerItemWithRandomChoice(
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {}
 
-    public EntityItem dropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenDropPlayerItemWithRandomChoice(this);
-        EntityItem var5;
-        if (var4 == null) {
-            var5 = this.playerAPI.localDropPlayerItemWithRandomChoice(var1, var2, var3);
-        } else if (var4 != this) {
-            var5 = var4.dropPlayerItemWithRandomChoice(var1, var2, var3);
-        } else {
-            var5 = null;
-        }
+    public net.minecraft.entity.item.EntityItem dropPlayerItemWithRandomChoice(
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDropPlayerItemWithRandomChoice(this);
 
-        return var5;
+        net.minecraft.entity.item.EntityItem _result;
+        if (overwritten == null)
+            _result = playerAPI.localDropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
+        else if (overwritten != this)
+            _result = overwritten.dropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterDropPlayerItemWithRandomChoice(ItemStack var1, boolean var2, boolean var3) {}
+    public void afterDropPlayerItemWithRandomChoice(
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {}
 
-    public void beforeFall(float var1) {}
+    public void beforeFall(float paramFloat) {}
 
-    public void fall(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenFall(this);
-        if (var2 == null) {
-            this.playerAPI.localFall(var1);
-        } else if (var2 != this) {
-            var2.fall(var1);
-        }
+    public void fall(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenFall(this);
+
+        if (overwritten == null) playerAPI.localFall(paramFloat);
+        else if (overwritten != this) overwritten.fall(paramFloat);
     }
 
-    public void afterFall(float var1) {}
+    public void afterFall(float paramFloat) {}
 
     public void beforeGetAIMoveSpeed() {}
 
     public float getAIMoveSpeed() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetAIMoveSpeed(this);
-        float var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localGetAIMoveSpeed();
-        } else if (var1 != this) {
-            var2 = var1.getAIMoveSpeed();
-        } else {
-            var2 = 0.0F;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetAIMoveSpeed(this);
 
-        return var2;
+        float _result;
+        if (overwritten == null) _result = playerAPI.localGetAIMoveSpeed();
+        else if (overwritten != this) _result = overwritten.getAIMoveSpeed();
+        else _result = 0;
+
+        return _result;
     }
 
     public void afterGetAIMoveSpeed() {}
@@ -403,197 +358,169 @@ public abstract class ClientPlayerBase {
     public void beforeGetBedOrientationInDegrees() {}
 
     public float getBedOrientationInDegrees() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetBedOrientationInDegrees(this);
-        float var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localGetBedOrientationInDegrees();
-        } else if (var1 != this) {
-            var2 = var1.getBedOrientationInDegrees();
-        } else {
-            var2 = 0.0F;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetBedOrientationInDegrees(this);
 
-        return var2;
+        float _result;
+        if (overwritten == null) _result = playerAPI.localGetBedOrientationInDegrees();
+        else if (overwritten != this) _result = overwritten.getBedOrientationInDegrees();
+        else _result = 0;
+
+        return _result;
     }
 
     public void afterGetBedOrientationInDegrees() {}
 
-    public void beforeGetBrightness(float var1) {}
+    public void beforeGetBrightness(float paramFloat) {}
 
-    public float getBrightness(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetBrightness(this);
-        float var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localGetBrightness(var1);
-        } else if (var2 != this) {
-            var3 = var2.getBrightness(var1);
-        } else {
-            var3 = 0.0F;
-        }
+    public float getBrightness(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetBrightness(this);
 
-        return var3;
+        float _result;
+        if (overwritten == null) _result = playerAPI.localGetBrightness(paramFloat);
+        else if (overwritten != this) _result = overwritten.getBrightness(paramFloat);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetBrightness(float var1) {}
+    public void afterGetBrightness(float paramFloat) {}
 
-    public void beforeGetBrightnessForRender(float var1) {}
+    public void beforeGetBrightnessForRender(float paramFloat) {}
 
-    public int getBrightnessForRender(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetBrightnessForRender(this);
-        int var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localGetBrightnessForRender(var1);
-        } else if (var2 != this) {
-            var3 = var2.getBrightnessForRender(var1);
-        } else {
-            var3 = 0;
-        }
+    public int getBrightnessForRender(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetBrightnessForRender(this);
 
-        return var3;
+        int _result;
+        if (overwritten == null) _result = playerAPI.localGetBrightnessForRender(paramFloat);
+        else if (overwritten != this) _result = overwritten.getBrightnessForRender(paramFloat);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetBrightnessForRender(float var1) {}
+    public void afterGetBrightnessForRender(float paramFloat) {}
 
-    public void beforeGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {}
+    public void beforeGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean) {}
 
-    public float getCurrentPlayerStrVsBlock(Block var1, boolean var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlock(this);
-        float var4;
-        if (var3 == null) {
-            var4 = this.playerAPI.localGetCurrentPlayerStrVsBlock(var1, var2);
-        } else if (var3 != this) {
-            var4 = var3.getCurrentPlayerStrVsBlock(var1, var2);
-        } else {
-            var4 = 0.0F;
-        }
+    public float getCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlock(this);
 
-        return var4;
+        float _result;
+        if (overwritten == null) _result = playerAPI.localGetCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
+        else if (overwritten != this) _result = overwritten.getCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetCurrentPlayerStrVsBlock(Block var1, boolean var2) {}
+    public void afterGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean) {}
 
-    public void beforeGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {}
+    public void beforeGetCurrentPlayerStrVsBlockForge(
+            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {}
 
-    public float getCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlockForge(this);
-        float var5;
-        if (var4 == null) {
-            var5 = this.playerAPI.localGetCurrentPlayerStrVsBlockForge(var1, var2, var3);
-        } else if (var4 != this) {
-            var5 = var4.getCurrentPlayerStrVsBlockForge(var1, var2, var3);
-        } else {
-            var5 = 0.0F;
-        }
+    public float getCurrentPlayerStrVsBlockForge(
+            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlockForge(this);
 
-        return var5;
+        float _result;
+        if (overwritten == null)
+            _result = playerAPI.localGetCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
+        else if (overwritten != this)
+            _result = overwritten.getCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetCurrentPlayerStrVsBlockForge(Block var1, boolean var2, int var3) {}
+    public void afterGetCurrentPlayerStrVsBlockForge(
+            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {}
 
-    public void beforeGetDistanceSq(double var1, double var3, double var5) {}
+    public void beforeGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public double getDistanceSq(double var1, double var3, double var5) {
-        ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenGetDistanceSq(this);
-        double var8;
-        if (var7 == null) {
-            var8 = this.playerAPI.localGetDistanceSq(var1, var3, var5);
-        } else if (var7 != this) {
-            var8 = var7.getDistanceSq(var1, var3, var5);
-        } else {
-            var8 = 0.0D;
-        }
+    public double getDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetDistanceSq(this);
 
-        return var8;
+        double _result;
+        if (overwritten == null) _result = playerAPI.localGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
+        else if (overwritten != this) _result = overwritten.getDistanceSq(paramDouble1, paramDouble2, paramDouble3);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetDistanceSq(double var1, double var3, double var5) {}
+    public void afterGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void beforeGetDistanceSqToEntity(Entity var1) {}
+    public void beforeGetDistanceSqToEntity(net.minecraft.entity.Entity paramEntity) {}
 
-    public double getDistanceSqToEntity(Entity var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenGetDistanceSqToEntity(this);
-        double var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localGetDistanceSqToEntity(var1);
-        } else if (var2 != this) {
-            var3 = var2.getDistanceSqToEntity(var1);
-        } else {
-            var3 = 0.0D;
-        }
+    public double getDistanceSqToEntity(net.minecraft.entity.Entity paramEntity) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetDistanceSqToEntity(this);
 
-        return var3;
+        double _result;
+        if (overwritten == null) _result = playerAPI.localGetDistanceSqToEntity(paramEntity);
+        else if (overwritten != this) _result = overwritten.getDistanceSqToEntity(paramEntity);
+        else _result = 0;
+
+        return _result;
     }
 
-    public void afterGetDistanceSqToEntity(Entity var1) {}
+    public void afterGetDistanceSqToEntity(net.minecraft.entity.Entity paramEntity) {}
 
     public void beforeGetFOVMultiplier() {}
 
     public float getFOVMultiplier() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetFOVMultiplier(this);
-        float var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localGetFOVMultiplier();
-        } else if (var1 != this) {
-            var2 = var1.getFOVMultiplier();
-        } else {
-            var2 = 0.0F;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetFOVMultiplier(this);
 
-        return var2;
+        float _result;
+        if (overwritten == null) _result = playerAPI.localGetFOVMultiplier();
+        else if (overwritten != this) _result = overwritten.getFOVMultiplier();
+        else _result = 0;
+
+        return _result;
     }
 
     public void afterGetFOVMultiplier() {}
 
     public void beforeGetHurtSound() {}
 
-    public String getHurtSound() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetHurtSound(this);
-        String var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localGetHurtSound();
-        } else if (var1 != this) {
-            var2 = var1.getHurtSound();
-        } else {
-            var2 = null;
-        }
+    public java.lang.String getHurtSound() {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetHurtSound(this);
 
-        return var2;
+        java.lang.String _result;
+        if (overwritten == null) _result = playerAPI.localGetHurtSound();
+        else if (overwritten != this) _result = overwritten.getHurtSound();
+        else _result = null;
+
+        return _result;
     }
 
     public void afterGetHurtSound() {}
 
-    public void beforeGetItemIcon(ItemStack var1, int var2) {}
+    public void beforeGetItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt) {}
 
-    public IIcon getItemIcon(ItemStack var1, int var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenGetItemIcon(this);
-        IIcon var4;
-        if (var3 == null) {
-            var4 = this.playerAPI.localGetItemIcon(var1, var2);
-        } else if (var3 != this) {
-            var4 = var3.getItemIcon(var1, var2);
-        } else {
-            var4 = null;
-        }
+    public net.minecraft.util.IIcon getItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetItemIcon(this);
 
-        return var4;
+        net.minecraft.util.IIcon _result;
+        if (overwritten == null) _result = playerAPI.localGetItemIcon(paramItemStack, paramInt);
+        else if (overwritten != this) _result = overwritten.getItemIcon(paramItemStack, paramInt);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterGetItemIcon(ItemStack var1, int var2) {}
+    public void afterGetItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt) {}
 
     public void beforeGetSleepTimer() {}
 
     public int getSleepTimer() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenGetSleepTimer(this);
-        int var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localGetSleepTimer();
-        } else if (var1 != this) {
-            var2 = var1.getSleepTimer();
-        } else {
-            var2 = 0;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetSleepTimer(this);
 
-        return var2;
+        int _result;
+        if (overwritten == null) _result = playerAPI.localGetSleepTimer();
+        else if (overwritten != this) _result = overwritten.getSleepTimer();
+        else _result = 0;
+
+        return _result;
     }
 
     public void afterGetSleepTimer() {}
@@ -601,17 +528,14 @@ public abstract class ClientPlayerBase {
     public void beforeHandleLavaMovement() {}
 
     public boolean handleLavaMovement() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenHandleLavaMovement(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localHandleLavaMovement();
-        } else if (var1 != this) {
-            var2 = var1.handleLavaMovement();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenHandleLavaMovement(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localHandleLavaMovement();
+        else if (overwritten != this) _result = overwritten.handleLavaMovement();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterHandleLavaMovement() {}
@@ -619,48 +543,40 @@ public abstract class ClientPlayerBase {
     public void beforeHandleWaterMovement() {}
 
     public boolean handleWaterMovement() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenHandleWaterMovement(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localHandleWaterMovement();
-        } else if (var1 != this) {
-            var2 = var1.handleWaterMovement();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenHandleWaterMovement(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localHandleWaterMovement();
+        else if (overwritten != this) _result = overwritten.handleWaterMovement();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterHandleWaterMovement() {}
 
-    public void beforeHeal(float var1) {}
+    public void beforeHeal(float paramFloat) {}
 
-    public void heal(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenHeal(this);
-        if (var2 == null) {
-            this.playerAPI.localHeal(var1);
-        } else if (var2 != this) {
-            var2.heal(var1);
-        }
+    public void heal(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenHeal(this);
+
+        if (overwritten == null) playerAPI.localHeal(paramFloat);
+        else if (overwritten != this) overwritten.heal(paramFloat);
     }
 
-    public void afterHeal(float var1) {}
+    public void afterHeal(float paramFloat) {}
 
     public void beforeIsEntityInsideOpaqueBlock() {}
 
     public boolean isEntityInsideOpaqueBlock() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsEntityInsideOpaqueBlock(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsEntityInsideOpaqueBlock();
-        } else if (var1 != this) {
-            var2 = var1.isEntityInsideOpaqueBlock();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsEntityInsideOpaqueBlock(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsEntityInsideOpaqueBlock();
+        else if (overwritten != this) _result = overwritten.isEntityInsideOpaqueBlock();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsEntityInsideOpaqueBlock() {}
@@ -668,53 +584,44 @@ public abstract class ClientPlayerBase {
     public void beforeIsInWater() {}
 
     public boolean isInWater() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsInWater(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsInWater();
-        } else if (var1 != this) {
-            var2 = var1.isInWater();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsInWater(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsInWater();
+        else if (overwritten != this) _result = overwritten.isInWater();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsInWater() {}
 
-    public void beforeIsInsideOfMaterial(Material var1) {}
+    public void beforeIsInsideOfMaterial(net.minecraft.block.material.Material paramMaterial) {}
 
-    public boolean isInsideOfMaterial(Material var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenIsInsideOfMaterial(this);
-        boolean var3;
-        if (var2 == null) {
-            var3 = this.playerAPI.localIsInsideOfMaterial(var1);
-        } else if (var2 != this) {
-            var3 = var2.isInsideOfMaterial(var1);
-        } else {
-            var3 = false;
-        }
+    public boolean isInsideOfMaterial(net.minecraft.block.material.Material paramMaterial) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsInsideOfMaterial(this);
 
-        return var3;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsInsideOfMaterial(paramMaterial);
+        else if (overwritten != this) _result = overwritten.isInsideOfMaterial(paramMaterial);
+        else _result = false;
+
+        return _result;
     }
 
-    public void afterIsInsideOfMaterial(Material var1) {}
+    public void afterIsInsideOfMaterial(net.minecraft.block.material.Material paramMaterial) {}
 
     public void beforeIsOnLadder() {}
 
     public boolean isOnLadder() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsOnLadder(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsOnLadder();
-        } else if (var1 != this) {
-            var2 = var1.isOnLadder();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsOnLadder(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsOnLadder();
+        else if (overwritten != this) _result = overwritten.isOnLadder();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsOnLadder() {}
@@ -722,17 +629,14 @@ public abstract class ClientPlayerBase {
     public void beforeIsPlayerSleeping() {}
 
     public boolean isPlayerSleeping() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsPlayerSleeping(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsPlayerSleeping();
-        } else if (var1 != this) {
-            var2 = var1.isPlayerSleeping();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsPlayerSleeping(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsPlayerSleeping();
+        else if (overwritten != this) _result = overwritten.isPlayerSleeping();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsPlayerSleeping() {}
@@ -740,17 +644,14 @@ public abstract class ClientPlayerBase {
     public void beforeIsSneaking() {}
 
     public boolean isSneaking() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsSneaking(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsSneaking();
-        } else if (var1 != this) {
-            var2 = var1.isSneaking();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsSneaking(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsSneaking();
+        else if (overwritten != this) _result = overwritten.isSneaking();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsSneaking() {}
@@ -758,17 +659,14 @@ public abstract class ClientPlayerBase {
     public void beforeIsSprinting() {}
 
     public boolean isSprinting() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenIsSprinting(this);
-        boolean var2;
-        if (var1 == null) {
-            var2 = this.playerAPI.localIsSprinting();
-        } else if (var1 != this) {
-            var2 = var1.isSprinting();
-        } else {
-            var2 = false;
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenIsSprinting(this);
 
-        return var2;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localIsSprinting();
+        else if (overwritten != this) _result = overwritten.isSprinting();
+        else _result = false;
+
+        return _result;
     }
 
     public void afterIsSprinting() {}
@@ -776,204 +674,176 @@ public abstract class ClientPlayerBase {
     public void beforeJump() {}
 
     public void jump() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenJump(this);
-        if (var1 == null) {
-            this.playerAPI.localJump();
-        } else if (var1 != this) {
-            var1.jump();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenJump(this);
+
+        if (overwritten == null) playerAPI.localJump();
+        else if (overwritten != this) overwritten.jump();
     }
 
     public void afterJump() {}
 
-    public void beforeKnockBack(Entity var1, float var2, double var3, double var5) {}
+    public void beforeKnockBack(
+            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {}
 
-    public void knockBack(Entity var1, float var2, double var3, double var5) {
-        ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenKnockBack(this);
-        if (var7 == null) {
-            this.playerAPI.localKnockBack(var1, var2, var3, var5);
-        } else if (var7 != this) {
-            var7.knockBack(var1, var2, var3, var5);
-        }
+    public void knockBack(
+            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenKnockBack(this);
+
+        if (overwritten == null) playerAPI.localKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
+        else if (overwritten != this) overwritten.knockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
     }
 
-    public void afterKnockBack(Entity var1, float var2, double var3, double var5) {}
+    public void afterKnockBack(
+            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {}
 
-    public void beforeMoveEntity(double var1, double var3, double var5) {}
+    public void beforeMoveEntity(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void moveEntity(double var1, double var3, double var5) {
-        ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenMoveEntity(this);
-        if (var7 == null) {
-            this.playerAPI.localMoveEntity(var1, var3, var5);
-        } else if (var7 != this) {
-            var7.moveEntity(var1, var3, var5);
-        }
+    public void moveEntity(double paramDouble1, double paramDouble2, double paramDouble3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenMoveEntity(this);
+
+        if (overwritten == null) playerAPI.localMoveEntity(paramDouble1, paramDouble2, paramDouble3);
+        else if (overwritten != this) overwritten.moveEntity(paramDouble1, paramDouble2, paramDouble3);
     }
 
-    public void afterMoveEntity(double var1, double var3, double var5) {}
+    public void afterMoveEntity(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void beforeMoveEntityWithHeading(float var1, float var2) {}
+    public void beforeMoveEntityWithHeading(float paramFloat1, float paramFloat2) {}
 
-    public void moveEntityWithHeading(float var1, float var2) {
-        ClientPlayerBase var3 = this.internalClientPlayerAPI.GetOverwrittenMoveEntityWithHeading(this);
-        if (var3 == null) {
-            this.playerAPI.localMoveEntityWithHeading(var1, var2);
-        } else if (var3 != this) {
-            var3.moveEntityWithHeading(var1, var2);
-        }
+    public void moveEntityWithHeading(float paramFloat1, float paramFloat2) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenMoveEntityWithHeading(this);
+
+        if (overwritten == null) playerAPI.localMoveEntityWithHeading(paramFloat1, paramFloat2);
+        else if (overwritten != this) overwritten.moveEntityWithHeading(paramFloat1, paramFloat2);
     }
 
-    public void afterMoveEntityWithHeading(float var1, float var2) {}
+    public void afterMoveEntityWithHeading(float paramFloat1, float paramFloat2) {}
 
-    public void beforeMoveFlying(float var1, float var2, float var3) {}
+    public void beforeMoveFlying(float paramFloat1, float paramFloat2, float paramFloat3) {}
 
-    public void moveFlying(float var1, float var2, float var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenMoveFlying(this);
-        if (var4 == null) {
-            this.playerAPI.localMoveFlying(var1, var2, var3);
-        } else if (var4 != this) {
-            var4.moveFlying(var1, var2, var3);
-        }
+    public void moveFlying(float paramFloat1, float paramFloat2, float paramFloat3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenMoveFlying(this);
+
+        if (overwritten == null) playerAPI.localMoveFlying(paramFloat1, paramFloat2, paramFloat3);
+        else if (overwritten != this) overwritten.moveFlying(paramFloat1, paramFloat2, paramFloat3);
     }
 
-    public void afterMoveFlying(float var1, float var2, float var3) {}
+    public void afterMoveFlying(float paramFloat1, float paramFloat2, float paramFloat3) {}
 
-    public void beforeOnDeath(DamageSource var1) {}
+    public void beforeOnDeath(net.minecraft.util.DamageSource paramDamageSource) {}
 
-    public void onDeath(DamageSource var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnDeath(this);
-        if (var2 == null) {
-            this.playerAPI.localOnDeath(var1);
-        } else if (var2 != this) {
-            var2.onDeath(var1);
-        }
+    public void onDeath(net.minecraft.util.DamageSource paramDamageSource) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenOnDeath(this);
+
+        if (overwritten == null) playerAPI.localOnDeath(paramDamageSource);
+        else if (overwritten != this) overwritten.onDeath(paramDamageSource);
     }
 
-    public void afterOnDeath(DamageSource var1) {}
+    public void afterOnDeath(net.minecraft.util.DamageSource paramDamageSource) {}
 
     public void beforeOnLivingUpdate() {}
 
     public void onLivingUpdate() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenOnLivingUpdate(this);
-        if (var1 == null) {
-            this.playerAPI.localOnLivingUpdate();
-        } else if (var1 != this) {
-            var1.onLivingUpdate();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenOnLivingUpdate(this);
+
+        if (overwritten == null) playerAPI.localOnLivingUpdate();
+        else if (overwritten != this) overwritten.onLivingUpdate();
     }
 
     public void afterOnLivingUpdate() {}
 
-    public void beforeOnKillEntity(EntityLivingBase var1) {}
+    public void beforeOnKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {}
 
-    public void onKillEntity(EntityLivingBase var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnKillEntity(this);
-        if (var2 == null) {
-            this.playerAPI.localOnKillEntity(var1);
-        } else if (var2 != this) {
-            var2.onKillEntity(var1);
-        }
+    public void onKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenOnKillEntity(this);
+
+        if (overwritten == null) playerAPI.localOnKillEntity(paramEntityLivingBase);
+        else if (overwritten != this) overwritten.onKillEntity(paramEntityLivingBase);
     }
 
-    public void afterOnKillEntity(EntityLivingBase var1) {}
+    public void afterOnKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {}
 
-    public void beforeOnStruckByLightning(EntityLightningBolt var1) {}
+    public void beforeOnStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {}
 
-    public void onStruckByLightning(EntityLightningBolt var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenOnStruckByLightning(this);
-        if (var2 == null) {
-            this.playerAPI.localOnStruckByLightning(var1);
-        } else if (var2 != this) {
-            var2.onStruckByLightning(var1);
-        }
+    public void onStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenOnStruckByLightning(this);
+
+        if (overwritten == null) playerAPI.localOnStruckByLightning(paramEntityLightningBolt);
+        else if (overwritten != this) overwritten.onStruckByLightning(paramEntityLightningBolt);
     }
 
-    public void afterOnStruckByLightning(EntityLightningBolt var1) {}
+    public void afterOnStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {}
 
     public void beforeOnUpdate() {}
 
     public void onUpdate() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenOnUpdate(this);
-        if (var1 == null) {
-            this.playerAPI.localOnUpdate();
-        } else if (var1 != this) {
-            var1.onUpdate();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenOnUpdate(this);
+
+        if (overwritten == null) playerAPI.localOnUpdate();
+        else if (overwritten != this) overwritten.onUpdate();
     }
 
     public void afterOnUpdate() {}
 
-    public void beforePlayStepSound(int var1, int var2, int var3, Block var4) {}
+    public void beforePlayStepSound(
+            int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {}
 
-    public void playStepSound(int var1, int var2, int var3, Block var4) {
-        ClientPlayerBase var5 = this.internalClientPlayerAPI.GetOverwrittenPlayStepSound(this);
-        if (var5 == null) {
-            this.playerAPI.localPlayStepSound(var1, var2, var3, var4);
-        } else if (var5 != this) {
-            var5.playStepSound(var1, var2, var3, var4);
-        }
+    public void playStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenPlayStepSound(this);
+
+        if (overwritten == null) playerAPI.localPlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
+        else if (overwritten != this) overwritten.playStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
     }
 
-    public void afterPlayStepSound(int var1, int var2, int var3, Block var4) {}
+    public void afterPlayStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {}
 
-    public void beforePushOutOfBlocks(double var1, double var3, double var5) {}
+    public void beforePushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public boolean pushOutOfBlocks(double var1, double var3, double var5) {
-        ClientPlayerBase var7 = this.internalClientPlayerAPI.GetOverwrittenPushOutOfBlocks(this);
-        boolean var8;
-        if (var7 == null) {
-            var8 = this.playerAPI.localPushOutOfBlocks(var1, var3, var5);
-        } else if (var7 != this) {
-            var8 = var7.pushOutOfBlocks(var1, var3, var5);
-        } else {
-            var8 = false;
-        }
+    public boolean pushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenPushOutOfBlocks(this);
 
-        return var8;
+        boolean _result;
+        if (overwritten == null) _result = playerAPI.localPushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
+        else if (overwritten != this) _result = overwritten.pushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
+        else _result = false;
+
+        return _result;
     }
 
-    public void afterPushOutOfBlocks(double var1, double var3, double var5) {}
+    public void afterPushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
-    public void beforeRayTrace(double var1, float var3) {}
+    public void beforeRayTrace(double paramDouble, float paramFloat) {}
 
-    public MovingObjectPosition rayTrace(double var1, float var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenRayTrace(this);
-        MovingObjectPosition var5;
-        if (var4 == null) {
-            var5 = this.playerAPI.localRayTrace(var1, var3);
-        } else if (var4 != this) {
-            var5 = var4.rayTrace(var1, var3);
-        } else {
-            var5 = null;
-        }
+    public net.minecraft.util.MovingObjectPosition rayTrace(double paramDouble, float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenRayTrace(this);
 
-        return var5;
+        net.minecraft.util.MovingObjectPosition _result;
+        if (overwritten == null) _result = playerAPI.localRayTrace(paramDouble, paramFloat);
+        else if (overwritten != this) _result = overwritten.rayTrace(paramDouble, paramFloat);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterRayTrace(double var1, float var3) {}
+    public void afterRayTrace(double paramDouble, float paramFloat) {}
 
-    public void beforeReadEntityFromNBT(NBTTagCompound var1) {}
+    public void beforeReadEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {}
 
-    public void readEntityFromNBT(NBTTagCompound var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenReadEntityFromNBT(this);
-        if (var2 == null) {
-            this.playerAPI.localReadEntityFromNBT(var1);
-        } else if (var2 != this) {
-            var2.readEntityFromNBT(var1);
-        }
+    public void readEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenReadEntityFromNBT(this);
+
+        if (overwritten == null) playerAPI.localReadEntityFromNBT(paramNBTTagCompound);
+        else if (overwritten != this) overwritten.readEntityFromNBT(paramNBTTagCompound);
     }
 
-    public void afterReadEntityFromNBT(NBTTagCompound var1) {}
+    public void afterReadEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {}
 
     public void beforeRespawnPlayer() {}
 
     public void respawnPlayer() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenRespawnPlayer(this);
-        if (var1 == null) {
-            this.playerAPI.localRespawnPlayer();
-        } else if (var1 != this) {
-            var1.respawnPlayer();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenRespawnPlayer(this);
+
+        if (overwritten == null) playerAPI.localRespawnPlayer();
+        else if (overwritten != this) overwritten.respawnPlayer();
     }
 
     public void afterRespawnPlayer() {}
@@ -981,95 +851,86 @@ public abstract class ClientPlayerBase {
     public void beforeSetDead() {}
 
     public void setDead() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenSetDead(this);
-        if (var1 == null) {
-            this.playerAPI.localSetDead();
-        } else if (var1 != this) {
-            var1.setDead();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetDead(this);
+
+        if (overwritten == null) playerAPI.localSetDead();
+        else if (overwritten != this) overwritten.setDead();
     }
 
     public void afterSetDead() {}
 
-    public void beforeSetPlayerSPHealth(float var1) {}
+    public void beforeSetPlayerSPHealth(float paramFloat) {}
 
-    public void setPlayerSPHealth(float var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetPlayerSPHealth(this);
-        if (var2 == null) {
-            this.playerAPI.localSetPlayerSPHealth(var1);
-        } else if (var2 != this) {
-            var2.setPlayerSPHealth(var1);
-        }
+    public void setPlayerSPHealth(float paramFloat) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetPlayerSPHealth(this);
+
+        if (overwritten == null) playerAPI.localSetPlayerSPHealth(paramFloat);
+        else if (overwritten != this) overwritten.setPlayerSPHealth(paramFloat);
     }
 
-    public void afterSetPlayerSPHealth(float var1) {}
+    public void afterSetPlayerSPHealth(float paramFloat) {}
 
-    public void beforeSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {}
+    public void beforeSetPositionAndRotation(
+            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {}
 
-    public void setPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {
-        ClientPlayerBase var9 = this.internalClientPlayerAPI.GetOverwrittenSetPositionAndRotation(this);
-        if (var9 == null) {
-            this.playerAPI.localSetPositionAndRotation(var1, var3, var5, var7, var8);
-        } else if (var9 != this) {
-            var9.setPositionAndRotation(var1, var3, var5, var7, var8);
-        }
+    public void setPositionAndRotation(
+            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetPositionAndRotation(this);
+
+        if (overwritten == null)
+            playerAPI.localSetPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
+        else if (overwritten != this)
+            overwritten.setPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
     }
 
-    public void afterSetPositionAndRotation(double var1, double var3, double var5, float var7, float var8) {}
+    public void afterSetPositionAndRotation(
+            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {}
 
-    public void beforeSetSneaking(boolean var1) {}
+    public void beforeSetSneaking(boolean paramBoolean) {}
 
-    public void setSneaking(boolean var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetSneaking(this);
-        if (var2 == null) {
-            this.playerAPI.localSetSneaking(var1);
-        } else if (var2 != this) {
-            var2.setSneaking(var1);
-        }
+    public void setSneaking(boolean paramBoolean) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetSneaking(this);
+
+        if (overwritten == null) playerAPI.localSetSneaking(paramBoolean);
+        else if (overwritten != this) overwritten.setSneaking(paramBoolean);
     }
 
-    public void afterSetSneaking(boolean var1) {}
+    public void afterSetSneaking(boolean paramBoolean) {}
 
-    public void beforeSetSprinting(boolean var1) {}
+    public void beforeSetSprinting(boolean paramBoolean) {}
 
-    public void setSprinting(boolean var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenSetSprinting(this);
-        if (var2 == null) {
-            this.playerAPI.localSetSprinting(var1);
-        } else if (var2 != this) {
-            var2.setSprinting(var1);
-        }
+    public void setSprinting(boolean paramBoolean) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetSprinting(this);
+
+        if (overwritten == null) playerAPI.localSetSprinting(paramBoolean);
+        else if (overwritten != this) overwritten.setSprinting(paramBoolean);
     }
 
-    public void afterSetSprinting(boolean var1) {}
+    public void afterSetSprinting(boolean paramBoolean) {}
 
-    public void beforeSleepInBedAt(int var1, int var2, int var3) {}
+    public void beforeSleepInBedAt(int paramInt1, int paramInt2, int paramInt3) {}
 
-    public EnumStatus sleepInBedAt(int var1, int var2, int var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenSleepInBedAt(this);
-        EnumStatus var5;
-        if (var4 == null) {
-            var5 = this.playerAPI.localSleepInBedAt(var1, var2, var3);
-        } else if (var4 != this) {
-            var5 = var4.sleepInBedAt(var1, var2, var3);
-        } else {
-            var5 = null;
-        }
+    public net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(
+            int paramInt1, int paramInt2, int paramInt3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSleepInBedAt(this);
 
-        return var5;
+        net.minecraft.entity.player.EntityPlayer.EnumStatus _result;
+        if (overwritten == null) _result = playerAPI.localSleepInBedAt(paramInt1, paramInt2, paramInt3);
+        else if (overwritten != this) _result = overwritten.sleepInBedAt(paramInt1, paramInt2, paramInt3);
+        else _result = null;
+
+        return _result;
     }
 
-    public void afterSleepInBedAt(int var1, int var2, int var3) {}
+    public void afterSleepInBedAt(int paramInt1, int paramInt2, int paramInt3) {}
 
     public void beforeSwingItem() {}
 
     public void swingItem() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenSwingItem(this);
-        if (var1 == null) {
-            this.playerAPI.localSwingItem();
-        } else if (var1 != this) {
-            var1.swingItem();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSwingItem(this);
+
+        if (overwritten == null) playerAPI.localSwingItem();
+        else if (overwritten != this) overwritten.swingItem();
     }
 
     public void afterSwingItem() {}
@@ -1077,12 +938,10 @@ public abstract class ClientPlayerBase {
     public void beforeUpdateEntityActionState() {}
 
     public void updateEntityActionState() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenUpdateEntityActionState(this);
-        if (var1 == null) {
-            this.playerAPI.localUpdateEntityActionState();
-        } else if (var1 != this) {
-            var1.updateEntityActionState();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenUpdateEntityActionState(this);
+
+        if (overwritten == null) playerAPI.localUpdateEntityActionState();
+        else if (overwritten != this) overwritten.updateEntityActionState();
     }
 
     public void afterUpdateEntityActionState() {}
@@ -1090,39 +949,37 @@ public abstract class ClientPlayerBase {
     public void beforeUpdateRidden() {}
 
     public void updateRidden() {
-        ClientPlayerBase var1 = this.internalClientPlayerAPI.GetOverwrittenUpdateRidden(this);
-        if (var1 == null) {
-            this.playerAPI.localUpdateRidden();
-        } else if (var1 != this) {
-            var1.updateRidden();
-        }
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenUpdateRidden(this);
+
+        if (overwritten == null) playerAPI.localUpdateRidden();
+        else if (overwritten != this) overwritten.updateRidden();
     }
 
     public void afterUpdateRidden() {}
 
-    public void beforeWakeUpPlayer(boolean var1, boolean var2, boolean var3) {}
+    public void beforeWakeUpPlayer(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3) {}
 
-    public void wakeUpPlayer(boolean var1, boolean var2, boolean var3) {
-        ClientPlayerBase var4 = this.internalClientPlayerAPI.GetOverwrittenWakeUpPlayer(this);
-        if (var4 == null) {
-            this.playerAPI.localWakeUpPlayer(var1, var2, var3);
-        } else if (var4 != this) {
-            var4.wakeUpPlayer(var1, var2, var3);
-        }
+    public void wakeUpPlayer(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenWakeUpPlayer(this);
+
+        if (overwritten == null) playerAPI.localWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
+        else if (overwritten != this) overwritten.wakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
     }
 
-    public void afterWakeUpPlayer(boolean var1, boolean var2, boolean var3) {}
+    public void afterWakeUpPlayer(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3) {}
 
-    public void beforeWriteEntityToNBT(NBTTagCompound var1) {}
+    public void beforeWriteEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {}
 
-    public void writeEntityToNBT(NBTTagCompound var1) {
-        ClientPlayerBase var2 = this.internalClientPlayerAPI.GetOverwrittenWriteEntityToNBT(this);
-        if (var2 == null) {
-            this.playerAPI.localWriteEntityToNBT(var1);
-        } else if (var2 != this) {
-            var2.writeEntityToNBT(var1);
-        }
+    public void writeEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+        ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenWriteEntityToNBT(this);
+
+        if (overwritten == null) playerAPI.localWriteEntityToNBT(paramNBTTagCompound);
+        else if (overwritten != this) overwritten.writeEntityToNBT(paramNBTTagCompound);
     }
 
-    public void afterWriteEntityToNBT(NBTTagCompound var1) {}
+    public void afterWriteEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {}
+
+    protected final net.minecraft.client.entity.EntityPlayerSP player;
+    protected final IClientPlayer playerAPI;
+    private final ClientPlayerAPI internalClientPlayerAPI;
 }
