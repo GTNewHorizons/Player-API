@@ -1,434 +1,521 @@
+// ==================================================================
+// This file is part of Player API.
+//
+// Player API is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Player API is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and the GNU General Public License along with Player API.
+// If not, see <http://www.gnu.org/licenses/>.
+// ==================================================================
+
 package api.player.client;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ClientPlayerBaseSorting {
-
     private String[] beforeLocalConstructingSuperiors = null;
     private String[] beforeLocalConstructingInferiors = null;
     private String[] afterLocalConstructingSuperiors = null;
     private String[] afterLocalConstructingInferiors = null;
+
     private Map<String, String[]> dynamicBeforeSuperiors = null;
     private Map<String, String[]> dynamicBeforeInferiors = null;
     private Map<String, String[]> dynamicOverrideSuperiors = null;
     private Map<String, String[]> dynamicOverrideInferiors = null;
     private Map<String, String[]> dynamicAfterSuperiors = null;
     private Map<String, String[]> dynamicAfterInferiors = null;
+
     private String[] beforeAddExhaustionSuperiors = null;
     private String[] beforeAddExhaustionInferiors = null;
     private String[] overrideAddExhaustionSuperiors = null;
     private String[] overrideAddExhaustionInferiors = null;
     private String[] afterAddExhaustionSuperiors = null;
     private String[] afterAddExhaustionInferiors = null;
+
     private String[] beforeAddMovementStatSuperiors = null;
     private String[] beforeAddMovementStatInferiors = null;
     private String[] overrideAddMovementStatSuperiors = null;
     private String[] overrideAddMovementStatInferiors = null;
     private String[] afterAddMovementStatSuperiors = null;
     private String[] afterAddMovementStatInferiors = null;
+
     private String[] beforeAddStatSuperiors = null;
     private String[] beforeAddStatInferiors = null;
     private String[] overrideAddStatSuperiors = null;
     private String[] overrideAddStatInferiors = null;
     private String[] afterAddStatSuperiors = null;
     private String[] afterAddStatInferiors = null;
+
     private String[] beforeAttackEntityFromSuperiors = null;
     private String[] beforeAttackEntityFromInferiors = null;
     private String[] overrideAttackEntityFromSuperiors = null;
     private String[] overrideAttackEntityFromInferiors = null;
     private String[] afterAttackEntityFromSuperiors = null;
     private String[] afterAttackEntityFromInferiors = null;
+
     private String[] beforeAttackTargetEntityWithCurrentItemSuperiors = null;
     private String[] beforeAttackTargetEntityWithCurrentItemInferiors = null;
     private String[] overrideAttackTargetEntityWithCurrentItemSuperiors = null;
     private String[] overrideAttackTargetEntityWithCurrentItemInferiors = null;
     private String[] afterAttackTargetEntityWithCurrentItemSuperiors = null;
     private String[] afterAttackTargetEntityWithCurrentItemInferiors = null;
+
     private String[] beforeCanBreatheUnderwaterSuperiors = null;
     private String[] beforeCanBreatheUnderwaterInferiors = null;
     private String[] overrideCanBreatheUnderwaterSuperiors = null;
     private String[] overrideCanBreatheUnderwaterInferiors = null;
     private String[] afterCanBreatheUnderwaterSuperiors = null;
     private String[] afterCanBreatheUnderwaterInferiors = null;
+
     private String[] beforeCanHarvestBlockSuperiors = null;
     private String[] beforeCanHarvestBlockInferiors = null;
     private String[] overrideCanHarvestBlockSuperiors = null;
     private String[] overrideCanHarvestBlockInferiors = null;
     private String[] afterCanHarvestBlockSuperiors = null;
     private String[] afterCanHarvestBlockInferiors = null;
+
     private String[] beforeCanPlayerEditSuperiors = null;
     private String[] beforeCanPlayerEditInferiors = null;
     private String[] overrideCanPlayerEditSuperiors = null;
     private String[] overrideCanPlayerEditInferiors = null;
     private String[] afterCanPlayerEditSuperiors = null;
     private String[] afterCanPlayerEditInferiors = null;
+
     private String[] beforeCanTriggerWalkingSuperiors = null;
     private String[] beforeCanTriggerWalkingInferiors = null;
     private String[] overrideCanTriggerWalkingSuperiors = null;
     private String[] overrideCanTriggerWalkingInferiors = null;
     private String[] afterCanTriggerWalkingSuperiors = null;
     private String[] afterCanTriggerWalkingInferiors = null;
+
     private String[] beforeCloseScreenSuperiors = null;
     private String[] beforeCloseScreenInferiors = null;
     private String[] overrideCloseScreenSuperiors = null;
     private String[] overrideCloseScreenInferiors = null;
     private String[] afterCloseScreenSuperiors = null;
     private String[] afterCloseScreenInferiors = null;
+
     private String[] beforeDamageEntitySuperiors = null;
     private String[] beforeDamageEntityInferiors = null;
     private String[] overrideDamageEntitySuperiors = null;
     private String[] overrideDamageEntityInferiors = null;
     private String[] afterDamageEntitySuperiors = null;
     private String[] afterDamageEntityInferiors = null;
+
     private String[] beforeDisplayGUIBrewingStandSuperiors = null;
     private String[] beforeDisplayGUIBrewingStandInferiors = null;
     private String[] overrideDisplayGUIBrewingStandSuperiors = null;
     private String[] overrideDisplayGUIBrewingStandInferiors = null;
     private String[] afterDisplayGUIBrewingStandSuperiors = null;
     private String[] afterDisplayGUIBrewingStandInferiors = null;
+
     private String[] beforeDisplayGUIChestSuperiors = null;
     private String[] beforeDisplayGUIChestInferiors = null;
     private String[] overrideDisplayGUIChestSuperiors = null;
     private String[] overrideDisplayGUIChestInferiors = null;
     private String[] afterDisplayGUIChestSuperiors = null;
     private String[] afterDisplayGUIChestInferiors = null;
+
     private String[] beforeDisplayGUIDispenserSuperiors = null;
     private String[] beforeDisplayGUIDispenserInferiors = null;
     private String[] overrideDisplayGUIDispenserSuperiors = null;
     private String[] overrideDisplayGUIDispenserInferiors = null;
     private String[] afterDisplayGUIDispenserSuperiors = null;
     private String[] afterDisplayGUIDispenserInferiors = null;
+
     private String[] beforeDisplayGUIEditSignSuperiors = null;
     private String[] beforeDisplayGUIEditSignInferiors = null;
     private String[] overrideDisplayGUIEditSignSuperiors = null;
     private String[] overrideDisplayGUIEditSignInferiors = null;
     private String[] afterDisplayGUIEditSignSuperiors = null;
     private String[] afterDisplayGUIEditSignInferiors = null;
+
     private String[] beforeDisplayGUIEnchantmentSuperiors = null;
     private String[] beforeDisplayGUIEnchantmentInferiors = null;
     private String[] overrideDisplayGUIEnchantmentSuperiors = null;
     private String[] overrideDisplayGUIEnchantmentInferiors = null;
     private String[] afterDisplayGUIEnchantmentSuperiors = null;
     private String[] afterDisplayGUIEnchantmentInferiors = null;
+
     private String[] beforeDisplayGUIFurnaceSuperiors = null;
     private String[] beforeDisplayGUIFurnaceInferiors = null;
     private String[] overrideDisplayGUIFurnaceSuperiors = null;
     private String[] overrideDisplayGUIFurnaceInferiors = null;
     private String[] afterDisplayGUIFurnaceSuperiors = null;
     private String[] afterDisplayGUIFurnaceInferiors = null;
+
     private String[] beforeDisplayGUIWorkbenchSuperiors = null;
     private String[] beforeDisplayGUIWorkbenchInferiors = null;
     private String[] overrideDisplayGUIWorkbenchSuperiors = null;
     private String[] overrideDisplayGUIWorkbenchInferiors = null;
     private String[] afterDisplayGUIWorkbenchSuperiors = null;
     private String[] afterDisplayGUIWorkbenchInferiors = null;
+
     private String[] beforeDropOneItemSuperiors = null;
     private String[] beforeDropOneItemInferiors = null;
     private String[] overrideDropOneItemSuperiors = null;
     private String[] overrideDropOneItemInferiors = null;
     private String[] afterDropOneItemSuperiors = null;
     private String[] afterDropOneItemInferiors = null;
+
     private String[] beforeDropPlayerItemSuperiors = null;
     private String[] beforeDropPlayerItemInferiors = null;
     private String[] overrideDropPlayerItemSuperiors = null;
     private String[] overrideDropPlayerItemInferiors = null;
     private String[] afterDropPlayerItemSuperiors = null;
     private String[] afterDropPlayerItemInferiors = null;
+
     private String[] beforeDropPlayerItemWithRandomChoiceSuperiors = null;
     private String[] beforeDropPlayerItemWithRandomChoiceInferiors = null;
     private String[] overrideDropPlayerItemWithRandomChoiceSuperiors = null;
     private String[] overrideDropPlayerItemWithRandomChoiceInferiors = null;
     private String[] afterDropPlayerItemWithRandomChoiceSuperiors = null;
     private String[] afterDropPlayerItemWithRandomChoiceInferiors = null;
+
     private String[] beforeFallSuperiors = null;
     private String[] beforeFallInferiors = null;
     private String[] overrideFallSuperiors = null;
     private String[] overrideFallInferiors = null;
     private String[] afterFallSuperiors = null;
     private String[] afterFallInferiors = null;
+
     private String[] beforeGetAIMoveSpeedSuperiors = null;
     private String[] beforeGetAIMoveSpeedInferiors = null;
     private String[] overrideGetAIMoveSpeedSuperiors = null;
     private String[] overrideGetAIMoveSpeedInferiors = null;
     private String[] afterGetAIMoveSpeedSuperiors = null;
     private String[] afterGetAIMoveSpeedInferiors = null;
+
     private String[] beforeGetBedOrientationInDegreesSuperiors = null;
     private String[] beforeGetBedOrientationInDegreesInferiors = null;
     private String[] overrideGetBedOrientationInDegreesSuperiors = null;
     private String[] overrideGetBedOrientationInDegreesInferiors = null;
     private String[] afterGetBedOrientationInDegreesSuperiors = null;
     private String[] afterGetBedOrientationInDegreesInferiors = null;
+
     private String[] beforeGetBrightnessSuperiors = null;
     private String[] beforeGetBrightnessInferiors = null;
     private String[] overrideGetBrightnessSuperiors = null;
     private String[] overrideGetBrightnessInferiors = null;
     private String[] afterGetBrightnessSuperiors = null;
     private String[] afterGetBrightnessInferiors = null;
+
     private String[] beforeGetBrightnessForRenderSuperiors = null;
     private String[] beforeGetBrightnessForRenderInferiors = null;
     private String[] overrideGetBrightnessForRenderSuperiors = null;
     private String[] overrideGetBrightnessForRenderInferiors = null;
     private String[] afterGetBrightnessForRenderSuperiors = null;
     private String[] afterGetBrightnessForRenderInferiors = null;
+
     private String[] beforeGetCurrentPlayerStrVsBlockSuperiors = null;
     private String[] beforeGetCurrentPlayerStrVsBlockInferiors = null;
     private String[] overrideGetCurrentPlayerStrVsBlockSuperiors = null;
     private String[] overrideGetCurrentPlayerStrVsBlockInferiors = null;
     private String[] afterGetCurrentPlayerStrVsBlockSuperiors = null;
     private String[] afterGetCurrentPlayerStrVsBlockInferiors = null;
+
     private String[] beforeGetCurrentPlayerStrVsBlockForgeSuperiors = null;
     private String[] beforeGetCurrentPlayerStrVsBlockForgeInferiors = null;
     private String[] overrideGetCurrentPlayerStrVsBlockForgeSuperiors = null;
     private String[] overrideGetCurrentPlayerStrVsBlockForgeInferiors = null;
     private String[] afterGetCurrentPlayerStrVsBlockForgeSuperiors = null;
     private String[] afterGetCurrentPlayerStrVsBlockForgeInferiors = null;
+
     private String[] beforeGetDistanceSqSuperiors = null;
     private String[] beforeGetDistanceSqInferiors = null;
     private String[] overrideGetDistanceSqSuperiors = null;
     private String[] overrideGetDistanceSqInferiors = null;
     private String[] afterGetDistanceSqSuperiors = null;
     private String[] afterGetDistanceSqInferiors = null;
+
     private String[] beforeGetDistanceSqToEntitySuperiors = null;
     private String[] beforeGetDistanceSqToEntityInferiors = null;
     private String[] overrideGetDistanceSqToEntitySuperiors = null;
     private String[] overrideGetDistanceSqToEntityInferiors = null;
     private String[] afterGetDistanceSqToEntitySuperiors = null;
     private String[] afterGetDistanceSqToEntityInferiors = null;
+
     private String[] beforeGetFOVMultiplierSuperiors = null;
     private String[] beforeGetFOVMultiplierInferiors = null;
     private String[] overrideGetFOVMultiplierSuperiors = null;
     private String[] overrideGetFOVMultiplierInferiors = null;
     private String[] afterGetFOVMultiplierSuperiors = null;
     private String[] afterGetFOVMultiplierInferiors = null;
+
     private String[] beforeGetHurtSoundSuperiors = null;
     private String[] beforeGetHurtSoundInferiors = null;
     private String[] overrideGetHurtSoundSuperiors = null;
     private String[] overrideGetHurtSoundInferiors = null;
     private String[] afterGetHurtSoundSuperiors = null;
     private String[] afterGetHurtSoundInferiors = null;
+
     private String[] beforeGetItemIconSuperiors = null;
     private String[] beforeGetItemIconInferiors = null;
     private String[] overrideGetItemIconSuperiors = null;
     private String[] overrideGetItemIconInferiors = null;
     private String[] afterGetItemIconSuperiors = null;
     private String[] afterGetItemIconInferiors = null;
+
     private String[] beforeGetSleepTimerSuperiors = null;
     private String[] beforeGetSleepTimerInferiors = null;
     private String[] overrideGetSleepTimerSuperiors = null;
     private String[] overrideGetSleepTimerInferiors = null;
     private String[] afterGetSleepTimerSuperiors = null;
     private String[] afterGetSleepTimerInferiors = null;
+
     private String[] beforeHandleLavaMovementSuperiors = null;
     private String[] beforeHandleLavaMovementInferiors = null;
     private String[] overrideHandleLavaMovementSuperiors = null;
     private String[] overrideHandleLavaMovementInferiors = null;
     private String[] afterHandleLavaMovementSuperiors = null;
     private String[] afterHandleLavaMovementInferiors = null;
+
     private String[] beforeHandleWaterMovementSuperiors = null;
     private String[] beforeHandleWaterMovementInferiors = null;
     private String[] overrideHandleWaterMovementSuperiors = null;
     private String[] overrideHandleWaterMovementInferiors = null;
     private String[] afterHandleWaterMovementSuperiors = null;
     private String[] afterHandleWaterMovementInferiors = null;
+
     private String[] beforeHealSuperiors = null;
     private String[] beforeHealInferiors = null;
     private String[] overrideHealSuperiors = null;
     private String[] overrideHealInferiors = null;
     private String[] afterHealSuperiors = null;
     private String[] afterHealInferiors = null;
+
     private String[] beforeIsEntityInsideOpaqueBlockSuperiors = null;
     private String[] beforeIsEntityInsideOpaqueBlockInferiors = null;
     private String[] overrideIsEntityInsideOpaqueBlockSuperiors = null;
     private String[] overrideIsEntityInsideOpaqueBlockInferiors = null;
     private String[] afterIsEntityInsideOpaqueBlockSuperiors = null;
     private String[] afterIsEntityInsideOpaqueBlockInferiors = null;
+
     private String[] beforeIsInWaterSuperiors = null;
     private String[] beforeIsInWaterInferiors = null;
     private String[] overrideIsInWaterSuperiors = null;
     private String[] overrideIsInWaterInferiors = null;
     private String[] afterIsInWaterSuperiors = null;
     private String[] afterIsInWaterInferiors = null;
+
     private String[] beforeIsInsideOfMaterialSuperiors = null;
     private String[] beforeIsInsideOfMaterialInferiors = null;
     private String[] overrideIsInsideOfMaterialSuperiors = null;
     private String[] overrideIsInsideOfMaterialInferiors = null;
     private String[] afterIsInsideOfMaterialSuperiors = null;
     private String[] afterIsInsideOfMaterialInferiors = null;
+
     private String[] beforeIsOnLadderSuperiors = null;
     private String[] beforeIsOnLadderInferiors = null;
     private String[] overrideIsOnLadderSuperiors = null;
     private String[] overrideIsOnLadderInferiors = null;
     private String[] afterIsOnLadderSuperiors = null;
     private String[] afterIsOnLadderInferiors = null;
+
     private String[] beforeIsPlayerSleepingSuperiors = null;
     private String[] beforeIsPlayerSleepingInferiors = null;
     private String[] overrideIsPlayerSleepingSuperiors = null;
     private String[] overrideIsPlayerSleepingInferiors = null;
     private String[] afterIsPlayerSleepingSuperiors = null;
     private String[] afterIsPlayerSleepingInferiors = null;
+
     private String[] beforeIsSneakingSuperiors = null;
     private String[] beforeIsSneakingInferiors = null;
     private String[] overrideIsSneakingSuperiors = null;
     private String[] overrideIsSneakingInferiors = null;
     private String[] afterIsSneakingSuperiors = null;
     private String[] afterIsSneakingInferiors = null;
+
     private String[] beforeIsSprintingSuperiors = null;
     private String[] beforeIsSprintingInferiors = null;
     private String[] overrideIsSprintingSuperiors = null;
     private String[] overrideIsSprintingInferiors = null;
     private String[] afterIsSprintingSuperiors = null;
     private String[] afterIsSprintingInferiors = null;
+
     private String[] beforeJumpSuperiors = null;
     private String[] beforeJumpInferiors = null;
     private String[] overrideJumpSuperiors = null;
     private String[] overrideJumpInferiors = null;
     private String[] afterJumpSuperiors = null;
     private String[] afterJumpInferiors = null;
+
     private String[] beforeKnockBackSuperiors = null;
     private String[] beforeKnockBackInferiors = null;
     private String[] overrideKnockBackSuperiors = null;
     private String[] overrideKnockBackInferiors = null;
     private String[] afterKnockBackSuperiors = null;
     private String[] afterKnockBackInferiors = null;
+
     private String[] beforeMoveEntitySuperiors = null;
     private String[] beforeMoveEntityInferiors = null;
     private String[] overrideMoveEntitySuperiors = null;
     private String[] overrideMoveEntityInferiors = null;
     private String[] afterMoveEntitySuperiors = null;
     private String[] afterMoveEntityInferiors = null;
+
     private String[] beforeMoveEntityWithHeadingSuperiors = null;
     private String[] beforeMoveEntityWithHeadingInferiors = null;
     private String[] overrideMoveEntityWithHeadingSuperiors = null;
     private String[] overrideMoveEntityWithHeadingInferiors = null;
     private String[] afterMoveEntityWithHeadingSuperiors = null;
     private String[] afterMoveEntityWithHeadingInferiors = null;
+
     private String[] beforeMoveFlyingSuperiors = null;
     private String[] beforeMoveFlyingInferiors = null;
     private String[] overrideMoveFlyingSuperiors = null;
     private String[] overrideMoveFlyingInferiors = null;
     private String[] afterMoveFlyingSuperiors = null;
     private String[] afterMoveFlyingInferiors = null;
+
     private String[] beforeOnDeathSuperiors = null;
     private String[] beforeOnDeathInferiors = null;
     private String[] overrideOnDeathSuperiors = null;
     private String[] overrideOnDeathInferiors = null;
     private String[] afterOnDeathSuperiors = null;
     private String[] afterOnDeathInferiors = null;
+
     private String[] beforeOnLivingUpdateSuperiors = null;
     private String[] beforeOnLivingUpdateInferiors = null;
     private String[] overrideOnLivingUpdateSuperiors = null;
     private String[] overrideOnLivingUpdateInferiors = null;
     private String[] afterOnLivingUpdateSuperiors = null;
     private String[] afterOnLivingUpdateInferiors = null;
+
     private String[] beforeOnKillEntitySuperiors = null;
     private String[] beforeOnKillEntityInferiors = null;
     private String[] overrideOnKillEntitySuperiors = null;
     private String[] overrideOnKillEntityInferiors = null;
     private String[] afterOnKillEntitySuperiors = null;
     private String[] afterOnKillEntityInferiors = null;
+
     private String[] beforeOnStruckByLightningSuperiors = null;
     private String[] beforeOnStruckByLightningInferiors = null;
     private String[] overrideOnStruckByLightningSuperiors = null;
     private String[] overrideOnStruckByLightningInferiors = null;
     private String[] afterOnStruckByLightningSuperiors = null;
     private String[] afterOnStruckByLightningInferiors = null;
+
     private String[] beforeOnUpdateSuperiors = null;
     private String[] beforeOnUpdateInferiors = null;
     private String[] overrideOnUpdateSuperiors = null;
     private String[] overrideOnUpdateInferiors = null;
     private String[] afterOnUpdateSuperiors = null;
     private String[] afterOnUpdateInferiors = null;
+
     private String[] beforePlayStepSoundSuperiors = null;
     private String[] beforePlayStepSoundInferiors = null;
     private String[] overridePlayStepSoundSuperiors = null;
     private String[] overridePlayStepSoundInferiors = null;
     private String[] afterPlayStepSoundSuperiors = null;
     private String[] afterPlayStepSoundInferiors = null;
+
     private String[] beforePushOutOfBlocksSuperiors = null;
     private String[] beforePushOutOfBlocksInferiors = null;
     private String[] overridePushOutOfBlocksSuperiors = null;
     private String[] overridePushOutOfBlocksInferiors = null;
     private String[] afterPushOutOfBlocksSuperiors = null;
     private String[] afterPushOutOfBlocksInferiors = null;
+
     private String[] beforeRayTraceSuperiors = null;
     private String[] beforeRayTraceInferiors = null;
     private String[] overrideRayTraceSuperiors = null;
     private String[] overrideRayTraceInferiors = null;
     private String[] afterRayTraceSuperiors = null;
     private String[] afterRayTraceInferiors = null;
+
     private String[] beforeReadEntityFromNBTSuperiors = null;
     private String[] beforeReadEntityFromNBTInferiors = null;
     private String[] overrideReadEntityFromNBTSuperiors = null;
     private String[] overrideReadEntityFromNBTInferiors = null;
     private String[] afterReadEntityFromNBTSuperiors = null;
     private String[] afterReadEntityFromNBTInferiors = null;
+
     private String[] beforeRespawnPlayerSuperiors = null;
     private String[] beforeRespawnPlayerInferiors = null;
     private String[] overrideRespawnPlayerSuperiors = null;
     private String[] overrideRespawnPlayerInferiors = null;
     private String[] afterRespawnPlayerSuperiors = null;
     private String[] afterRespawnPlayerInferiors = null;
+
     private String[] beforeSetDeadSuperiors = null;
     private String[] beforeSetDeadInferiors = null;
     private String[] overrideSetDeadSuperiors = null;
     private String[] overrideSetDeadInferiors = null;
     private String[] afterSetDeadSuperiors = null;
     private String[] afterSetDeadInferiors = null;
+
     private String[] beforeSetPlayerSPHealthSuperiors = null;
     private String[] beforeSetPlayerSPHealthInferiors = null;
     private String[] overrideSetPlayerSPHealthSuperiors = null;
     private String[] overrideSetPlayerSPHealthInferiors = null;
     private String[] afterSetPlayerSPHealthSuperiors = null;
     private String[] afterSetPlayerSPHealthInferiors = null;
+
     private String[] beforeSetPositionAndRotationSuperiors = null;
     private String[] beforeSetPositionAndRotationInferiors = null;
     private String[] overrideSetPositionAndRotationSuperiors = null;
     private String[] overrideSetPositionAndRotationInferiors = null;
     private String[] afterSetPositionAndRotationSuperiors = null;
     private String[] afterSetPositionAndRotationInferiors = null;
+
     private String[] beforeSetSneakingSuperiors = null;
     private String[] beforeSetSneakingInferiors = null;
     private String[] overrideSetSneakingSuperiors = null;
     private String[] overrideSetSneakingInferiors = null;
     private String[] afterSetSneakingSuperiors = null;
     private String[] afterSetSneakingInferiors = null;
+
     private String[] beforeSetSprintingSuperiors = null;
     private String[] beforeSetSprintingInferiors = null;
     private String[] overrideSetSprintingSuperiors = null;
     private String[] overrideSetSprintingInferiors = null;
     private String[] afterSetSprintingSuperiors = null;
     private String[] afterSetSprintingInferiors = null;
+
     private String[] beforeSleepInBedAtSuperiors = null;
     private String[] beforeSleepInBedAtInferiors = null;
     private String[] overrideSleepInBedAtSuperiors = null;
     private String[] overrideSleepInBedAtInferiors = null;
     private String[] afterSleepInBedAtSuperiors = null;
     private String[] afterSleepInBedAtInferiors = null;
+
     private String[] beforeSwingItemSuperiors = null;
     private String[] beforeSwingItemInferiors = null;
     private String[] overrideSwingItemSuperiors = null;
     private String[] overrideSwingItemInferiors = null;
     private String[] afterSwingItemSuperiors = null;
     private String[] afterSwingItemInferiors = null;
+
     private String[] beforeUpdateEntityActionStateSuperiors = null;
     private String[] beforeUpdateEntityActionStateInferiors = null;
     private String[] overrideUpdateEntityActionStateSuperiors = null;
     private String[] overrideUpdateEntityActionStateInferiors = null;
     private String[] afterUpdateEntityActionStateSuperiors = null;
     private String[] afterUpdateEntityActionStateInferiors = null;
+
     private String[] beforeUpdateRiddenSuperiors = null;
     private String[] beforeUpdateRiddenInferiors = null;
     private String[] overrideUpdateRiddenSuperiors = null;
     private String[] overrideUpdateRiddenInferiors = null;
     private String[] afterUpdateRiddenSuperiors = null;
     private String[] afterUpdateRiddenInferiors = null;
+
     private String[] beforeWakeUpPlayerSuperiors = null;
     private String[] beforeWakeUpPlayerInferiors = null;
     private String[] overrideWakeUpPlayerSuperiors = null;
     private String[] overrideWakeUpPlayerInferiors = null;
     private String[] afterWakeUpPlayerSuperiors = null;
     private String[] afterWakeUpPlayerInferiors = null;
+
     private String[] beforeWriteEntityToNBTSuperiors = null;
     private String[] beforeWriteEntityToNBTInferiors = null;
     private String[] overrideWriteEntityToNBTSuperiors = null;
@@ -437,3461 +524,3456 @@ public final class ClientPlayerBaseSorting {
     private String[] afterWriteEntityToNBTInferiors = null;
 
     public String[] getBeforeLocalConstructingSuperiors() {
-        return this.beforeLocalConstructingSuperiors;
+        return beforeLocalConstructingSuperiors;
     }
 
     public String[] getBeforeLocalConstructingInferiors() {
-        return this.beforeLocalConstructingInferiors;
+        return beforeLocalConstructingInferiors;
     }
 
     public String[] getAfterLocalConstructingSuperiors() {
-        return this.afterLocalConstructingSuperiors;
+        return afterLocalConstructingSuperiors;
     }
 
     public String[] getAfterLocalConstructingInferiors() {
-        return this.afterLocalConstructingInferiors;
+        return afterLocalConstructingInferiors;
     }
 
     public void setBeforeLocalConstructingSuperiors(String[] value) {
-        this.beforeLocalConstructingSuperiors = value;
+        beforeLocalConstructingSuperiors = value;
     }
 
     public void setBeforeLocalConstructingInferiors(String[] value) {
-        this.beforeLocalConstructingInferiors = value;
+        beforeLocalConstructingInferiors = value;
     }
 
     public void setAfterLocalConstructingSuperiors(String[] value) {
-        this.afterLocalConstructingSuperiors = value;
+        afterLocalConstructingSuperiors = value;
     }
 
     public void setAfterLocalConstructingInferiors(String[] value) {
-        this.afterLocalConstructingInferiors = value;
+        afterLocalConstructingInferiors = value;
     }
 
     public Map<String, String[]> getDynamicBeforeSuperiors() {
-        return this.dynamicBeforeSuperiors;
+        return dynamicBeforeSuperiors;
     }
 
     public Map<String, String[]> getDynamicBeforeInferiors() {
-        return this.dynamicBeforeInferiors;
+        return dynamicBeforeInferiors;
     }
 
     public Map<String, String[]> getDynamicOverrideSuperiors() {
-        return this.dynamicOverrideSuperiors;
+        return dynamicOverrideSuperiors;
     }
 
     public Map<String, String[]> getDynamicOverrideInferiors() {
-        return this.dynamicOverrideInferiors;
+        return dynamicOverrideInferiors;
     }
 
     public Map<String, String[]> getDynamicAfterSuperiors() {
-        return this.dynamicAfterSuperiors;
+        return dynamicAfterSuperiors;
     }
 
     public Map<String, String[]> getDynamicAfterInferiors() {
-        return this.dynamicAfterInferiors;
+        return dynamicAfterInferiors;
     }
 
-    public void setDynamicBeforeSuperiors(String value, String[] var2) {
-        this.dynamicBeforeSuperiors = this.setDynamic(value, var2, this.dynamicBeforeSuperiors);
+    public void setDynamicBeforeSuperiors(String name, String[] superiors) {
+        dynamicBeforeSuperiors = setDynamic(name, superiors, dynamicBeforeSuperiors);
     }
 
-    public void setDynamicBeforeInferiors(String value, String[] var2) {
-        this.dynamicBeforeInferiors = this.setDynamic(value, var2, this.dynamicBeforeInferiors);
+    public void setDynamicBeforeInferiors(String name, String[] inferiors) {
+        dynamicBeforeInferiors = setDynamic(name, inferiors, dynamicBeforeInferiors);
     }
 
-    public void setDynamicOverrideSuperiors(String value, String[] var2) {
-        this.dynamicOverrideSuperiors = this.setDynamic(value, var2, this.dynamicOverrideSuperiors);
+    public void setDynamicOverrideSuperiors(String name, String[] superiors) {
+        dynamicOverrideSuperiors = setDynamic(name, superiors, dynamicOverrideSuperiors);
     }
 
-    public void setDynamicOverrideInferiors(String value, String[] var2) {
-        this.dynamicOverrideInferiors = this.setDynamic(value, var2, this.dynamicOverrideInferiors);
+    public void setDynamicOverrideInferiors(String name, String[] inferiors) {
+        dynamicOverrideInferiors = setDynamic(name, inferiors, dynamicOverrideInferiors);
     }
 
-    public void setDynamicAfterSuperiors(String value, String[] var2) {
-        this.dynamicAfterSuperiors = this.setDynamic(value, var2, this.dynamicAfterSuperiors);
+    public void setDynamicAfterSuperiors(String name, String[] superiors) {
+        dynamicAfterSuperiors = setDynamic(name, superiors, dynamicAfterSuperiors);
     }
 
-    public void setDynamicAfterInferiors(String value, String[] var2) {
-        this.dynamicAfterInferiors = this.setDynamic(value, var2, this.dynamicAfterInferiors);
+    public void setDynamicAfterInferiors(String name, String[] inferiors) {
+        dynamicAfterInferiors = setDynamic(name, inferiors, dynamicAfterInferiors);
     }
 
-    private Map<String, String[]> setDynamic(String value, String[] var2, Map<String, String[]> var3) {
-        if (value == null) {
-            throw new IllegalArgumentException("Parameter 'name' may not be null");
-        } else if (var2 == null) {
-            if (var3 != null) {
-                var3.remove(value);
-            }
+    private Map<String, String[]> setDynamic(String name, String[] names, Map<String, String[]> map) {
+        if (name == null) throw new IllegalArgumentException("Parameter 'name' may not be null");
 
-            return var3;
-        } else {
-            if (var3 == null) {
-                var3 = new HashMap<>();
-            }
-
-            var3.put(value, var2);
-            return var3;
+        if (names == null) {
+            if (map != null) map.remove(name);
+            return map;
         }
+
+        if (map == null) map = new HashMap<String, String[]>();
+        map.put(name, names);
+
+        return map;
     }
 
     public String[] getBeforeAddExhaustionSuperiors() {
-        return this.beforeAddExhaustionSuperiors;
+        return beforeAddExhaustionSuperiors;
     }
 
     public String[] getBeforeAddExhaustionInferiors() {
-        return this.beforeAddExhaustionInferiors;
+        return beforeAddExhaustionInferiors;
     }
 
     public String[] getOverrideAddExhaustionSuperiors() {
-        return this.overrideAddExhaustionSuperiors;
+        return overrideAddExhaustionSuperiors;
     }
 
     public String[] getOverrideAddExhaustionInferiors() {
-        return this.overrideAddExhaustionInferiors;
+        return overrideAddExhaustionInferiors;
     }
 
     public String[] getAfterAddExhaustionSuperiors() {
-        return this.afterAddExhaustionSuperiors;
+        return afterAddExhaustionSuperiors;
     }
 
     public String[] getAfterAddExhaustionInferiors() {
-        return this.afterAddExhaustionInferiors;
+        return afterAddExhaustionInferiors;
     }
 
     public void setBeforeAddExhaustionSuperiors(String[] value) {
-        this.beforeAddExhaustionSuperiors = value;
+        beforeAddExhaustionSuperiors = value;
     }
 
     public void setBeforeAddExhaustionInferiors(String[] value) {
-        this.beforeAddExhaustionInferiors = value;
+        beforeAddExhaustionInferiors = value;
     }
 
     public void setOverrideAddExhaustionSuperiors(String[] value) {
-        this.overrideAddExhaustionSuperiors = value;
+        overrideAddExhaustionSuperiors = value;
     }
 
     public void setOverrideAddExhaustionInferiors(String[] value) {
-        this.overrideAddExhaustionInferiors = value;
+        overrideAddExhaustionInferiors = value;
     }
 
     public void setAfterAddExhaustionSuperiors(String[] value) {
-        this.afterAddExhaustionSuperiors = value;
+        afterAddExhaustionSuperiors = value;
     }
 
     public void setAfterAddExhaustionInferiors(String[] value) {
-        this.afterAddExhaustionInferiors = value;
+        afterAddExhaustionInferiors = value;
     }
 
     public String[] getBeforeAddMovementStatSuperiors() {
-        return this.beforeAddMovementStatSuperiors;
+        return beforeAddMovementStatSuperiors;
     }
 
     public String[] getBeforeAddMovementStatInferiors() {
-        return this.beforeAddMovementStatInferiors;
+        return beforeAddMovementStatInferiors;
     }
 
     public String[] getOverrideAddMovementStatSuperiors() {
-        return this.overrideAddMovementStatSuperiors;
+        return overrideAddMovementStatSuperiors;
     }
 
     public String[] getOverrideAddMovementStatInferiors() {
-        return this.overrideAddMovementStatInferiors;
+        return overrideAddMovementStatInferiors;
     }
 
     public String[] getAfterAddMovementStatSuperiors() {
-        return this.afterAddMovementStatSuperiors;
+        return afterAddMovementStatSuperiors;
     }
 
     public String[] getAfterAddMovementStatInferiors() {
-        return this.afterAddMovementStatInferiors;
+        return afterAddMovementStatInferiors;
     }
 
     public void setBeforeAddMovementStatSuperiors(String[] value) {
-        this.beforeAddMovementStatSuperiors = value;
+        beforeAddMovementStatSuperiors = value;
     }
 
     public void setBeforeAddMovementStatInferiors(String[] value) {
-        this.beforeAddMovementStatInferiors = value;
+        beforeAddMovementStatInferiors = value;
     }
 
     public void setOverrideAddMovementStatSuperiors(String[] value) {
-        this.overrideAddMovementStatSuperiors = value;
+        overrideAddMovementStatSuperiors = value;
     }
 
     public void setOverrideAddMovementStatInferiors(String[] value) {
-        this.overrideAddMovementStatInferiors = value;
+        overrideAddMovementStatInferiors = value;
     }
 
     public void setAfterAddMovementStatSuperiors(String[] value) {
-        this.afterAddMovementStatSuperiors = value;
+        afterAddMovementStatSuperiors = value;
     }
 
     public void setAfterAddMovementStatInferiors(String[] value) {
-        this.afterAddMovementStatInferiors = value;
+        afterAddMovementStatInferiors = value;
     }
 
     public String[] getBeforeAddStatSuperiors() {
-        return this.beforeAddStatSuperiors;
+        return beforeAddStatSuperiors;
     }
 
     public String[] getBeforeAddStatInferiors() {
-        return this.beforeAddStatInferiors;
+        return beforeAddStatInferiors;
     }
 
     public String[] getOverrideAddStatSuperiors() {
-        return this.overrideAddStatSuperiors;
+        return overrideAddStatSuperiors;
     }
 
     public String[] getOverrideAddStatInferiors() {
-        return this.overrideAddStatInferiors;
+        return overrideAddStatInferiors;
     }
 
     public String[] getAfterAddStatSuperiors() {
-        return this.afterAddStatSuperiors;
+        return afterAddStatSuperiors;
     }
 
     public String[] getAfterAddStatInferiors() {
-        return this.afterAddStatInferiors;
+        return afterAddStatInferiors;
     }
 
     public void setBeforeAddStatSuperiors(String[] value) {
-        this.beforeAddStatSuperiors = value;
+        beforeAddStatSuperiors = value;
     }
 
     public void setBeforeAddStatInferiors(String[] value) {
-        this.beforeAddStatInferiors = value;
+        beforeAddStatInferiors = value;
     }
 
     public void setOverrideAddStatSuperiors(String[] value) {
-        this.overrideAddStatSuperiors = value;
+        overrideAddStatSuperiors = value;
     }
 
     public void setOverrideAddStatInferiors(String[] value) {
-        this.overrideAddStatInferiors = value;
+        overrideAddStatInferiors = value;
     }
 
     public void setAfterAddStatSuperiors(String[] value) {
-        this.afterAddStatSuperiors = value;
+        afterAddStatSuperiors = value;
     }
 
     public void setAfterAddStatInferiors(String[] value) {
-        this.afterAddStatInferiors = value;
+        afterAddStatInferiors = value;
     }
 
     public String[] getBeforeAttackEntityFromSuperiors() {
-        return this.beforeAttackEntityFromSuperiors;
+        return beforeAttackEntityFromSuperiors;
     }
 
     public String[] getBeforeAttackEntityFromInferiors() {
-        return this.beforeAttackEntityFromInferiors;
+        return beforeAttackEntityFromInferiors;
     }
 
     public String[] getOverrideAttackEntityFromSuperiors() {
-        return this.overrideAttackEntityFromSuperiors;
+        return overrideAttackEntityFromSuperiors;
     }
 
     public String[] getOverrideAttackEntityFromInferiors() {
-        return this.overrideAttackEntityFromInferiors;
+        return overrideAttackEntityFromInferiors;
     }
 
     public String[] getAfterAttackEntityFromSuperiors() {
-        return this.afterAttackEntityFromSuperiors;
+        return afterAttackEntityFromSuperiors;
     }
 
     public String[] getAfterAttackEntityFromInferiors() {
-        return this.afterAttackEntityFromInferiors;
+        return afterAttackEntityFromInferiors;
     }
 
     public void setBeforeAttackEntityFromSuperiors(String[] value) {
-        this.beforeAttackEntityFromSuperiors = value;
+        beforeAttackEntityFromSuperiors = value;
     }
 
     public void setBeforeAttackEntityFromInferiors(String[] value) {
-        this.beforeAttackEntityFromInferiors = value;
+        beforeAttackEntityFromInferiors = value;
     }
 
     public void setOverrideAttackEntityFromSuperiors(String[] value) {
-        this.overrideAttackEntityFromSuperiors = value;
+        overrideAttackEntityFromSuperiors = value;
     }
 
     public void setOverrideAttackEntityFromInferiors(String[] value) {
-        this.overrideAttackEntityFromInferiors = value;
+        overrideAttackEntityFromInferiors = value;
     }
 
     public void setAfterAttackEntityFromSuperiors(String[] value) {
-        this.afterAttackEntityFromSuperiors = value;
+        afterAttackEntityFromSuperiors = value;
     }
 
     public void setAfterAttackEntityFromInferiors(String[] value) {
-        this.afterAttackEntityFromInferiors = value;
+        afterAttackEntityFromInferiors = value;
     }
 
     public String[] getBeforeAttackTargetEntityWithCurrentItemSuperiors() {
-        return this.beforeAttackTargetEntityWithCurrentItemSuperiors;
+        return beforeAttackTargetEntityWithCurrentItemSuperiors;
     }
 
     public String[] getBeforeAttackTargetEntityWithCurrentItemInferiors() {
-        return this.beforeAttackTargetEntityWithCurrentItemInferiors;
+        return beforeAttackTargetEntityWithCurrentItemInferiors;
     }
 
     public String[] getOverrideAttackTargetEntityWithCurrentItemSuperiors() {
-        return this.overrideAttackTargetEntityWithCurrentItemSuperiors;
+        return overrideAttackTargetEntityWithCurrentItemSuperiors;
     }
 
     public String[] getOverrideAttackTargetEntityWithCurrentItemInferiors() {
-        return this.overrideAttackTargetEntityWithCurrentItemInferiors;
+        return overrideAttackTargetEntityWithCurrentItemInferiors;
     }
 
     public String[] getAfterAttackTargetEntityWithCurrentItemSuperiors() {
-        return this.afterAttackTargetEntityWithCurrentItemSuperiors;
+        return afterAttackTargetEntityWithCurrentItemSuperiors;
     }
 
     public String[] getAfterAttackTargetEntityWithCurrentItemInferiors() {
-        return this.afterAttackTargetEntityWithCurrentItemInferiors;
+        return afterAttackTargetEntityWithCurrentItemInferiors;
     }
 
     public void setBeforeAttackTargetEntityWithCurrentItemSuperiors(String[] value) {
-        this.beforeAttackTargetEntityWithCurrentItemSuperiors = value;
+        beforeAttackTargetEntityWithCurrentItemSuperiors = value;
     }
 
     public void setBeforeAttackTargetEntityWithCurrentItemInferiors(String[] value) {
-        this.beforeAttackTargetEntityWithCurrentItemInferiors = value;
+        beforeAttackTargetEntityWithCurrentItemInferiors = value;
     }
 
     public void setOverrideAttackTargetEntityWithCurrentItemSuperiors(String[] value) {
-        this.overrideAttackTargetEntityWithCurrentItemSuperiors = value;
+        overrideAttackTargetEntityWithCurrentItemSuperiors = value;
     }
 
     public void setOverrideAttackTargetEntityWithCurrentItemInferiors(String[] value) {
-        this.overrideAttackTargetEntityWithCurrentItemInferiors = value;
+        overrideAttackTargetEntityWithCurrentItemInferiors = value;
     }
 
     public void setAfterAttackTargetEntityWithCurrentItemSuperiors(String[] value) {
-        this.afterAttackTargetEntityWithCurrentItemSuperiors = value;
+        afterAttackTargetEntityWithCurrentItemSuperiors = value;
     }
 
     public void setAfterAttackTargetEntityWithCurrentItemInferiors(String[] value) {
-        this.afterAttackTargetEntityWithCurrentItemInferiors = value;
+        afterAttackTargetEntityWithCurrentItemInferiors = value;
     }
 
     public String[] getBeforeCanBreatheUnderwaterSuperiors() {
-        return this.beforeCanBreatheUnderwaterSuperiors;
+        return beforeCanBreatheUnderwaterSuperiors;
     }
 
     public String[] getBeforeCanBreatheUnderwaterInferiors() {
-        return this.beforeCanBreatheUnderwaterInferiors;
+        return beforeCanBreatheUnderwaterInferiors;
     }
 
     public String[] getOverrideCanBreatheUnderwaterSuperiors() {
-        return this.overrideCanBreatheUnderwaterSuperiors;
+        return overrideCanBreatheUnderwaterSuperiors;
     }
 
     public String[] getOverrideCanBreatheUnderwaterInferiors() {
-        return this.overrideCanBreatheUnderwaterInferiors;
+        return overrideCanBreatheUnderwaterInferiors;
     }
 
     public String[] getAfterCanBreatheUnderwaterSuperiors() {
-        return this.afterCanBreatheUnderwaterSuperiors;
+        return afterCanBreatheUnderwaterSuperiors;
     }
 
     public String[] getAfterCanBreatheUnderwaterInferiors() {
-        return this.afterCanBreatheUnderwaterInferiors;
+        return afterCanBreatheUnderwaterInferiors;
     }
 
     public void setBeforeCanBreatheUnderwaterSuperiors(String[] value) {
-        this.beforeCanBreatheUnderwaterSuperiors = value;
+        beforeCanBreatheUnderwaterSuperiors = value;
     }
 
     public void setBeforeCanBreatheUnderwaterInferiors(String[] value) {
-        this.beforeCanBreatheUnderwaterInferiors = value;
+        beforeCanBreatheUnderwaterInferiors = value;
     }
 
     public void setOverrideCanBreatheUnderwaterSuperiors(String[] value) {
-        this.overrideCanBreatheUnderwaterSuperiors = value;
+        overrideCanBreatheUnderwaterSuperiors = value;
     }
 
     public void setOverrideCanBreatheUnderwaterInferiors(String[] value) {
-        this.overrideCanBreatheUnderwaterInferiors = value;
+        overrideCanBreatheUnderwaterInferiors = value;
     }
 
     public void setAfterCanBreatheUnderwaterSuperiors(String[] value) {
-        this.afterCanBreatheUnderwaterSuperiors = value;
+        afterCanBreatheUnderwaterSuperiors = value;
     }
 
     public void setAfterCanBreatheUnderwaterInferiors(String[] value) {
-        this.afterCanBreatheUnderwaterInferiors = value;
+        afterCanBreatheUnderwaterInferiors = value;
     }
 
     public String[] getBeforeCanHarvestBlockSuperiors() {
-        return this.beforeCanHarvestBlockSuperiors;
+        return beforeCanHarvestBlockSuperiors;
     }
 
     public String[] getBeforeCanHarvestBlockInferiors() {
-        return this.beforeCanHarvestBlockInferiors;
+        return beforeCanHarvestBlockInferiors;
     }
 
     public String[] getOverrideCanHarvestBlockSuperiors() {
-        return this.overrideCanHarvestBlockSuperiors;
+        return overrideCanHarvestBlockSuperiors;
     }
 
     public String[] getOverrideCanHarvestBlockInferiors() {
-        return this.overrideCanHarvestBlockInferiors;
+        return overrideCanHarvestBlockInferiors;
     }
 
     public String[] getAfterCanHarvestBlockSuperiors() {
-        return this.afterCanHarvestBlockSuperiors;
+        return afterCanHarvestBlockSuperiors;
     }
 
     public String[] getAfterCanHarvestBlockInferiors() {
-        return this.afterCanHarvestBlockInferiors;
+        return afterCanHarvestBlockInferiors;
     }
 
     public void setBeforeCanHarvestBlockSuperiors(String[] value) {
-        this.beforeCanHarvestBlockSuperiors = value;
+        beforeCanHarvestBlockSuperiors = value;
     }
 
     public void setBeforeCanHarvestBlockInferiors(String[] value) {
-        this.beforeCanHarvestBlockInferiors = value;
+        beforeCanHarvestBlockInferiors = value;
     }
 
     public void setOverrideCanHarvestBlockSuperiors(String[] value) {
-        this.overrideCanHarvestBlockSuperiors = value;
+        overrideCanHarvestBlockSuperiors = value;
     }
 
     public void setOverrideCanHarvestBlockInferiors(String[] value) {
-        this.overrideCanHarvestBlockInferiors = value;
+        overrideCanHarvestBlockInferiors = value;
     }
 
     public void setAfterCanHarvestBlockSuperiors(String[] value) {
-        this.afterCanHarvestBlockSuperiors = value;
+        afterCanHarvestBlockSuperiors = value;
     }
 
     public void setAfterCanHarvestBlockInferiors(String[] value) {
-        this.afterCanHarvestBlockInferiors = value;
+        afterCanHarvestBlockInferiors = value;
     }
 
     public String[] getBeforeCanPlayerEditSuperiors() {
-        return this.beforeCanPlayerEditSuperiors;
+        return beforeCanPlayerEditSuperiors;
     }
 
     public String[] getBeforeCanPlayerEditInferiors() {
-        return this.beforeCanPlayerEditInferiors;
+        return beforeCanPlayerEditInferiors;
     }
 
     public String[] getOverrideCanPlayerEditSuperiors() {
-        return this.overrideCanPlayerEditSuperiors;
+        return overrideCanPlayerEditSuperiors;
     }
 
     public String[] getOverrideCanPlayerEditInferiors() {
-        return this.overrideCanPlayerEditInferiors;
+        return overrideCanPlayerEditInferiors;
     }
 
     public String[] getAfterCanPlayerEditSuperiors() {
-        return this.afterCanPlayerEditSuperiors;
+        return afterCanPlayerEditSuperiors;
     }
 
     public String[] getAfterCanPlayerEditInferiors() {
-        return this.afterCanPlayerEditInferiors;
+        return afterCanPlayerEditInferiors;
     }
 
     public void setBeforeCanPlayerEditSuperiors(String[] value) {
-        this.beforeCanPlayerEditSuperiors = value;
+        beforeCanPlayerEditSuperiors = value;
     }
 
     public void setBeforeCanPlayerEditInferiors(String[] value) {
-        this.beforeCanPlayerEditInferiors = value;
+        beforeCanPlayerEditInferiors = value;
     }
 
     public void setOverrideCanPlayerEditSuperiors(String[] value) {
-        this.overrideCanPlayerEditSuperiors = value;
+        overrideCanPlayerEditSuperiors = value;
     }
 
     public void setOverrideCanPlayerEditInferiors(String[] value) {
-        this.overrideCanPlayerEditInferiors = value;
+        overrideCanPlayerEditInferiors = value;
     }
 
     public void setAfterCanPlayerEditSuperiors(String[] value) {
-        this.afterCanPlayerEditSuperiors = value;
+        afterCanPlayerEditSuperiors = value;
     }
 
     public void setAfterCanPlayerEditInferiors(String[] value) {
-        this.afterCanPlayerEditInferiors = value;
+        afterCanPlayerEditInferiors = value;
     }
 
     public String[] getBeforeCanTriggerWalkingSuperiors() {
-        return this.beforeCanTriggerWalkingSuperiors;
+        return beforeCanTriggerWalkingSuperiors;
     }
 
     public String[] getBeforeCanTriggerWalkingInferiors() {
-        return this.beforeCanTriggerWalkingInferiors;
+        return beforeCanTriggerWalkingInferiors;
     }
 
     public String[] getOverrideCanTriggerWalkingSuperiors() {
-        return this.overrideCanTriggerWalkingSuperiors;
+        return overrideCanTriggerWalkingSuperiors;
     }
 
     public String[] getOverrideCanTriggerWalkingInferiors() {
-        return this.overrideCanTriggerWalkingInferiors;
+        return overrideCanTriggerWalkingInferiors;
     }
 
     public String[] getAfterCanTriggerWalkingSuperiors() {
-        return this.afterCanTriggerWalkingSuperiors;
+        return afterCanTriggerWalkingSuperiors;
     }
 
     public String[] getAfterCanTriggerWalkingInferiors() {
-        return this.afterCanTriggerWalkingInferiors;
+        return afterCanTriggerWalkingInferiors;
     }
 
     public void setBeforeCanTriggerWalkingSuperiors(String[] value) {
-        this.beforeCanTriggerWalkingSuperiors = value;
+        beforeCanTriggerWalkingSuperiors = value;
     }
 
     public void setBeforeCanTriggerWalkingInferiors(String[] value) {
-        this.beforeCanTriggerWalkingInferiors = value;
+        beforeCanTriggerWalkingInferiors = value;
     }
 
     public void setOverrideCanTriggerWalkingSuperiors(String[] value) {
-        this.overrideCanTriggerWalkingSuperiors = value;
+        overrideCanTriggerWalkingSuperiors = value;
     }
 
     public void setOverrideCanTriggerWalkingInferiors(String[] value) {
-        this.overrideCanTriggerWalkingInferiors = value;
+        overrideCanTriggerWalkingInferiors = value;
     }
 
     public void setAfterCanTriggerWalkingSuperiors(String[] value) {
-        this.afterCanTriggerWalkingSuperiors = value;
+        afterCanTriggerWalkingSuperiors = value;
     }
 
     public void setAfterCanTriggerWalkingInferiors(String[] value) {
-        this.afterCanTriggerWalkingInferiors = value;
+        afterCanTriggerWalkingInferiors = value;
     }
 
     public String[] getBeforeCloseScreenSuperiors() {
-        return this.beforeCloseScreenSuperiors;
+        return beforeCloseScreenSuperiors;
     }
 
     public String[] getBeforeCloseScreenInferiors() {
-        return this.beforeCloseScreenInferiors;
+        return beforeCloseScreenInferiors;
     }
 
     public String[] getOverrideCloseScreenSuperiors() {
-        return this.overrideCloseScreenSuperiors;
+        return overrideCloseScreenSuperiors;
     }
 
     public String[] getOverrideCloseScreenInferiors() {
-        return this.overrideCloseScreenInferiors;
+        return overrideCloseScreenInferiors;
     }
 
     public String[] getAfterCloseScreenSuperiors() {
-        return this.afterCloseScreenSuperiors;
+        return afterCloseScreenSuperiors;
     }
 
     public String[] getAfterCloseScreenInferiors() {
-        return this.afterCloseScreenInferiors;
+        return afterCloseScreenInferiors;
     }
 
     public void setBeforeCloseScreenSuperiors(String[] value) {
-        this.beforeCloseScreenSuperiors = value;
+        beforeCloseScreenSuperiors = value;
     }
 
     public void setBeforeCloseScreenInferiors(String[] value) {
-        this.beforeCloseScreenInferiors = value;
+        beforeCloseScreenInferiors = value;
     }
 
     public void setOverrideCloseScreenSuperiors(String[] value) {
-        this.overrideCloseScreenSuperiors = value;
+        overrideCloseScreenSuperiors = value;
     }
 
     public void setOverrideCloseScreenInferiors(String[] value) {
-        this.overrideCloseScreenInferiors = value;
+        overrideCloseScreenInferiors = value;
     }
 
     public void setAfterCloseScreenSuperiors(String[] value) {
-        this.afterCloseScreenSuperiors = value;
+        afterCloseScreenSuperiors = value;
     }
 
     public void setAfterCloseScreenInferiors(String[] value) {
-        this.afterCloseScreenInferiors = value;
+        afterCloseScreenInferiors = value;
     }
 
     public String[] getBeforeDamageEntitySuperiors() {
-        return this.beforeDamageEntitySuperiors;
+        return beforeDamageEntitySuperiors;
     }
 
     public String[] getBeforeDamageEntityInferiors() {
-        return this.beforeDamageEntityInferiors;
+        return beforeDamageEntityInferiors;
     }
 
     public String[] getOverrideDamageEntitySuperiors() {
-        return this.overrideDamageEntitySuperiors;
+        return overrideDamageEntitySuperiors;
     }
 
     public String[] getOverrideDamageEntityInferiors() {
-        return this.overrideDamageEntityInferiors;
+        return overrideDamageEntityInferiors;
     }
 
     public String[] getAfterDamageEntitySuperiors() {
-        return this.afterDamageEntitySuperiors;
+        return afterDamageEntitySuperiors;
     }
 
     public String[] getAfterDamageEntityInferiors() {
-        return this.afterDamageEntityInferiors;
+        return afterDamageEntityInferiors;
     }
 
     public void setBeforeDamageEntitySuperiors(String[] value) {
-        this.beforeDamageEntitySuperiors = value;
+        beforeDamageEntitySuperiors = value;
     }
 
     public void setBeforeDamageEntityInferiors(String[] value) {
-        this.beforeDamageEntityInferiors = value;
+        beforeDamageEntityInferiors = value;
     }
 
     public void setOverrideDamageEntitySuperiors(String[] value) {
-        this.overrideDamageEntitySuperiors = value;
+        overrideDamageEntitySuperiors = value;
     }
 
     public void setOverrideDamageEntityInferiors(String[] value) {
-        this.overrideDamageEntityInferiors = value;
+        overrideDamageEntityInferiors = value;
     }
 
     public void setAfterDamageEntitySuperiors(String[] value) {
-        this.afterDamageEntitySuperiors = value;
+        afterDamageEntitySuperiors = value;
     }
 
     public void setAfterDamageEntityInferiors(String[] value) {
-        this.afterDamageEntityInferiors = value;
+        afterDamageEntityInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIBrewingStandSuperiors() {
-        return this.beforeDisplayGUIBrewingStandSuperiors;
+        return beforeDisplayGUIBrewingStandSuperiors;
     }
 
     public String[] getBeforeDisplayGUIBrewingStandInferiors() {
-        return this.beforeDisplayGUIBrewingStandInferiors;
+        return beforeDisplayGUIBrewingStandInferiors;
     }
 
     public String[] getOverrideDisplayGUIBrewingStandSuperiors() {
-        return this.overrideDisplayGUIBrewingStandSuperiors;
+        return overrideDisplayGUIBrewingStandSuperiors;
     }
 
     public String[] getOverrideDisplayGUIBrewingStandInferiors() {
-        return this.overrideDisplayGUIBrewingStandInferiors;
+        return overrideDisplayGUIBrewingStandInferiors;
     }
 
     public String[] getAfterDisplayGUIBrewingStandSuperiors() {
-        return this.afterDisplayGUIBrewingStandSuperiors;
+        return afterDisplayGUIBrewingStandSuperiors;
     }
 
     public String[] getAfterDisplayGUIBrewingStandInferiors() {
-        return this.afterDisplayGUIBrewingStandInferiors;
+        return afterDisplayGUIBrewingStandInferiors;
     }
 
     public void setBeforeDisplayGUIBrewingStandSuperiors(String[] value) {
-        this.beforeDisplayGUIBrewingStandSuperiors = value;
+        beforeDisplayGUIBrewingStandSuperiors = value;
     }
 
     public void setBeforeDisplayGUIBrewingStandInferiors(String[] value) {
-        this.beforeDisplayGUIBrewingStandInferiors = value;
+        beforeDisplayGUIBrewingStandInferiors = value;
     }
 
     public void setOverrideDisplayGUIBrewingStandSuperiors(String[] value) {
-        this.overrideDisplayGUIBrewingStandSuperiors = value;
+        overrideDisplayGUIBrewingStandSuperiors = value;
     }
 
     public void setOverrideDisplayGUIBrewingStandInferiors(String[] value) {
-        this.overrideDisplayGUIBrewingStandInferiors = value;
+        overrideDisplayGUIBrewingStandInferiors = value;
     }
 
     public void setAfterDisplayGUIBrewingStandSuperiors(String[] value) {
-        this.afterDisplayGUIBrewingStandSuperiors = value;
+        afterDisplayGUIBrewingStandSuperiors = value;
     }
 
     public void setAfterDisplayGUIBrewingStandInferiors(String[] value) {
-        this.afterDisplayGUIBrewingStandInferiors = value;
+        afterDisplayGUIBrewingStandInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIChestSuperiors() {
-        return this.beforeDisplayGUIChestSuperiors;
+        return beforeDisplayGUIChestSuperiors;
     }
 
     public String[] getBeforeDisplayGUIChestInferiors() {
-        return this.beforeDisplayGUIChestInferiors;
+        return beforeDisplayGUIChestInferiors;
     }
 
     public String[] getOverrideDisplayGUIChestSuperiors() {
-        return this.overrideDisplayGUIChestSuperiors;
+        return overrideDisplayGUIChestSuperiors;
     }
 
     public String[] getOverrideDisplayGUIChestInferiors() {
-        return this.overrideDisplayGUIChestInferiors;
+        return overrideDisplayGUIChestInferiors;
     }
 
     public String[] getAfterDisplayGUIChestSuperiors() {
-        return this.afterDisplayGUIChestSuperiors;
+        return afterDisplayGUIChestSuperiors;
     }
 
     public String[] getAfterDisplayGUIChestInferiors() {
-        return this.afterDisplayGUIChestInferiors;
+        return afterDisplayGUIChestInferiors;
     }
 
     public void setBeforeDisplayGUIChestSuperiors(String[] value) {
-        this.beforeDisplayGUIChestSuperiors = value;
+        beforeDisplayGUIChestSuperiors = value;
     }
 
     public void setBeforeDisplayGUIChestInferiors(String[] value) {
-        this.beforeDisplayGUIChestInferiors = value;
+        beforeDisplayGUIChestInferiors = value;
     }
 
     public void setOverrideDisplayGUIChestSuperiors(String[] value) {
-        this.overrideDisplayGUIChestSuperiors = value;
+        overrideDisplayGUIChestSuperiors = value;
     }
 
     public void setOverrideDisplayGUIChestInferiors(String[] value) {
-        this.overrideDisplayGUIChestInferiors = value;
+        overrideDisplayGUIChestInferiors = value;
     }
 
     public void setAfterDisplayGUIChestSuperiors(String[] value) {
-        this.afterDisplayGUIChestSuperiors = value;
+        afterDisplayGUIChestSuperiors = value;
     }
 
     public void setAfterDisplayGUIChestInferiors(String[] value) {
-        this.afterDisplayGUIChestInferiors = value;
+        afterDisplayGUIChestInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIDispenserSuperiors() {
-        return this.beforeDisplayGUIDispenserSuperiors;
+        return beforeDisplayGUIDispenserSuperiors;
     }
 
     public String[] getBeforeDisplayGUIDispenserInferiors() {
-        return this.beforeDisplayGUIDispenserInferiors;
+        return beforeDisplayGUIDispenserInferiors;
     }
 
     public String[] getOverrideDisplayGUIDispenserSuperiors() {
-        return this.overrideDisplayGUIDispenserSuperiors;
+        return overrideDisplayGUIDispenserSuperiors;
     }
 
     public String[] getOverrideDisplayGUIDispenserInferiors() {
-        return this.overrideDisplayGUIDispenserInferiors;
+        return overrideDisplayGUIDispenserInferiors;
     }
 
     public String[] getAfterDisplayGUIDispenserSuperiors() {
-        return this.afterDisplayGUIDispenserSuperiors;
+        return afterDisplayGUIDispenserSuperiors;
     }
 
     public String[] getAfterDisplayGUIDispenserInferiors() {
-        return this.afterDisplayGUIDispenserInferiors;
+        return afterDisplayGUIDispenserInferiors;
     }
 
     public void setBeforeDisplayGUIDispenserSuperiors(String[] value) {
-        this.beforeDisplayGUIDispenserSuperiors = value;
+        beforeDisplayGUIDispenserSuperiors = value;
     }
 
     public void setBeforeDisplayGUIDispenserInferiors(String[] value) {
-        this.beforeDisplayGUIDispenserInferiors = value;
+        beforeDisplayGUIDispenserInferiors = value;
     }
 
     public void setOverrideDisplayGUIDispenserSuperiors(String[] value) {
-        this.overrideDisplayGUIDispenserSuperiors = value;
+        overrideDisplayGUIDispenserSuperiors = value;
     }
 
     public void setOverrideDisplayGUIDispenserInferiors(String[] value) {
-        this.overrideDisplayGUIDispenserInferiors = value;
+        overrideDisplayGUIDispenserInferiors = value;
     }
 
     public void setAfterDisplayGUIDispenserSuperiors(String[] value) {
-        this.afterDisplayGUIDispenserSuperiors = value;
+        afterDisplayGUIDispenserSuperiors = value;
     }
 
     public void setAfterDisplayGUIDispenserInferiors(String[] value) {
-        this.afterDisplayGUIDispenserInferiors = value;
+        afterDisplayGUIDispenserInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIEditSignSuperiors() {
-        return this.beforeDisplayGUIEditSignSuperiors;
+        return beforeDisplayGUIEditSignSuperiors;
     }
 
     public String[] getBeforeDisplayGUIEditSignInferiors() {
-        return this.beforeDisplayGUIEditSignInferiors;
+        return beforeDisplayGUIEditSignInferiors;
     }
 
     public String[] getOverrideDisplayGUIEditSignSuperiors() {
-        return this.overrideDisplayGUIEditSignSuperiors;
+        return overrideDisplayGUIEditSignSuperiors;
     }
 
     public String[] getOverrideDisplayGUIEditSignInferiors() {
-        return this.overrideDisplayGUIEditSignInferiors;
+        return overrideDisplayGUIEditSignInferiors;
     }
 
     public String[] getAfterDisplayGUIEditSignSuperiors() {
-        return this.afterDisplayGUIEditSignSuperiors;
+        return afterDisplayGUIEditSignSuperiors;
     }
 
     public String[] getAfterDisplayGUIEditSignInferiors() {
-        return this.afterDisplayGUIEditSignInferiors;
+        return afterDisplayGUIEditSignInferiors;
     }
 
     public void setBeforeDisplayGUIEditSignSuperiors(String[] value) {
-        this.beforeDisplayGUIEditSignSuperiors = value;
+        beforeDisplayGUIEditSignSuperiors = value;
     }
 
     public void setBeforeDisplayGUIEditSignInferiors(String[] value) {
-        this.beforeDisplayGUIEditSignInferiors = value;
+        beforeDisplayGUIEditSignInferiors = value;
     }
 
     public void setOverrideDisplayGUIEditSignSuperiors(String[] value) {
-        this.overrideDisplayGUIEditSignSuperiors = value;
+        overrideDisplayGUIEditSignSuperiors = value;
     }
 
     public void setOverrideDisplayGUIEditSignInferiors(String[] value) {
-        this.overrideDisplayGUIEditSignInferiors = value;
+        overrideDisplayGUIEditSignInferiors = value;
     }
 
     public void setAfterDisplayGUIEditSignSuperiors(String[] value) {
-        this.afterDisplayGUIEditSignSuperiors = value;
+        afterDisplayGUIEditSignSuperiors = value;
     }
 
     public void setAfterDisplayGUIEditSignInferiors(String[] value) {
-        this.afterDisplayGUIEditSignInferiors = value;
+        afterDisplayGUIEditSignInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIEnchantmentSuperiors() {
-        return this.beforeDisplayGUIEnchantmentSuperiors;
+        return beforeDisplayGUIEnchantmentSuperiors;
     }
 
     public String[] getBeforeDisplayGUIEnchantmentInferiors() {
-        return this.beforeDisplayGUIEnchantmentInferiors;
+        return beforeDisplayGUIEnchantmentInferiors;
     }
 
     public String[] getOverrideDisplayGUIEnchantmentSuperiors() {
-        return this.overrideDisplayGUIEnchantmentSuperiors;
+        return overrideDisplayGUIEnchantmentSuperiors;
     }
 
     public String[] getOverrideDisplayGUIEnchantmentInferiors() {
-        return this.overrideDisplayGUIEnchantmentInferiors;
+        return overrideDisplayGUIEnchantmentInferiors;
     }
 
     public String[] getAfterDisplayGUIEnchantmentSuperiors() {
-        return this.afterDisplayGUIEnchantmentSuperiors;
+        return afterDisplayGUIEnchantmentSuperiors;
     }
 
     public String[] getAfterDisplayGUIEnchantmentInferiors() {
-        return this.afterDisplayGUIEnchantmentInferiors;
+        return afterDisplayGUIEnchantmentInferiors;
     }
 
     public void setBeforeDisplayGUIEnchantmentSuperiors(String[] value) {
-        this.beforeDisplayGUIEnchantmentSuperiors = value;
+        beforeDisplayGUIEnchantmentSuperiors = value;
     }
 
     public void setBeforeDisplayGUIEnchantmentInferiors(String[] value) {
-        this.beforeDisplayGUIEnchantmentInferiors = value;
+        beforeDisplayGUIEnchantmentInferiors = value;
     }
 
     public void setOverrideDisplayGUIEnchantmentSuperiors(String[] value) {
-        this.overrideDisplayGUIEnchantmentSuperiors = value;
+        overrideDisplayGUIEnchantmentSuperiors = value;
     }
 
     public void setOverrideDisplayGUIEnchantmentInferiors(String[] value) {
-        this.overrideDisplayGUIEnchantmentInferiors = value;
+        overrideDisplayGUIEnchantmentInferiors = value;
     }
 
     public void setAfterDisplayGUIEnchantmentSuperiors(String[] value) {
-        this.afterDisplayGUIEnchantmentSuperiors = value;
+        afterDisplayGUIEnchantmentSuperiors = value;
     }
 
     public void setAfterDisplayGUIEnchantmentInferiors(String[] value) {
-        this.afterDisplayGUIEnchantmentInferiors = value;
+        afterDisplayGUIEnchantmentInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIFurnaceSuperiors() {
-        return this.beforeDisplayGUIFurnaceSuperiors;
+        return beforeDisplayGUIFurnaceSuperiors;
     }
 
     public String[] getBeforeDisplayGUIFurnaceInferiors() {
-        return this.beforeDisplayGUIFurnaceInferiors;
+        return beforeDisplayGUIFurnaceInferiors;
     }
 
     public String[] getOverrideDisplayGUIFurnaceSuperiors() {
-        return this.overrideDisplayGUIFurnaceSuperiors;
+        return overrideDisplayGUIFurnaceSuperiors;
     }
 
     public String[] getOverrideDisplayGUIFurnaceInferiors() {
-        return this.overrideDisplayGUIFurnaceInferiors;
+        return overrideDisplayGUIFurnaceInferiors;
     }
 
     public String[] getAfterDisplayGUIFurnaceSuperiors() {
-        return this.afterDisplayGUIFurnaceSuperiors;
+        return afterDisplayGUIFurnaceSuperiors;
     }
 
     public String[] getAfterDisplayGUIFurnaceInferiors() {
-        return this.afterDisplayGUIFurnaceInferiors;
+        return afterDisplayGUIFurnaceInferiors;
     }
 
     public void setBeforeDisplayGUIFurnaceSuperiors(String[] value) {
-        this.beforeDisplayGUIFurnaceSuperiors = value;
+        beforeDisplayGUIFurnaceSuperiors = value;
     }
 
     public void setBeforeDisplayGUIFurnaceInferiors(String[] value) {
-        this.beforeDisplayGUIFurnaceInferiors = value;
+        beforeDisplayGUIFurnaceInferiors = value;
     }
 
     public void setOverrideDisplayGUIFurnaceSuperiors(String[] value) {
-        this.overrideDisplayGUIFurnaceSuperiors = value;
+        overrideDisplayGUIFurnaceSuperiors = value;
     }
 
     public void setOverrideDisplayGUIFurnaceInferiors(String[] value) {
-        this.overrideDisplayGUIFurnaceInferiors = value;
+        overrideDisplayGUIFurnaceInferiors = value;
     }
 
     public void setAfterDisplayGUIFurnaceSuperiors(String[] value) {
-        this.afterDisplayGUIFurnaceSuperiors = value;
+        afterDisplayGUIFurnaceSuperiors = value;
     }
 
     public void setAfterDisplayGUIFurnaceInferiors(String[] value) {
-        this.afterDisplayGUIFurnaceInferiors = value;
+        afterDisplayGUIFurnaceInferiors = value;
     }
 
     public String[] getBeforeDisplayGUIWorkbenchSuperiors() {
-        return this.beforeDisplayGUIWorkbenchSuperiors;
+        return beforeDisplayGUIWorkbenchSuperiors;
     }
 
     public String[] getBeforeDisplayGUIWorkbenchInferiors() {
-        return this.beforeDisplayGUIWorkbenchInferiors;
+        return beforeDisplayGUIWorkbenchInferiors;
     }
 
     public String[] getOverrideDisplayGUIWorkbenchSuperiors() {
-        return this.overrideDisplayGUIWorkbenchSuperiors;
+        return overrideDisplayGUIWorkbenchSuperiors;
     }
 
     public String[] getOverrideDisplayGUIWorkbenchInferiors() {
-        return this.overrideDisplayGUIWorkbenchInferiors;
+        return overrideDisplayGUIWorkbenchInferiors;
     }
 
     public String[] getAfterDisplayGUIWorkbenchSuperiors() {
-        return this.afterDisplayGUIWorkbenchSuperiors;
+        return afterDisplayGUIWorkbenchSuperiors;
     }
 
     public String[] getAfterDisplayGUIWorkbenchInferiors() {
-        return this.afterDisplayGUIWorkbenchInferiors;
+        return afterDisplayGUIWorkbenchInferiors;
     }
 
     public void setBeforeDisplayGUIWorkbenchSuperiors(String[] value) {
-        this.beforeDisplayGUIWorkbenchSuperiors = value;
+        beforeDisplayGUIWorkbenchSuperiors = value;
     }
 
     public void setBeforeDisplayGUIWorkbenchInferiors(String[] value) {
-        this.beforeDisplayGUIWorkbenchInferiors = value;
+        beforeDisplayGUIWorkbenchInferiors = value;
     }
 
     public void setOverrideDisplayGUIWorkbenchSuperiors(String[] value) {
-        this.overrideDisplayGUIWorkbenchSuperiors = value;
+        overrideDisplayGUIWorkbenchSuperiors = value;
     }
 
     public void setOverrideDisplayGUIWorkbenchInferiors(String[] value) {
-        this.overrideDisplayGUIWorkbenchInferiors = value;
+        overrideDisplayGUIWorkbenchInferiors = value;
     }
 
     public void setAfterDisplayGUIWorkbenchSuperiors(String[] value) {
-        this.afterDisplayGUIWorkbenchSuperiors = value;
+        afterDisplayGUIWorkbenchSuperiors = value;
     }
 
     public void setAfterDisplayGUIWorkbenchInferiors(String[] value) {
-        this.afterDisplayGUIWorkbenchInferiors = value;
+        afterDisplayGUIWorkbenchInferiors = value;
     }
 
     public String[] getBeforeDropOneItemSuperiors() {
-        return this.beforeDropOneItemSuperiors;
+        return beforeDropOneItemSuperiors;
     }
 
     public String[] getBeforeDropOneItemInferiors() {
-        return this.beforeDropOneItemInferiors;
+        return beforeDropOneItemInferiors;
     }
 
     public String[] getOverrideDropOneItemSuperiors() {
-        return this.overrideDropOneItemSuperiors;
+        return overrideDropOneItemSuperiors;
     }
 
     public String[] getOverrideDropOneItemInferiors() {
-        return this.overrideDropOneItemInferiors;
+        return overrideDropOneItemInferiors;
     }
 
     public String[] getAfterDropOneItemSuperiors() {
-        return this.afterDropOneItemSuperiors;
+        return afterDropOneItemSuperiors;
     }
 
     public String[] getAfterDropOneItemInferiors() {
-        return this.afterDropOneItemInferiors;
+        return afterDropOneItemInferiors;
     }
 
     public void setBeforeDropOneItemSuperiors(String[] value) {
-        this.beforeDropOneItemSuperiors = value;
+        beforeDropOneItemSuperiors = value;
     }
 
     public void setBeforeDropOneItemInferiors(String[] value) {
-        this.beforeDropOneItemInferiors = value;
+        beforeDropOneItemInferiors = value;
     }
 
     public void setOverrideDropOneItemSuperiors(String[] value) {
-        this.overrideDropOneItemSuperiors = value;
+        overrideDropOneItemSuperiors = value;
     }
 
     public void setOverrideDropOneItemInferiors(String[] value) {
-        this.overrideDropOneItemInferiors = value;
+        overrideDropOneItemInferiors = value;
     }
 
     public void setAfterDropOneItemSuperiors(String[] value) {
-        this.afterDropOneItemSuperiors = value;
+        afterDropOneItemSuperiors = value;
     }
 
     public void setAfterDropOneItemInferiors(String[] value) {
-        this.afterDropOneItemInferiors = value;
+        afterDropOneItemInferiors = value;
     }
 
     public String[] getBeforeDropPlayerItemSuperiors() {
-        return this.beforeDropPlayerItemSuperiors;
+        return beforeDropPlayerItemSuperiors;
     }
 
     public String[] getBeforeDropPlayerItemInferiors() {
-        return this.beforeDropPlayerItemInferiors;
+        return beforeDropPlayerItemInferiors;
     }
 
     public String[] getOverrideDropPlayerItemSuperiors() {
-        return this.overrideDropPlayerItemSuperiors;
+        return overrideDropPlayerItemSuperiors;
     }
 
     public String[] getOverrideDropPlayerItemInferiors() {
-        return this.overrideDropPlayerItemInferiors;
+        return overrideDropPlayerItemInferiors;
     }
 
     public String[] getAfterDropPlayerItemSuperiors() {
-        return this.afterDropPlayerItemSuperiors;
+        return afterDropPlayerItemSuperiors;
     }
 
     public String[] getAfterDropPlayerItemInferiors() {
-        return this.afterDropPlayerItemInferiors;
+        return afterDropPlayerItemInferiors;
     }
 
     public void setBeforeDropPlayerItemSuperiors(String[] value) {
-        this.beforeDropPlayerItemSuperiors = value;
+        beforeDropPlayerItemSuperiors = value;
     }
 
     public void setBeforeDropPlayerItemInferiors(String[] value) {
-        this.beforeDropPlayerItemInferiors = value;
+        beforeDropPlayerItemInferiors = value;
     }
 
     public void setOverrideDropPlayerItemSuperiors(String[] value) {
-        this.overrideDropPlayerItemSuperiors = value;
+        overrideDropPlayerItemSuperiors = value;
     }
 
     public void setOverrideDropPlayerItemInferiors(String[] value) {
-        this.overrideDropPlayerItemInferiors = value;
+        overrideDropPlayerItemInferiors = value;
     }
 
     public void setAfterDropPlayerItemSuperiors(String[] value) {
-        this.afterDropPlayerItemSuperiors = value;
+        afterDropPlayerItemSuperiors = value;
     }
 
     public void setAfterDropPlayerItemInferiors(String[] value) {
-        this.afterDropPlayerItemInferiors = value;
+        afterDropPlayerItemInferiors = value;
     }
 
     public String[] getBeforeDropPlayerItemWithRandomChoiceSuperiors() {
-        return this.beforeDropPlayerItemWithRandomChoiceSuperiors;
+        return beforeDropPlayerItemWithRandomChoiceSuperiors;
     }
 
     public String[] getBeforeDropPlayerItemWithRandomChoiceInferiors() {
-        return this.beforeDropPlayerItemWithRandomChoiceInferiors;
+        return beforeDropPlayerItemWithRandomChoiceInferiors;
     }
 
     public String[] getOverrideDropPlayerItemWithRandomChoiceSuperiors() {
-        return this.overrideDropPlayerItemWithRandomChoiceSuperiors;
+        return overrideDropPlayerItemWithRandomChoiceSuperiors;
     }
 
     public String[] getOverrideDropPlayerItemWithRandomChoiceInferiors() {
-        return this.overrideDropPlayerItemWithRandomChoiceInferiors;
+        return overrideDropPlayerItemWithRandomChoiceInferiors;
     }
 
     public String[] getAfterDropPlayerItemWithRandomChoiceSuperiors() {
-        return this.afterDropPlayerItemWithRandomChoiceSuperiors;
+        return afterDropPlayerItemWithRandomChoiceSuperiors;
     }
 
     public String[] getAfterDropPlayerItemWithRandomChoiceInferiors() {
-        return this.afterDropPlayerItemWithRandomChoiceInferiors;
+        return afterDropPlayerItemWithRandomChoiceInferiors;
     }
 
     public void setBeforeDropPlayerItemWithRandomChoiceSuperiors(String[] value) {
-        this.beforeDropPlayerItemWithRandomChoiceSuperiors = value;
+        beforeDropPlayerItemWithRandomChoiceSuperiors = value;
     }
 
     public void setBeforeDropPlayerItemWithRandomChoiceInferiors(String[] value) {
-        this.beforeDropPlayerItemWithRandomChoiceInferiors = value;
+        beforeDropPlayerItemWithRandomChoiceInferiors = value;
     }
 
     public void setOverrideDropPlayerItemWithRandomChoiceSuperiors(String[] value) {
-        this.overrideDropPlayerItemWithRandomChoiceSuperiors = value;
+        overrideDropPlayerItemWithRandomChoiceSuperiors = value;
     }
 
     public void setOverrideDropPlayerItemWithRandomChoiceInferiors(String[] value) {
-        this.overrideDropPlayerItemWithRandomChoiceInferiors = value;
+        overrideDropPlayerItemWithRandomChoiceInferiors = value;
     }
 
     public void setAfterDropPlayerItemWithRandomChoiceSuperiors(String[] value) {
-        this.afterDropPlayerItemWithRandomChoiceSuperiors = value;
+        afterDropPlayerItemWithRandomChoiceSuperiors = value;
     }
 
     public void setAfterDropPlayerItemWithRandomChoiceInferiors(String[] value) {
-        this.afterDropPlayerItemWithRandomChoiceInferiors = value;
+        afterDropPlayerItemWithRandomChoiceInferiors = value;
     }
 
     public String[] getBeforeFallSuperiors() {
-        return this.beforeFallSuperiors;
+        return beforeFallSuperiors;
     }
 
     public String[] getBeforeFallInferiors() {
-        return this.beforeFallInferiors;
+        return beforeFallInferiors;
     }
 
     public String[] getOverrideFallSuperiors() {
-        return this.overrideFallSuperiors;
+        return overrideFallSuperiors;
     }
 
     public String[] getOverrideFallInferiors() {
-        return this.overrideFallInferiors;
+        return overrideFallInferiors;
     }
 
     public String[] getAfterFallSuperiors() {
-        return this.afterFallSuperiors;
+        return afterFallSuperiors;
     }
 
     public String[] getAfterFallInferiors() {
-        return this.afterFallInferiors;
+        return afterFallInferiors;
     }
 
     public void setBeforeFallSuperiors(String[] value) {
-        this.beforeFallSuperiors = value;
+        beforeFallSuperiors = value;
     }
 
     public void setBeforeFallInferiors(String[] value) {
-        this.beforeFallInferiors = value;
+        beforeFallInferiors = value;
     }
 
     public void setOverrideFallSuperiors(String[] value) {
-        this.overrideFallSuperiors = value;
+        overrideFallSuperiors = value;
     }
 
     public void setOverrideFallInferiors(String[] value) {
-        this.overrideFallInferiors = value;
+        overrideFallInferiors = value;
     }
 
     public void setAfterFallSuperiors(String[] value) {
-        this.afterFallSuperiors = value;
+        afterFallSuperiors = value;
     }
 
     public void setAfterFallInferiors(String[] value) {
-        this.afterFallInferiors = value;
+        afterFallInferiors = value;
     }
 
     public String[] getBeforeGetAIMoveSpeedSuperiors() {
-        return this.beforeGetAIMoveSpeedSuperiors;
+        return beforeGetAIMoveSpeedSuperiors;
     }
 
     public String[] getBeforeGetAIMoveSpeedInferiors() {
-        return this.beforeGetAIMoveSpeedInferiors;
+        return beforeGetAIMoveSpeedInferiors;
     }
 
     public String[] getOverrideGetAIMoveSpeedSuperiors() {
-        return this.overrideGetAIMoveSpeedSuperiors;
+        return overrideGetAIMoveSpeedSuperiors;
     }
 
     public String[] getOverrideGetAIMoveSpeedInferiors() {
-        return this.overrideGetAIMoveSpeedInferiors;
+        return overrideGetAIMoveSpeedInferiors;
     }
 
     public String[] getAfterGetAIMoveSpeedSuperiors() {
-        return this.afterGetAIMoveSpeedSuperiors;
+        return afterGetAIMoveSpeedSuperiors;
     }
 
     public String[] getAfterGetAIMoveSpeedInferiors() {
-        return this.afterGetAIMoveSpeedInferiors;
+        return afterGetAIMoveSpeedInferiors;
     }
 
     public void setBeforeGetAIMoveSpeedSuperiors(String[] value) {
-        this.beforeGetAIMoveSpeedSuperiors = value;
+        beforeGetAIMoveSpeedSuperiors = value;
     }
 
     public void setBeforeGetAIMoveSpeedInferiors(String[] value) {
-        this.beforeGetAIMoveSpeedInferiors = value;
+        beforeGetAIMoveSpeedInferiors = value;
     }
 
     public void setOverrideGetAIMoveSpeedSuperiors(String[] value) {
-        this.overrideGetAIMoveSpeedSuperiors = value;
+        overrideGetAIMoveSpeedSuperiors = value;
     }
 
     public void setOverrideGetAIMoveSpeedInferiors(String[] value) {
-        this.overrideGetAIMoveSpeedInferiors = value;
+        overrideGetAIMoveSpeedInferiors = value;
     }
 
     public void setAfterGetAIMoveSpeedSuperiors(String[] value) {
-        this.afterGetAIMoveSpeedSuperiors = value;
+        afterGetAIMoveSpeedSuperiors = value;
     }
 
     public void setAfterGetAIMoveSpeedInferiors(String[] value) {
-        this.afterGetAIMoveSpeedInferiors = value;
+        afterGetAIMoveSpeedInferiors = value;
     }
 
     public String[] getBeforeGetBedOrientationInDegreesSuperiors() {
-        return this.beforeGetBedOrientationInDegreesSuperiors;
+        return beforeGetBedOrientationInDegreesSuperiors;
     }
 
     public String[] getBeforeGetBedOrientationInDegreesInferiors() {
-        return this.beforeGetBedOrientationInDegreesInferiors;
+        return beforeGetBedOrientationInDegreesInferiors;
     }
 
     public String[] getOverrideGetBedOrientationInDegreesSuperiors() {
-        return this.overrideGetBedOrientationInDegreesSuperiors;
+        return overrideGetBedOrientationInDegreesSuperiors;
     }
 
     public String[] getOverrideGetBedOrientationInDegreesInferiors() {
-        return this.overrideGetBedOrientationInDegreesInferiors;
+        return overrideGetBedOrientationInDegreesInferiors;
     }
 
     public String[] getAfterGetBedOrientationInDegreesSuperiors() {
-        return this.afterGetBedOrientationInDegreesSuperiors;
+        return afterGetBedOrientationInDegreesSuperiors;
     }
 
     public String[] getAfterGetBedOrientationInDegreesInferiors() {
-        return this.afterGetBedOrientationInDegreesInferiors;
+        return afterGetBedOrientationInDegreesInferiors;
     }
 
     public void setBeforeGetBedOrientationInDegreesSuperiors(String[] value) {
-        this.beforeGetBedOrientationInDegreesSuperiors = value;
+        beforeGetBedOrientationInDegreesSuperiors = value;
     }
 
     public void setBeforeGetBedOrientationInDegreesInferiors(String[] value) {
-        this.beforeGetBedOrientationInDegreesInferiors = value;
+        beforeGetBedOrientationInDegreesInferiors = value;
     }
 
     public void setOverrideGetBedOrientationInDegreesSuperiors(String[] value) {
-        this.overrideGetBedOrientationInDegreesSuperiors = value;
+        overrideGetBedOrientationInDegreesSuperiors = value;
     }
 
     public void setOverrideGetBedOrientationInDegreesInferiors(String[] value) {
-        this.overrideGetBedOrientationInDegreesInferiors = value;
+        overrideGetBedOrientationInDegreesInferiors = value;
     }
 
     public void setAfterGetBedOrientationInDegreesSuperiors(String[] value) {
-        this.afterGetBedOrientationInDegreesSuperiors = value;
+        afterGetBedOrientationInDegreesSuperiors = value;
     }
 
     public void setAfterGetBedOrientationInDegreesInferiors(String[] value) {
-        this.afterGetBedOrientationInDegreesInferiors = value;
+        afterGetBedOrientationInDegreesInferiors = value;
     }
 
     public String[] getBeforeGetBrightnessSuperiors() {
-        return this.beforeGetBrightnessSuperiors;
+        return beforeGetBrightnessSuperiors;
     }
 
     public String[] getBeforeGetBrightnessInferiors() {
-        return this.beforeGetBrightnessInferiors;
+        return beforeGetBrightnessInferiors;
     }
 
     public String[] getOverrideGetBrightnessSuperiors() {
-        return this.overrideGetBrightnessSuperiors;
+        return overrideGetBrightnessSuperiors;
     }
 
     public String[] getOverrideGetBrightnessInferiors() {
-        return this.overrideGetBrightnessInferiors;
+        return overrideGetBrightnessInferiors;
     }
 
     public String[] getAfterGetBrightnessSuperiors() {
-        return this.afterGetBrightnessSuperiors;
+        return afterGetBrightnessSuperiors;
     }
 
     public String[] getAfterGetBrightnessInferiors() {
-        return this.afterGetBrightnessInferiors;
+        return afterGetBrightnessInferiors;
     }
 
     public void setBeforeGetBrightnessSuperiors(String[] value) {
-        this.beforeGetBrightnessSuperiors = value;
+        beforeGetBrightnessSuperiors = value;
     }
 
     public void setBeforeGetBrightnessInferiors(String[] value) {
-        this.beforeGetBrightnessInferiors = value;
+        beforeGetBrightnessInferiors = value;
     }
 
     public void setOverrideGetBrightnessSuperiors(String[] value) {
-        this.overrideGetBrightnessSuperiors = value;
+        overrideGetBrightnessSuperiors = value;
     }
 
     public void setOverrideGetBrightnessInferiors(String[] value) {
-        this.overrideGetBrightnessInferiors = value;
+        overrideGetBrightnessInferiors = value;
     }
 
     public void setAfterGetBrightnessSuperiors(String[] value) {
-        this.afterGetBrightnessSuperiors = value;
+        afterGetBrightnessSuperiors = value;
     }
 
     public void setAfterGetBrightnessInferiors(String[] value) {
-        this.afterGetBrightnessInferiors = value;
+        afterGetBrightnessInferiors = value;
     }
 
     public String[] getBeforeGetBrightnessForRenderSuperiors() {
-        return this.beforeGetBrightnessForRenderSuperiors;
+        return beforeGetBrightnessForRenderSuperiors;
     }
 
     public String[] getBeforeGetBrightnessForRenderInferiors() {
-        return this.beforeGetBrightnessForRenderInferiors;
+        return beforeGetBrightnessForRenderInferiors;
     }
 
     public String[] getOverrideGetBrightnessForRenderSuperiors() {
-        return this.overrideGetBrightnessForRenderSuperiors;
+        return overrideGetBrightnessForRenderSuperiors;
     }
 
     public String[] getOverrideGetBrightnessForRenderInferiors() {
-        return this.overrideGetBrightnessForRenderInferiors;
+        return overrideGetBrightnessForRenderInferiors;
     }
 
     public String[] getAfterGetBrightnessForRenderSuperiors() {
-        return this.afterGetBrightnessForRenderSuperiors;
+        return afterGetBrightnessForRenderSuperiors;
     }
 
     public String[] getAfterGetBrightnessForRenderInferiors() {
-        return this.afterGetBrightnessForRenderInferiors;
+        return afterGetBrightnessForRenderInferiors;
     }
 
     public void setBeforeGetBrightnessForRenderSuperiors(String[] value) {
-        this.beforeGetBrightnessForRenderSuperiors = value;
+        beforeGetBrightnessForRenderSuperiors = value;
     }
 
     public void setBeforeGetBrightnessForRenderInferiors(String[] value) {
-        this.beforeGetBrightnessForRenderInferiors = value;
+        beforeGetBrightnessForRenderInferiors = value;
     }
 
     public void setOverrideGetBrightnessForRenderSuperiors(String[] value) {
-        this.overrideGetBrightnessForRenderSuperiors = value;
+        overrideGetBrightnessForRenderSuperiors = value;
     }
 
     public void setOverrideGetBrightnessForRenderInferiors(String[] value) {
-        this.overrideGetBrightnessForRenderInferiors = value;
+        overrideGetBrightnessForRenderInferiors = value;
     }
 
     public void setAfterGetBrightnessForRenderSuperiors(String[] value) {
-        this.afterGetBrightnessForRenderSuperiors = value;
+        afterGetBrightnessForRenderSuperiors = value;
     }
 
     public void setAfterGetBrightnessForRenderInferiors(String[] value) {
-        this.afterGetBrightnessForRenderInferiors = value;
+        afterGetBrightnessForRenderInferiors = value;
     }
 
     public String[] getBeforeGetCurrentPlayerStrVsBlockSuperiors() {
-        return this.beforeGetCurrentPlayerStrVsBlockSuperiors;
+        return beforeGetCurrentPlayerStrVsBlockSuperiors;
     }
 
     public String[] getBeforeGetCurrentPlayerStrVsBlockInferiors() {
-        return this.beforeGetCurrentPlayerStrVsBlockInferiors;
+        return beforeGetCurrentPlayerStrVsBlockInferiors;
     }
 
     public String[] getOverrideGetCurrentPlayerStrVsBlockSuperiors() {
-        return this.overrideGetCurrentPlayerStrVsBlockSuperiors;
+        return overrideGetCurrentPlayerStrVsBlockSuperiors;
     }
 
     public String[] getOverrideGetCurrentPlayerStrVsBlockInferiors() {
-        return this.overrideGetCurrentPlayerStrVsBlockInferiors;
+        return overrideGetCurrentPlayerStrVsBlockInferiors;
     }
 
     public String[] getAfterGetCurrentPlayerStrVsBlockSuperiors() {
-        return this.afterGetCurrentPlayerStrVsBlockSuperiors;
+        return afterGetCurrentPlayerStrVsBlockSuperiors;
     }
 
     public String[] getAfterGetCurrentPlayerStrVsBlockInferiors() {
-        return this.afterGetCurrentPlayerStrVsBlockInferiors;
+        return afterGetCurrentPlayerStrVsBlockInferiors;
     }
 
     public void setBeforeGetCurrentPlayerStrVsBlockSuperiors(String[] value) {
-        this.beforeGetCurrentPlayerStrVsBlockSuperiors = value;
+        beforeGetCurrentPlayerStrVsBlockSuperiors = value;
     }
 
     public void setBeforeGetCurrentPlayerStrVsBlockInferiors(String[] value) {
-        this.beforeGetCurrentPlayerStrVsBlockInferiors = value;
+        beforeGetCurrentPlayerStrVsBlockInferiors = value;
     }
 
     public void setOverrideGetCurrentPlayerStrVsBlockSuperiors(String[] value) {
-        this.overrideGetCurrentPlayerStrVsBlockSuperiors = value;
+        overrideGetCurrentPlayerStrVsBlockSuperiors = value;
     }
 
     public void setOverrideGetCurrentPlayerStrVsBlockInferiors(String[] value) {
-        this.overrideGetCurrentPlayerStrVsBlockInferiors = value;
+        overrideGetCurrentPlayerStrVsBlockInferiors = value;
     }
 
     public void setAfterGetCurrentPlayerStrVsBlockSuperiors(String[] value) {
-        this.afterGetCurrentPlayerStrVsBlockSuperiors = value;
+        afterGetCurrentPlayerStrVsBlockSuperiors = value;
     }
 
     public void setAfterGetCurrentPlayerStrVsBlockInferiors(String[] value) {
-        this.afterGetCurrentPlayerStrVsBlockInferiors = value;
+        afterGetCurrentPlayerStrVsBlockInferiors = value;
     }
 
     public String[] getBeforeGetCurrentPlayerStrVsBlockForgeSuperiors() {
-        return this.beforeGetCurrentPlayerStrVsBlockForgeSuperiors;
+        return beforeGetCurrentPlayerStrVsBlockForgeSuperiors;
     }
 
     public String[] getBeforeGetCurrentPlayerStrVsBlockForgeInferiors() {
-        return this.beforeGetCurrentPlayerStrVsBlockForgeInferiors;
+        return beforeGetCurrentPlayerStrVsBlockForgeInferiors;
     }
 
     public String[] getOverrideGetCurrentPlayerStrVsBlockForgeSuperiors() {
-        return this.overrideGetCurrentPlayerStrVsBlockForgeSuperiors;
+        return overrideGetCurrentPlayerStrVsBlockForgeSuperiors;
     }
 
     public String[] getOverrideGetCurrentPlayerStrVsBlockForgeInferiors() {
-        return this.overrideGetCurrentPlayerStrVsBlockForgeInferiors;
+        return overrideGetCurrentPlayerStrVsBlockForgeInferiors;
     }
 
     public String[] getAfterGetCurrentPlayerStrVsBlockForgeSuperiors() {
-        return this.afterGetCurrentPlayerStrVsBlockForgeSuperiors;
+        return afterGetCurrentPlayerStrVsBlockForgeSuperiors;
     }
 
     public String[] getAfterGetCurrentPlayerStrVsBlockForgeInferiors() {
-        return this.afterGetCurrentPlayerStrVsBlockForgeInferiors;
+        return afterGetCurrentPlayerStrVsBlockForgeInferiors;
     }
 
     public void setBeforeGetCurrentPlayerStrVsBlockForgeSuperiors(String[] value) {
-        this.beforeGetCurrentPlayerStrVsBlockForgeSuperiors = value;
+        beforeGetCurrentPlayerStrVsBlockForgeSuperiors = value;
     }
 
     public void setBeforeGetCurrentPlayerStrVsBlockForgeInferiors(String[] value) {
-        this.beforeGetCurrentPlayerStrVsBlockForgeInferiors = value;
+        beforeGetCurrentPlayerStrVsBlockForgeInferiors = value;
     }
 
     public void setOverrideGetCurrentPlayerStrVsBlockForgeSuperiors(String[] value) {
-        this.overrideGetCurrentPlayerStrVsBlockForgeSuperiors = value;
+        overrideGetCurrentPlayerStrVsBlockForgeSuperiors = value;
     }
 
     public void setOverrideGetCurrentPlayerStrVsBlockForgeInferiors(String[] value) {
-        this.overrideGetCurrentPlayerStrVsBlockForgeInferiors = value;
+        overrideGetCurrentPlayerStrVsBlockForgeInferiors = value;
     }
 
     public void setAfterGetCurrentPlayerStrVsBlockForgeSuperiors(String[] value) {
-        this.afterGetCurrentPlayerStrVsBlockForgeSuperiors = value;
+        afterGetCurrentPlayerStrVsBlockForgeSuperiors = value;
     }
 
     public void setAfterGetCurrentPlayerStrVsBlockForgeInferiors(String[] value) {
-        this.afterGetCurrentPlayerStrVsBlockForgeInferiors = value;
+        afterGetCurrentPlayerStrVsBlockForgeInferiors = value;
     }
 
     public String[] getBeforeGetDistanceSqSuperiors() {
-        return this.beforeGetDistanceSqSuperiors;
+        return beforeGetDistanceSqSuperiors;
     }
 
     public String[] getBeforeGetDistanceSqInferiors() {
-        return this.beforeGetDistanceSqInferiors;
+        return beforeGetDistanceSqInferiors;
     }
 
     public String[] getOverrideGetDistanceSqSuperiors() {
-        return this.overrideGetDistanceSqSuperiors;
+        return overrideGetDistanceSqSuperiors;
     }
 
     public String[] getOverrideGetDistanceSqInferiors() {
-        return this.overrideGetDistanceSqInferiors;
+        return overrideGetDistanceSqInferiors;
     }
 
     public String[] getAfterGetDistanceSqSuperiors() {
-        return this.afterGetDistanceSqSuperiors;
+        return afterGetDistanceSqSuperiors;
     }
 
     public String[] getAfterGetDistanceSqInferiors() {
-        return this.afterGetDistanceSqInferiors;
+        return afterGetDistanceSqInferiors;
     }
 
     public void setBeforeGetDistanceSqSuperiors(String[] value) {
-        this.beforeGetDistanceSqSuperiors = value;
+        beforeGetDistanceSqSuperiors = value;
     }
 
     public void setBeforeGetDistanceSqInferiors(String[] value) {
-        this.beforeGetDistanceSqInferiors = value;
+        beforeGetDistanceSqInferiors = value;
     }
 
     public void setOverrideGetDistanceSqSuperiors(String[] value) {
-        this.overrideGetDistanceSqSuperiors = value;
+        overrideGetDistanceSqSuperiors = value;
     }
 
     public void setOverrideGetDistanceSqInferiors(String[] value) {
-        this.overrideGetDistanceSqInferiors = value;
+        overrideGetDistanceSqInferiors = value;
     }
 
     public void setAfterGetDistanceSqSuperiors(String[] value) {
-        this.afterGetDistanceSqSuperiors = value;
+        afterGetDistanceSqSuperiors = value;
     }
 
     public void setAfterGetDistanceSqInferiors(String[] value) {
-        this.afterGetDistanceSqInferiors = value;
+        afterGetDistanceSqInferiors = value;
     }
 
     public String[] getBeforeGetDistanceSqToEntitySuperiors() {
-        return this.beforeGetDistanceSqToEntitySuperiors;
+        return beforeGetDistanceSqToEntitySuperiors;
     }
 
     public String[] getBeforeGetDistanceSqToEntityInferiors() {
-        return this.beforeGetDistanceSqToEntityInferiors;
+        return beforeGetDistanceSqToEntityInferiors;
     }
 
     public String[] getOverrideGetDistanceSqToEntitySuperiors() {
-        return this.overrideGetDistanceSqToEntitySuperiors;
+        return overrideGetDistanceSqToEntitySuperiors;
     }
 
     public String[] getOverrideGetDistanceSqToEntityInferiors() {
-        return this.overrideGetDistanceSqToEntityInferiors;
+        return overrideGetDistanceSqToEntityInferiors;
     }
 
     public String[] getAfterGetDistanceSqToEntitySuperiors() {
-        return this.afterGetDistanceSqToEntitySuperiors;
+        return afterGetDistanceSqToEntitySuperiors;
     }
 
     public String[] getAfterGetDistanceSqToEntityInferiors() {
-        return this.afterGetDistanceSqToEntityInferiors;
+        return afterGetDistanceSqToEntityInferiors;
     }
 
     public void setBeforeGetDistanceSqToEntitySuperiors(String[] value) {
-        this.beforeGetDistanceSqToEntitySuperiors = value;
+        beforeGetDistanceSqToEntitySuperiors = value;
     }
 
     public void setBeforeGetDistanceSqToEntityInferiors(String[] value) {
-        this.beforeGetDistanceSqToEntityInferiors = value;
+        beforeGetDistanceSqToEntityInferiors = value;
     }
 
     public void setOverrideGetDistanceSqToEntitySuperiors(String[] value) {
-        this.overrideGetDistanceSqToEntitySuperiors = value;
+        overrideGetDistanceSqToEntitySuperiors = value;
     }
 
     public void setOverrideGetDistanceSqToEntityInferiors(String[] value) {
-        this.overrideGetDistanceSqToEntityInferiors = value;
+        overrideGetDistanceSqToEntityInferiors = value;
     }
 
     public void setAfterGetDistanceSqToEntitySuperiors(String[] value) {
-        this.afterGetDistanceSqToEntitySuperiors = value;
+        afterGetDistanceSqToEntitySuperiors = value;
     }
 
     public void setAfterGetDistanceSqToEntityInferiors(String[] value) {
-        this.afterGetDistanceSqToEntityInferiors = value;
+        afterGetDistanceSqToEntityInferiors = value;
     }
 
     public String[] getBeforeGetFOVMultiplierSuperiors() {
-        return this.beforeGetFOVMultiplierSuperiors;
+        return beforeGetFOVMultiplierSuperiors;
     }
 
     public String[] getBeforeGetFOVMultiplierInferiors() {
-        return this.beforeGetFOVMultiplierInferiors;
+        return beforeGetFOVMultiplierInferiors;
     }
 
     public String[] getOverrideGetFOVMultiplierSuperiors() {
-        return this.overrideGetFOVMultiplierSuperiors;
+        return overrideGetFOVMultiplierSuperiors;
     }
 
     public String[] getOverrideGetFOVMultiplierInferiors() {
-        return this.overrideGetFOVMultiplierInferiors;
+        return overrideGetFOVMultiplierInferiors;
     }
 
     public String[] getAfterGetFOVMultiplierSuperiors() {
-        return this.afterGetFOVMultiplierSuperiors;
+        return afterGetFOVMultiplierSuperiors;
     }
 
     public String[] getAfterGetFOVMultiplierInferiors() {
-        return this.afterGetFOVMultiplierInferiors;
+        return afterGetFOVMultiplierInferiors;
     }
 
     public void setBeforeGetFOVMultiplierSuperiors(String[] value) {
-        this.beforeGetFOVMultiplierSuperiors = value;
+        beforeGetFOVMultiplierSuperiors = value;
     }
 
     public void setBeforeGetFOVMultiplierInferiors(String[] value) {
-        this.beforeGetFOVMultiplierInferiors = value;
+        beforeGetFOVMultiplierInferiors = value;
     }
 
     public void setOverrideGetFOVMultiplierSuperiors(String[] value) {
-        this.overrideGetFOVMultiplierSuperiors = value;
+        overrideGetFOVMultiplierSuperiors = value;
     }
 
     public void setOverrideGetFOVMultiplierInferiors(String[] value) {
-        this.overrideGetFOVMultiplierInferiors = value;
+        overrideGetFOVMultiplierInferiors = value;
     }
 
     public void setAfterGetFOVMultiplierSuperiors(String[] value) {
-        this.afterGetFOVMultiplierSuperiors = value;
+        afterGetFOVMultiplierSuperiors = value;
     }
 
     public void setAfterGetFOVMultiplierInferiors(String[] value) {
-        this.afterGetFOVMultiplierInferiors = value;
+        afterGetFOVMultiplierInferiors = value;
     }
 
     public String[] getBeforeGetHurtSoundSuperiors() {
-        return this.beforeGetHurtSoundSuperiors;
+        return beforeGetHurtSoundSuperiors;
     }
 
     public String[] getBeforeGetHurtSoundInferiors() {
-        return this.beforeGetHurtSoundInferiors;
+        return beforeGetHurtSoundInferiors;
     }
 
     public String[] getOverrideGetHurtSoundSuperiors() {
-        return this.overrideGetHurtSoundSuperiors;
+        return overrideGetHurtSoundSuperiors;
     }
 
     public String[] getOverrideGetHurtSoundInferiors() {
-        return this.overrideGetHurtSoundInferiors;
+        return overrideGetHurtSoundInferiors;
     }
 
     public String[] getAfterGetHurtSoundSuperiors() {
-        return this.afterGetHurtSoundSuperiors;
+        return afterGetHurtSoundSuperiors;
     }
 
     public String[] getAfterGetHurtSoundInferiors() {
-        return this.afterGetHurtSoundInferiors;
+        return afterGetHurtSoundInferiors;
     }
 
     public void setBeforeGetHurtSoundSuperiors(String[] value) {
-        this.beforeGetHurtSoundSuperiors = value;
+        beforeGetHurtSoundSuperiors = value;
     }
 
     public void setBeforeGetHurtSoundInferiors(String[] value) {
-        this.beforeGetHurtSoundInferiors = value;
+        beforeGetHurtSoundInferiors = value;
     }
 
     public void setOverrideGetHurtSoundSuperiors(String[] value) {
-        this.overrideGetHurtSoundSuperiors = value;
+        overrideGetHurtSoundSuperiors = value;
     }
 
     public void setOverrideGetHurtSoundInferiors(String[] value) {
-        this.overrideGetHurtSoundInferiors = value;
+        overrideGetHurtSoundInferiors = value;
     }
 
     public void setAfterGetHurtSoundSuperiors(String[] value) {
-        this.afterGetHurtSoundSuperiors = value;
+        afterGetHurtSoundSuperiors = value;
     }
 
     public void setAfterGetHurtSoundInferiors(String[] value) {
-        this.afterGetHurtSoundInferiors = value;
+        afterGetHurtSoundInferiors = value;
     }
 
     public String[] getBeforeGetItemIconSuperiors() {
-        return this.beforeGetItemIconSuperiors;
+        return beforeGetItemIconSuperiors;
     }
 
     public String[] getBeforeGetItemIconInferiors() {
-        return this.beforeGetItemIconInferiors;
+        return beforeGetItemIconInferiors;
     }
 
     public String[] getOverrideGetItemIconSuperiors() {
-        return this.overrideGetItemIconSuperiors;
+        return overrideGetItemIconSuperiors;
     }
 
     public String[] getOverrideGetItemIconInferiors() {
-        return this.overrideGetItemIconInferiors;
+        return overrideGetItemIconInferiors;
     }
 
     public String[] getAfterGetItemIconSuperiors() {
-        return this.afterGetItemIconSuperiors;
+        return afterGetItemIconSuperiors;
     }
 
     public String[] getAfterGetItemIconInferiors() {
-        return this.afterGetItemIconInferiors;
+        return afterGetItemIconInferiors;
     }
 
     public void setBeforeGetItemIconSuperiors(String[] value) {
-        this.beforeGetItemIconSuperiors = value;
+        beforeGetItemIconSuperiors = value;
     }
 
     public void setBeforeGetItemIconInferiors(String[] value) {
-        this.beforeGetItemIconInferiors = value;
+        beforeGetItemIconInferiors = value;
     }
 
     public void setOverrideGetItemIconSuperiors(String[] value) {
-        this.overrideGetItemIconSuperiors = value;
+        overrideGetItemIconSuperiors = value;
     }
 
     public void setOverrideGetItemIconInferiors(String[] value) {
-        this.overrideGetItemIconInferiors = value;
+        overrideGetItemIconInferiors = value;
     }
 
     public void setAfterGetItemIconSuperiors(String[] value) {
-        this.afterGetItemIconSuperiors = value;
+        afterGetItemIconSuperiors = value;
     }
 
     public void setAfterGetItemIconInferiors(String[] value) {
-        this.afterGetItemIconInferiors = value;
+        afterGetItemIconInferiors = value;
     }
 
     public String[] getBeforeGetSleepTimerSuperiors() {
-        return this.beforeGetSleepTimerSuperiors;
+        return beforeGetSleepTimerSuperiors;
     }
 
     public String[] getBeforeGetSleepTimerInferiors() {
-        return this.beforeGetSleepTimerInferiors;
+        return beforeGetSleepTimerInferiors;
     }
 
     public String[] getOverrideGetSleepTimerSuperiors() {
-        return this.overrideGetSleepTimerSuperiors;
+        return overrideGetSleepTimerSuperiors;
     }
 
     public String[] getOverrideGetSleepTimerInferiors() {
-        return this.overrideGetSleepTimerInferiors;
+        return overrideGetSleepTimerInferiors;
     }
 
     public String[] getAfterGetSleepTimerSuperiors() {
-        return this.afterGetSleepTimerSuperiors;
+        return afterGetSleepTimerSuperiors;
     }
 
     public String[] getAfterGetSleepTimerInferiors() {
-        return this.afterGetSleepTimerInferiors;
+        return afterGetSleepTimerInferiors;
     }
 
     public void setBeforeGetSleepTimerSuperiors(String[] value) {
-        this.beforeGetSleepTimerSuperiors = value;
+        beforeGetSleepTimerSuperiors = value;
     }
 
     public void setBeforeGetSleepTimerInferiors(String[] value) {
-        this.beforeGetSleepTimerInferiors = value;
+        beforeGetSleepTimerInferiors = value;
     }
 
     public void setOverrideGetSleepTimerSuperiors(String[] value) {
-        this.overrideGetSleepTimerSuperiors = value;
+        overrideGetSleepTimerSuperiors = value;
     }
 
     public void setOverrideGetSleepTimerInferiors(String[] value) {
-        this.overrideGetSleepTimerInferiors = value;
+        overrideGetSleepTimerInferiors = value;
     }
 
     public void setAfterGetSleepTimerSuperiors(String[] value) {
-        this.afterGetSleepTimerSuperiors = value;
+        afterGetSleepTimerSuperiors = value;
     }
 
     public void setAfterGetSleepTimerInferiors(String[] value) {
-        this.afterGetSleepTimerInferiors = value;
+        afterGetSleepTimerInferiors = value;
     }
 
     public String[] getBeforeHandleLavaMovementSuperiors() {
-        return this.beforeHandleLavaMovementSuperiors;
+        return beforeHandleLavaMovementSuperiors;
     }
 
     public String[] getBeforeHandleLavaMovementInferiors() {
-        return this.beforeHandleLavaMovementInferiors;
+        return beforeHandleLavaMovementInferiors;
     }
 
     public String[] getOverrideHandleLavaMovementSuperiors() {
-        return this.overrideHandleLavaMovementSuperiors;
+        return overrideHandleLavaMovementSuperiors;
     }
 
     public String[] getOverrideHandleLavaMovementInferiors() {
-        return this.overrideHandleLavaMovementInferiors;
+        return overrideHandleLavaMovementInferiors;
     }
 
     public String[] getAfterHandleLavaMovementSuperiors() {
-        return this.afterHandleLavaMovementSuperiors;
+        return afterHandleLavaMovementSuperiors;
     }
 
     public String[] getAfterHandleLavaMovementInferiors() {
-        return this.afterHandleLavaMovementInferiors;
+        return afterHandleLavaMovementInferiors;
     }
 
     public void setBeforeHandleLavaMovementSuperiors(String[] value) {
-        this.beforeHandleLavaMovementSuperiors = value;
+        beforeHandleLavaMovementSuperiors = value;
     }
 
     public void setBeforeHandleLavaMovementInferiors(String[] value) {
-        this.beforeHandleLavaMovementInferiors = value;
+        beforeHandleLavaMovementInferiors = value;
     }
 
     public void setOverrideHandleLavaMovementSuperiors(String[] value) {
-        this.overrideHandleLavaMovementSuperiors = value;
+        overrideHandleLavaMovementSuperiors = value;
     }
 
     public void setOverrideHandleLavaMovementInferiors(String[] value) {
-        this.overrideHandleLavaMovementInferiors = value;
+        overrideHandleLavaMovementInferiors = value;
     }
 
     public void setAfterHandleLavaMovementSuperiors(String[] value) {
-        this.afterHandleLavaMovementSuperiors = value;
+        afterHandleLavaMovementSuperiors = value;
     }
 
     public void setAfterHandleLavaMovementInferiors(String[] value) {
-        this.afterHandleLavaMovementInferiors = value;
+        afterHandleLavaMovementInferiors = value;
     }
 
     public String[] getBeforeHandleWaterMovementSuperiors() {
-        return this.beforeHandleWaterMovementSuperiors;
+        return beforeHandleWaterMovementSuperiors;
     }
 
     public String[] getBeforeHandleWaterMovementInferiors() {
-        return this.beforeHandleWaterMovementInferiors;
+        return beforeHandleWaterMovementInferiors;
     }
 
     public String[] getOverrideHandleWaterMovementSuperiors() {
-        return this.overrideHandleWaterMovementSuperiors;
+        return overrideHandleWaterMovementSuperiors;
     }
 
     public String[] getOverrideHandleWaterMovementInferiors() {
-        return this.overrideHandleWaterMovementInferiors;
+        return overrideHandleWaterMovementInferiors;
     }
 
     public String[] getAfterHandleWaterMovementSuperiors() {
-        return this.afterHandleWaterMovementSuperiors;
+        return afterHandleWaterMovementSuperiors;
     }
 
     public String[] getAfterHandleWaterMovementInferiors() {
-        return this.afterHandleWaterMovementInferiors;
+        return afterHandleWaterMovementInferiors;
     }
 
     public void setBeforeHandleWaterMovementSuperiors(String[] value) {
-        this.beforeHandleWaterMovementSuperiors = value;
+        beforeHandleWaterMovementSuperiors = value;
     }
 
     public void setBeforeHandleWaterMovementInferiors(String[] value) {
-        this.beforeHandleWaterMovementInferiors = value;
+        beforeHandleWaterMovementInferiors = value;
     }
 
     public void setOverrideHandleWaterMovementSuperiors(String[] value) {
-        this.overrideHandleWaterMovementSuperiors = value;
+        overrideHandleWaterMovementSuperiors = value;
     }
 
     public void setOverrideHandleWaterMovementInferiors(String[] value) {
-        this.overrideHandleWaterMovementInferiors = value;
+        overrideHandleWaterMovementInferiors = value;
     }
 
     public void setAfterHandleWaterMovementSuperiors(String[] value) {
-        this.afterHandleWaterMovementSuperiors = value;
+        afterHandleWaterMovementSuperiors = value;
     }
 
     public void setAfterHandleWaterMovementInferiors(String[] value) {
-        this.afterHandleWaterMovementInferiors = value;
+        afterHandleWaterMovementInferiors = value;
     }
 
     public String[] getBeforeHealSuperiors() {
-        return this.beforeHealSuperiors;
+        return beforeHealSuperiors;
     }
 
     public String[] getBeforeHealInferiors() {
-        return this.beforeHealInferiors;
+        return beforeHealInferiors;
     }
 
     public String[] getOverrideHealSuperiors() {
-        return this.overrideHealSuperiors;
+        return overrideHealSuperiors;
     }
 
     public String[] getOverrideHealInferiors() {
-        return this.overrideHealInferiors;
+        return overrideHealInferiors;
     }
 
     public String[] getAfterHealSuperiors() {
-        return this.afterHealSuperiors;
+        return afterHealSuperiors;
     }
 
     public String[] getAfterHealInferiors() {
-        return this.afterHealInferiors;
+        return afterHealInferiors;
     }
 
     public void setBeforeHealSuperiors(String[] value) {
-        this.beforeHealSuperiors = value;
+        beforeHealSuperiors = value;
     }
 
     public void setBeforeHealInferiors(String[] value) {
-        this.beforeHealInferiors = value;
+        beforeHealInferiors = value;
     }
 
     public void setOverrideHealSuperiors(String[] value) {
-        this.overrideHealSuperiors = value;
+        overrideHealSuperiors = value;
     }
 
     public void setOverrideHealInferiors(String[] value) {
-        this.overrideHealInferiors = value;
+        overrideHealInferiors = value;
     }
 
     public void setAfterHealSuperiors(String[] value) {
-        this.afterHealSuperiors = value;
+        afterHealSuperiors = value;
     }
 
     public void setAfterHealInferiors(String[] value) {
-        this.afterHealInferiors = value;
+        afterHealInferiors = value;
     }
 
     public String[] getBeforeIsEntityInsideOpaqueBlockSuperiors() {
-        return this.beforeIsEntityInsideOpaqueBlockSuperiors;
+        return beforeIsEntityInsideOpaqueBlockSuperiors;
     }
 
     public String[] getBeforeIsEntityInsideOpaqueBlockInferiors() {
-        return this.beforeIsEntityInsideOpaqueBlockInferiors;
+        return beforeIsEntityInsideOpaqueBlockInferiors;
     }
 
     public String[] getOverrideIsEntityInsideOpaqueBlockSuperiors() {
-        return this.overrideIsEntityInsideOpaqueBlockSuperiors;
+        return overrideIsEntityInsideOpaqueBlockSuperiors;
     }
 
     public String[] getOverrideIsEntityInsideOpaqueBlockInferiors() {
-        return this.overrideIsEntityInsideOpaqueBlockInferiors;
+        return overrideIsEntityInsideOpaqueBlockInferiors;
     }
 
     public String[] getAfterIsEntityInsideOpaqueBlockSuperiors() {
-        return this.afterIsEntityInsideOpaqueBlockSuperiors;
+        return afterIsEntityInsideOpaqueBlockSuperiors;
     }
 
     public String[] getAfterIsEntityInsideOpaqueBlockInferiors() {
-        return this.afterIsEntityInsideOpaqueBlockInferiors;
+        return afterIsEntityInsideOpaqueBlockInferiors;
     }
 
     public void setBeforeIsEntityInsideOpaqueBlockSuperiors(String[] value) {
-        this.beforeIsEntityInsideOpaqueBlockSuperiors = value;
+        beforeIsEntityInsideOpaqueBlockSuperiors = value;
     }
 
     public void setBeforeIsEntityInsideOpaqueBlockInferiors(String[] value) {
-        this.beforeIsEntityInsideOpaqueBlockInferiors = value;
+        beforeIsEntityInsideOpaqueBlockInferiors = value;
     }
 
     public void setOverrideIsEntityInsideOpaqueBlockSuperiors(String[] value) {
-        this.overrideIsEntityInsideOpaqueBlockSuperiors = value;
+        overrideIsEntityInsideOpaqueBlockSuperiors = value;
     }
 
     public void setOverrideIsEntityInsideOpaqueBlockInferiors(String[] value) {
-        this.overrideIsEntityInsideOpaqueBlockInferiors = value;
+        overrideIsEntityInsideOpaqueBlockInferiors = value;
     }
 
     public void setAfterIsEntityInsideOpaqueBlockSuperiors(String[] value) {
-        this.afterIsEntityInsideOpaqueBlockSuperiors = value;
+        afterIsEntityInsideOpaqueBlockSuperiors = value;
     }
 
     public void setAfterIsEntityInsideOpaqueBlockInferiors(String[] value) {
-        this.afterIsEntityInsideOpaqueBlockInferiors = value;
+        afterIsEntityInsideOpaqueBlockInferiors = value;
     }
 
     public String[] getBeforeIsInWaterSuperiors() {
-        return this.beforeIsInWaterSuperiors;
+        return beforeIsInWaterSuperiors;
     }
 
     public String[] getBeforeIsInWaterInferiors() {
-        return this.beforeIsInWaterInferiors;
+        return beforeIsInWaterInferiors;
     }
 
     public String[] getOverrideIsInWaterSuperiors() {
-        return this.overrideIsInWaterSuperiors;
+        return overrideIsInWaterSuperiors;
     }
 
     public String[] getOverrideIsInWaterInferiors() {
-        return this.overrideIsInWaterInferiors;
+        return overrideIsInWaterInferiors;
     }
 
     public String[] getAfterIsInWaterSuperiors() {
-        return this.afterIsInWaterSuperiors;
+        return afterIsInWaterSuperiors;
     }
 
     public String[] getAfterIsInWaterInferiors() {
-        return this.afterIsInWaterInferiors;
+        return afterIsInWaterInferiors;
     }
 
     public void setBeforeIsInWaterSuperiors(String[] value) {
-        this.beforeIsInWaterSuperiors = value;
+        beforeIsInWaterSuperiors = value;
     }
 
     public void setBeforeIsInWaterInferiors(String[] value) {
-        this.beforeIsInWaterInferiors = value;
+        beforeIsInWaterInferiors = value;
     }
 
     public void setOverrideIsInWaterSuperiors(String[] value) {
-        this.overrideIsInWaterSuperiors = value;
+        overrideIsInWaterSuperiors = value;
     }
 
     public void setOverrideIsInWaterInferiors(String[] value) {
-        this.overrideIsInWaterInferiors = value;
+        overrideIsInWaterInferiors = value;
     }
 
     public void setAfterIsInWaterSuperiors(String[] value) {
-        this.afterIsInWaterSuperiors = value;
+        afterIsInWaterSuperiors = value;
     }
 
     public void setAfterIsInWaterInferiors(String[] value) {
-        this.afterIsInWaterInferiors = value;
+        afterIsInWaterInferiors = value;
     }
 
     public String[] getBeforeIsInsideOfMaterialSuperiors() {
-        return this.beforeIsInsideOfMaterialSuperiors;
+        return beforeIsInsideOfMaterialSuperiors;
     }
 
     public String[] getBeforeIsInsideOfMaterialInferiors() {
-        return this.beforeIsInsideOfMaterialInferiors;
+        return beforeIsInsideOfMaterialInferiors;
     }
 
     public String[] getOverrideIsInsideOfMaterialSuperiors() {
-        return this.overrideIsInsideOfMaterialSuperiors;
+        return overrideIsInsideOfMaterialSuperiors;
     }
 
     public String[] getOverrideIsInsideOfMaterialInferiors() {
-        return this.overrideIsInsideOfMaterialInferiors;
+        return overrideIsInsideOfMaterialInferiors;
     }
 
     public String[] getAfterIsInsideOfMaterialSuperiors() {
-        return this.afterIsInsideOfMaterialSuperiors;
+        return afterIsInsideOfMaterialSuperiors;
     }
 
     public String[] getAfterIsInsideOfMaterialInferiors() {
-        return this.afterIsInsideOfMaterialInferiors;
+        return afterIsInsideOfMaterialInferiors;
     }
 
     public void setBeforeIsInsideOfMaterialSuperiors(String[] value) {
-        this.beforeIsInsideOfMaterialSuperiors = value;
+        beforeIsInsideOfMaterialSuperiors = value;
     }
 
     public void setBeforeIsInsideOfMaterialInferiors(String[] value) {
-        this.beforeIsInsideOfMaterialInferiors = value;
+        beforeIsInsideOfMaterialInferiors = value;
     }
 
     public void setOverrideIsInsideOfMaterialSuperiors(String[] value) {
-        this.overrideIsInsideOfMaterialSuperiors = value;
+        overrideIsInsideOfMaterialSuperiors = value;
     }
 
     public void setOverrideIsInsideOfMaterialInferiors(String[] value) {
-        this.overrideIsInsideOfMaterialInferiors = value;
+        overrideIsInsideOfMaterialInferiors = value;
     }
 
     public void setAfterIsInsideOfMaterialSuperiors(String[] value) {
-        this.afterIsInsideOfMaterialSuperiors = value;
+        afterIsInsideOfMaterialSuperiors = value;
     }
 
     public void setAfterIsInsideOfMaterialInferiors(String[] value) {
-        this.afterIsInsideOfMaterialInferiors = value;
+        afterIsInsideOfMaterialInferiors = value;
     }
 
     public String[] getBeforeIsOnLadderSuperiors() {
-        return this.beforeIsOnLadderSuperiors;
+        return beforeIsOnLadderSuperiors;
     }
 
     public String[] getBeforeIsOnLadderInferiors() {
-        return this.beforeIsOnLadderInferiors;
+        return beforeIsOnLadderInferiors;
     }
 
     public String[] getOverrideIsOnLadderSuperiors() {
-        return this.overrideIsOnLadderSuperiors;
+        return overrideIsOnLadderSuperiors;
     }
 
     public String[] getOverrideIsOnLadderInferiors() {
-        return this.overrideIsOnLadderInferiors;
+        return overrideIsOnLadderInferiors;
     }
 
     public String[] getAfterIsOnLadderSuperiors() {
-        return this.afterIsOnLadderSuperiors;
+        return afterIsOnLadderSuperiors;
     }
 
     public String[] getAfterIsOnLadderInferiors() {
-        return this.afterIsOnLadderInferiors;
+        return afterIsOnLadderInferiors;
     }
 
     public void setBeforeIsOnLadderSuperiors(String[] value) {
-        this.beforeIsOnLadderSuperiors = value;
+        beforeIsOnLadderSuperiors = value;
     }
 
     public void setBeforeIsOnLadderInferiors(String[] value) {
-        this.beforeIsOnLadderInferiors = value;
+        beforeIsOnLadderInferiors = value;
     }
 
     public void setOverrideIsOnLadderSuperiors(String[] value) {
-        this.overrideIsOnLadderSuperiors = value;
+        overrideIsOnLadderSuperiors = value;
     }
 
     public void setOverrideIsOnLadderInferiors(String[] value) {
-        this.overrideIsOnLadderInferiors = value;
+        overrideIsOnLadderInferiors = value;
     }
 
     public void setAfterIsOnLadderSuperiors(String[] value) {
-        this.afterIsOnLadderSuperiors = value;
+        afterIsOnLadderSuperiors = value;
     }
 
     public void setAfterIsOnLadderInferiors(String[] value) {
-        this.afterIsOnLadderInferiors = value;
+        afterIsOnLadderInferiors = value;
     }
 
     public String[] getBeforeIsPlayerSleepingSuperiors() {
-        return this.beforeIsPlayerSleepingSuperiors;
+        return beforeIsPlayerSleepingSuperiors;
     }
 
     public String[] getBeforeIsPlayerSleepingInferiors() {
-        return this.beforeIsPlayerSleepingInferiors;
+        return beforeIsPlayerSleepingInferiors;
     }
 
     public String[] getOverrideIsPlayerSleepingSuperiors() {
-        return this.overrideIsPlayerSleepingSuperiors;
+        return overrideIsPlayerSleepingSuperiors;
     }
 
     public String[] getOverrideIsPlayerSleepingInferiors() {
-        return this.overrideIsPlayerSleepingInferiors;
+        return overrideIsPlayerSleepingInferiors;
     }
 
     public String[] getAfterIsPlayerSleepingSuperiors() {
-        return this.afterIsPlayerSleepingSuperiors;
+        return afterIsPlayerSleepingSuperiors;
     }
 
     public String[] getAfterIsPlayerSleepingInferiors() {
-        return this.afterIsPlayerSleepingInferiors;
+        return afterIsPlayerSleepingInferiors;
     }
 
     public void setBeforeIsPlayerSleepingSuperiors(String[] value) {
-        this.beforeIsPlayerSleepingSuperiors = value;
+        beforeIsPlayerSleepingSuperiors = value;
     }
 
     public void setBeforeIsPlayerSleepingInferiors(String[] value) {
-        this.beforeIsPlayerSleepingInferiors = value;
+        beforeIsPlayerSleepingInferiors = value;
     }
 
     public void setOverrideIsPlayerSleepingSuperiors(String[] value) {
-        this.overrideIsPlayerSleepingSuperiors = value;
+        overrideIsPlayerSleepingSuperiors = value;
     }
 
     public void setOverrideIsPlayerSleepingInferiors(String[] value) {
-        this.overrideIsPlayerSleepingInferiors = value;
+        overrideIsPlayerSleepingInferiors = value;
     }
 
     public void setAfterIsPlayerSleepingSuperiors(String[] value) {
-        this.afterIsPlayerSleepingSuperiors = value;
+        afterIsPlayerSleepingSuperiors = value;
     }
 
     public void setAfterIsPlayerSleepingInferiors(String[] value) {
-        this.afterIsPlayerSleepingInferiors = value;
+        afterIsPlayerSleepingInferiors = value;
     }
 
     public String[] getBeforeIsSneakingSuperiors() {
-        return this.beforeIsSneakingSuperiors;
+        return beforeIsSneakingSuperiors;
     }
 
     public String[] getBeforeIsSneakingInferiors() {
-        return this.beforeIsSneakingInferiors;
+        return beforeIsSneakingInferiors;
     }
 
     public String[] getOverrideIsSneakingSuperiors() {
-        return this.overrideIsSneakingSuperiors;
+        return overrideIsSneakingSuperiors;
     }
 
     public String[] getOverrideIsSneakingInferiors() {
-        return this.overrideIsSneakingInferiors;
+        return overrideIsSneakingInferiors;
     }
 
     public String[] getAfterIsSneakingSuperiors() {
-        return this.afterIsSneakingSuperiors;
+        return afterIsSneakingSuperiors;
     }
 
     public String[] getAfterIsSneakingInferiors() {
-        return this.afterIsSneakingInferiors;
+        return afterIsSneakingInferiors;
     }
 
     public void setBeforeIsSneakingSuperiors(String[] value) {
-        this.beforeIsSneakingSuperiors = value;
+        beforeIsSneakingSuperiors = value;
     }
 
     public void setBeforeIsSneakingInferiors(String[] value) {
-        this.beforeIsSneakingInferiors = value;
+        beforeIsSneakingInferiors = value;
     }
 
     public void setOverrideIsSneakingSuperiors(String[] value) {
-        this.overrideIsSneakingSuperiors = value;
+        overrideIsSneakingSuperiors = value;
     }
 
     public void setOverrideIsSneakingInferiors(String[] value) {
-        this.overrideIsSneakingInferiors = value;
+        overrideIsSneakingInferiors = value;
     }
 
     public void setAfterIsSneakingSuperiors(String[] value) {
-        this.afterIsSneakingSuperiors = value;
+        afterIsSneakingSuperiors = value;
     }
 
     public void setAfterIsSneakingInferiors(String[] value) {
-        this.afterIsSneakingInferiors = value;
+        afterIsSneakingInferiors = value;
     }
 
     public String[] getBeforeIsSprintingSuperiors() {
-        return this.beforeIsSprintingSuperiors;
+        return beforeIsSprintingSuperiors;
     }
 
     public String[] getBeforeIsSprintingInferiors() {
-        return this.beforeIsSprintingInferiors;
+        return beforeIsSprintingInferiors;
     }
 
     public String[] getOverrideIsSprintingSuperiors() {
-        return this.overrideIsSprintingSuperiors;
+        return overrideIsSprintingSuperiors;
     }
 
     public String[] getOverrideIsSprintingInferiors() {
-        return this.overrideIsSprintingInferiors;
+        return overrideIsSprintingInferiors;
     }
 
     public String[] getAfterIsSprintingSuperiors() {
-        return this.afterIsSprintingSuperiors;
+        return afterIsSprintingSuperiors;
     }
 
     public String[] getAfterIsSprintingInferiors() {
-        return this.afterIsSprintingInferiors;
+        return afterIsSprintingInferiors;
     }
 
     public void setBeforeIsSprintingSuperiors(String[] value) {
-        this.beforeIsSprintingSuperiors = value;
+        beforeIsSprintingSuperiors = value;
     }
 
     public void setBeforeIsSprintingInferiors(String[] value) {
-        this.beforeIsSprintingInferiors = value;
+        beforeIsSprintingInferiors = value;
     }
 
     public void setOverrideIsSprintingSuperiors(String[] value) {
-        this.overrideIsSprintingSuperiors = value;
+        overrideIsSprintingSuperiors = value;
     }
 
     public void setOverrideIsSprintingInferiors(String[] value) {
-        this.overrideIsSprintingInferiors = value;
+        overrideIsSprintingInferiors = value;
     }
 
     public void setAfterIsSprintingSuperiors(String[] value) {
-        this.afterIsSprintingSuperiors = value;
+        afterIsSprintingSuperiors = value;
     }
 
     public void setAfterIsSprintingInferiors(String[] value) {
-        this.afterIsSprintingInferiors = value;
+        afterIsSprintingInferiors = value;
     }
 
     public String[] getBeforeJumpSuperiors() {
-        return this.beforeJumpSuperiors;
+        return beforeJumpSuperiors;
     }
 
     public String[] getBeforeJumpInferiors() {
-        return this.beforeJumpInferiors;
+        return beforeJumpInferiors;
     }
 
     public String[] getOverrideJumpSuperiors() {
-        return this.overrideJumpSuperiors;
+        return overrideJumpSuperiors;
     }
 
     public String[] getOverrideJumpInferiors() {
-        return this.overrideJumpInferiors;
+        return overrideJumpInferiors;
     }
 
     public String[] getAfterJumpSuperiors() {
-        return this.afterJumpSuperiors;
+        return afterJumpSuperiors;
     }
 
     public String[] getAfterJumpInferiors() {
-        return this.afterJumpInferiors;
+        return afterJumpInferiors;
     }
 
     public void setBeforeJumpSuperiors(String[] value) {
-        this.beforeJumpSuperiors = value;
+        beforeJumpSuperiors = value;
     }
 
     public void setBeforeJumpInferiors(String[] value) {
-        this.beforeJumpInferiors = value;
+        beforeJumpInferiors = value;
     }
 
     public void setOverrideJumpSuperiors(String[] value) {
-        this.overrideJumpSuperiors = value;
+        overrideJumpSuperiors = value;
     }
 
     public void setOverrideJumpInferiors(String[] value) {
-        this.overrideJumpInferiors = value;
+        overrideJumpInferiors = value;
     }
 
     public void setAfterJumpSuperiors(String[] value) {
-        this.afterJumpSuperiors = value;
+        afterJumpSuperiors = value;
     }
 
     public void setAfterJumpInferiors(String[] value) {
-        this.afterJumpInferiors = value;
+        afterJumpInferiors = value;
     }
 
     public String[] getBeforeKnockBackSuperiors() {
-        return this.beforeKnockBackSuperiors;
+        return beforeKnockBackSuperiors;
     }
 
     public String[] getBeforeKnockBackInferiors() {
-        return this.beforeKnockBackInferiors;
+        return beforeKnockBackInferiors;
     }
 
     public String[] getOverrideKnockBackSuperiors() {
-        return this.overrideKnockBackSuperiors;
+        return overrideKnockBackSuperiors;
     }
 
     public String[] getOverrideKnockBackInferiors() {
-        return this.overrideKnockBackInferiors;
+        return overrideKnockBackInferiors;
     }
 
     public String[] getAfterKnockBackSuperiors() {
-        return this.afterKnockBackSuperiors;
+        return afterKnockBackSuperiors;
     }
 
     public String[] getAfterKnockBackInferiors() {
-        return this.afterKnockBackInferiors;
+        return afterKnockBackInferiors;
     }
 
     public void setBeforeKnockBackSuperiors(String[] value) {
-        this.beforeKnockBackSuperiors = value;
+        beforeKnockBackSuperiors = value;
     }
 
     public void setBeforeKnockBackInferiors(String[] value) {
-        this.beforeKnockBackInferiors = value;
+        beforeKnockBackInferiors = value;
     }
 
     public void setOverrideKnockBackSuperiors(String[] value) {
-        this.overrideKnockBackSuperiors = value;
+        overrideKnockBackSuperiors = value;
     }
 
     public void setOverrideKnockBackInferiors(String[] value) {
-        this.overrideKnockBackInferiors = value;
+        overrideKnockBackInferiors = value;
     }
 
     public void setAfterKnockBackSuperiors(String[] value) {
-        this.afterKnockBackSuperiors = value;
+        afterKnockBackSuperiors = value;
     }
 
     public void setAfterKnockBackInferiors(String[] value) {
-        this.afterKnockBackInferiors = value;
+        afterKnockBackInferiors = value;
     }
 
     public String[] getBeforeMoveEntitySuperiors() {
-        return this.beforeMoveEntitySuperiors;
+        return beforeMoveEntitySuperiors;
     }
 
     public String[] getBeforeMoveEntityInferiors() {
-        return this.beforeMoveEntityInferiors;
+        return beforeMoveEntityInferiors;
     }
 
     public String[] getOverrideMoveEntitySuperiors() {
-        return this.overrideMoveEntitySuperiors;
+        return overrideMoveEntitySuperiors;
     }
 
     public String[] getOverrideMoveEntityInferiors() {
-        return this.overrideMoveEntityInferiors;
+        return overrideMoveEntityInferiors;
     }
 
     public String[] getAfterMoveEntitySuperiors() {
-        return this.afterMoveEntitySuperiors;
+        return afterMoveEntitySuperiors;
     }
 
     public String[] getAfterMoveEntityInferiors() {
-        return this.afterMoveEntityInferiors;
+        return afterMoveEntityInferiors;
     }
 
     public void setBeforeMoveEntitySuperiors(String[] value) {
-        this.beforeMoveEntitySuperiors = value;
+        beforeMoveEntitySuperiors = value;
     }
 
     public void setBeforeMoveEntityInferiors(String[] value) {
-        this.beforeMoveEntityInferiors = value;
+        beforeMoveEntityInferiors = value;
     }
 
     public void setOverrideMoveEntitySuperiors(String[] value) {
-        this.overrideMoveEntitySuperiors = value;
+        overrideMoveEntitySuperiors = value;
     }
 
     public void setOverrideMoveEntityInferiors(String[] value) {
-        this.overrideMoveEntityInferiors = value;
+        overrideMoveEntityInferiors = value;
     }
 
     public void setAfterMoveEntitySuperiors(String[] value) {
-        this.afterMoveEntitySuperiors = value;
+        afterMoveEntitySuperiors = value;
     }
 
     public void setAfterMoveEntityInferiors(String[] value) {
-        this.afterMoveEntityInferiors = value;
+        afterMoveEntityInferiors = value;
     }
 
     public String[] getBeforeMoveEntityWithHeadingSuperiors() {
-        return this.beforeMoveEntityWithHeadingSuperiors;
+        return beforeMoveEntityWithHeadingSuperiors;
     }
 
     public String[] getBeforeMoveEntityWithHeadingInferiors() {
-        return this.beforeMoveEntityWithHeadingInferiors;
+        return beforeMoveEntityWithHeadingInferiors;
     }
 
     public String[] getOverrideMoveEntityWithHeadingSuperiors() {
-        return this.overrideMoveEntityWithHeadingSuperiors;
+        return overrideMoveEntityWithHeadingSuperiors;
     }
 
     public String[] getOverrideMoveEntityWithHeadingInferiors() {
-        return this.overrideMoveEntityWithHeadingInferiors;
+        return overrideMoveEntityWithHeadingInferiors;
     }
 
     public String[] getAfterMoveEntityWithHeadingSuperiors() {
-        return this.afterMoveEntityWithHeadingSuperiors;
+        return afterMoveEntityWithHeadingSuperiors;
     }
 
     public String[] getAfterMoveEntityWithHeadingInferiors() {
-        return this.afterMoveEntityWithHeadingInferiors;
+        return afterMoveEntityWithHeadingInferiors;
     }
 
     public void setBeforeMoveEntityWithHeadingSuperiors(String[] value) {
-        this.beforeMoveEntityWithHeadingSuperiors = value;
+        beforeMoveEntityWithHeadingSuperiors = value;
     }
 
     public void setBeforeMoveEntityWithHeadingInferiors(String[] value) {
-        this.beforeMoveEntityWithHeadingInferiors = value;
+        beforeMoveEntityWithHeadingInferiors = value;
     }
 
     public void setOverrideMoveEntityWithHeadingSuperiors(String[] value) {
-        this.overrideMoveEntityWithHeadingSuperiors = value;
+        overrideMoveEntityWithHeadingSuperiors = value;
     }
 
     public void setOverrideMoveEntityWithHeadingInferiors(String[] value) {
-        this.overrideMoveEntityWithHeadingInferiors = value;
+        overrideMoveEntityWithHeadingInferiors = value;
     }
 
     public void setAfterMoveEntityWithHeadingSuperiors(String[] value) {
-        this.afterMoveEntityWithHeadingSuperiors = value;
+        afterMoveEntityWithHeadingSuperiors = value;
     }
 
     public void setAfterMoveEntityWithHeadingInferiors(String[] value) {
-        this.afterMoveEntityWithHeadingInferiors = value;
+        afterMoveEntityWithHeadingInferiors = value;
     }
 
     public String[] getBeforeMoveFlyingSuperiors() {
-        return this.beforeMoveFlyingSuperiors;
+        return beforeMoveFlyingSuperiors;
     }
 
     public String[] getBeforeMoveFlyingInferiors() {
-        return this.beforeMoveFlyingInferiors;
+        return beforeMoveFlyingInferiors;
     }
 
     public String[] getOverrideMoveFlyingSuperiors() {
-        return this.overrideMoveFlyingSuperiors;
+        return overrideMoveFlyingSuperiors;
     }
 
     public String[] getOverrideMoveFlyingInferiors() {
-        return this.overrideMoveFlyingInferiors;
+        return overrideMoveFlyingInferiors;
     }
 
     public String[] getAfterMoveFlyingSuperiors() {
-        return this.afterMoveFlyingSuperiors;
+        return afterMoveFlyingSuperiors;
     }
 
     public String[] getAfterMoveFlyingInferiors() {
-        return this.afterMoveFlyingInferiors;
+        return afterMoveFlyingInferiors;
     }
 
     public void setBeforeMoveFlyingSuperiors(String[] value) {
-        this.beforeMoveFlyingSuperiors = value;
+        beforeMoveFlyingSuperiors = value;
     }
 
     public void setBeforeMoveFlyingInferiors(String[] value) {
-        this.beforeMoveFlyingInferiors = value;
+        beforeMoveFlyingInferiors = value;
     }
 
     public void setOverrideMoveFlyingSuperiors(String[] value) {
-        this.overrideMoveFlyingSuperiors = value;
+        overrideMoveFlyingSuperiors = value;
     }
 
     public void setOverrideMoveFlyingInferiors(String[] value) {
-        this.overrideMoveFlyingInferiors = value;
+        overrideMoveFlyingInferiors = value;
     }
 
     public void setAfterMoveFlyingSuperiors(String[] value) {
-        this.afterMoveFlyingSuperiors = value;
+        afterMoveFlyingSuperiors = value;
     }
 
     public void setAfterMoveFlyingInferiors(String[] value) {
-        this.afterMoveFlyingInferiors = value;
+        afterMoveFlyingInferiors = value;
     }
 
     public String[] getBeforeOnDeathSuperiors() {
-        return this.beforeOnDeathSuperiors;
+        return beforeOnDeathSuperiors;
     }
 
     public String[] getBeforeOnDeathInferiors() {
-        return this.beforeOnDeathInferiors;
+        return beforeOnDeathInferiors;
     }
 
     public String[] getOverrideOnDeathSuperiors() {
-        return this.overrideOnDeathSuperiors;
+        return overrideOnDeathSuperiors;
     }
 
     public String[] getOverrideOnDeathInferiors() {
-        return this.overrideOnDeathInferiors;
+        return overrideOnDeathInferiors;
     }
 
     public String[] getAfterOnDeathSuperiors() {
-        return this.afterOnDeathSuperiors;
+        return afterOnDeathSuperiors;
     }
 
     public String[] getAfterOnDeathInferiors() {
-        return this.afterOnDeathInferiors;
+        return afterOnDeathInferiors;
     }
 
     public void setBeforeOnDeathSuperiors(String[] value) {
-        this.beforeOnDeathSuperiors = value;
+        beforeOnDeathSuperiors = value;
     }
 
     public void setBeforeOnDeathInferiors(String[] value) {
-        this.beforeOnDeathInferiors = value;
+        beforeOnDeathInferiors = value;
     }
 
     public void setOverrideOnDeathSuperiors(String[] value) {
-        this.overrideOnDeathSuperiors = value;
+        overrideOnDeathSuperiors = value;
     }
 
     public void setOverrideOnDeathInferiors(String[] value) {
-        this.overrideOnDeathInferiors = value;
+        overrideOnDeathInferiors = value;
     }
 
     public void setAfterOnDeathSuperiors(String[] value) {
-        this.afterOnDeathSuperiors = value;
+        afterOnDeathSuperiors = value;
     }
 
     public void setAfterOnDeathInferiors(String[] value) {
-        this.afterOnDeathInferiors = value;
+        afterOnDeathInferiors = value;
     }
 
     public String[] getBeforeOnLivingUpdateSuperiors() {
-        return this.beforeOnLivingUpdateSuperiors;
+        return beforeOnLivingUpdateSuperiors;
     }
 
     public String[] getBeforeOnLivingUpdateInferiors() {
-        return this.beforeOnLivingUpdateInferiors;
+        return beforeOnLivingUpdateInferiors;
     }
 
     public String[] getOverrideOnLivingUpdateSuperiors() {
-        return this.overrideOnLivingUpdateSuperiors;
+        return overrideOnLivingUpdateSuperiors;
     }
 
     public String[] getOverrideOnLivingUpdateInferiors() {
-        return this.overrideOnLivingUpdateInferiors;
+        return overrideOnLivingUpdateInferiors;
     }
 
     public String[] getAfterOnLivingUpdateSuperiors() {
-        return this.afterOnLivingUpdateSuperiors;
+        return afterOnLivingUpdateSuperiors;
     }
 
     public String[] getAfterOnLivingUpdateInferiors() {
-        return this.afterOnLivingUpdateInferiors;
+        return afterOnLivingUpdateInferiors;
     }
 
     public void setBeforeOnLivingUpdateSuperiors(String[] value) {
-        this.beforeOnLivingUpdateSuperiors = value;
+        beforeOnLivingUpdateSuperiors = value;
     }
 
     public void setBeforeOnLivingUpdateInferiors(String[] value) {
-        this.beforeOnLivingUpdateInferiors = value;
+        beforeOnLivingUpdateInferiors = value;
     }
 
     public void setOverrideOnLivingUpdateSuperiors(String[] value) {
-        this.overrideOnLivingUpdateSuperiors = value;
+        overrideOnLivingUpdateSuperiors = value;
     }
 
     public void setOverrideOnLivingUpdateInferiors(String[] value) {
-        this.overrideOnLivingUpdateInferiors = value;
+        overrideOnLivingUpdateInferiors = value;
     }
 
     public void setAfterOnLivingUpdateSuperiors(String[] value) {
-        this.afterOnLivingUpdateSuperiors = value;
+        afterOnLivingUpdateSuperiors = value;
     }
 
     public void setAfterOnLivingUpdateInferiors(String[] value) {
-        this.afterOnLivingUpdateInferiors = value;
+        afterOnLivingUpdateInferiors = value;
     }
 
     public String[] getBeforeOnKillEntitySuperiors() {
-        return this.beforeOnKillEntitySuperiors;
+        return beforeOnKillEntitySuperiors;
     }
 
     public String[] getBeforeOnKillEntityInferiors() {
-        return this.beforeOnKillEntityInferiors;
+        return beforeOnKillEntityInferiors;
     }
 
     public String[] getOverrideOnKillEntitySuperiors() {
-        return this.overrideOnKillEntitySuperiors;
+        return overrideOnKillEntitySuperiors;
     }
 
     public String[] getOverrideOnKillEntityInferiors() {
-        return this.overrideOnKillEntityInferiors;
+        return overrideOnKillEntityInferiors;
     }
 
     public String[] getAfterOnKillEntitySuperiors() {
-        return this.afterOnKillEntitySuperiors;
+        return afterOnKillEntitySuperiors;
     }
 
     public String[] getAfterOnKillEntityInferiors() {
-        return this.afterOnKillEntityInferiors;
+        return afterOnKillEntityInferiors;
     }
 
     public void setBeforeOnKillEntitySuperiors(String[] value) {
-        this.beforeOnKillEntitySuperiors = value;
+        beforeOnKillEntitySuperiors = value;
     }
 
     public void setBeforeOnKillEntityInferiors(String[] value) {
-        this.beforeOnKillEntityInferiors = value;
+        beforeOnKillEntityInferiors = value;
     }
 
     public void setOverrideOnKillEntitySuperiors(String[] value) {
-        this.overrideOnKillEntitySuperiors = value;
+        overrideOnKillEntitySuperiors = value;
     }
 
     public void setOverrideOnKillEntityInferiors(String[] value) {
-        this.overrideOnKillEntityInferiors = value;
+        overrideOnKillEntityInferiors = value;
     }
 
     public void setAfterOnKillEntitySuperiors(String[] value) {
-        this.afterOnKillEntitySuperiors = value;
+        afterOnKillEntitySuperiors = value;
     }
 
     public void setAfterOnKillEntityInferiors(String[] value) {
-        this.afterOnKillEntityInferiors = value;
+        afterOnKillEntityInferiors = value;
     }
 
     public String[] getBeforeOnStruckByLightningSuperiors() {
-        return this.beforeOnStruckByLightningSuperiors;
+        return beforeOnStruckByLightningSuperiors;
     }
 
     public String[] getBeforeOnStruckByLightningInferiors() {
-        return this.beforeOnStruckByLightningInferiors;
+        return beforeOnStruckByLightningInferiors;
     }
 
     public String[] getOverrideOnStruckByLightningSuperiors() {
-        return this.overrideOnStruckByLightningSuperiors;
+        return overrideOnStruckByLightningSuperiors;
     }
 
     public String[] getOverrideOnStruckByLightningInferiors() {
-        return this.overrideOnStruckByLightningInferiors;
+        return overrideOnStruckByLightningInferiors;
     }
 
     public String[] getAfterOnStruckByLightningSuperiors() {
-        return this.afterOnStruckByLightningSuperiors;
+        return afterOnStruckByLightningSuperiors;
     }
 
     public String[] getAfterOnStruckByLightningInferiors() {
-        return this.afterOnStruckByLightningInferiors;
+        return afterOnStruckByLightningInferiors;
     }
 
     public void setBeforeOnStruckByLightningSuperiors(String[] value) {
-        this.beforeOnStruckByLightningSuperiors = value;
+        beforeOnStruckByLightningSuperiors = value;
     }
 
     public void setBeforeOnStruckByLightningInferiors(String[] value) {
-        this.beforeOnStruckByLightningInferiors = value;
+        beforeOnStruckByLightningInferiors = value;
     }
 
     public void setOverrideOnStruckByLightningSuperiors(String[] value) {
-        this.overrideOnStruckByLightningSuperiors = value;
+        overrideOnStruckByLightningSuperiors = value;
     }
 
     public void setOverrideOnStruckByLightningInferiors(String[] value) {
-        this.overrideOnStruckByLightningInferiors = value;
+        overrideOnStruckByLightningInferiors = value;
     }
 
     public void setAfterOnStruckByLightningSuperiors(String[] value) {
-        this.afterOnStruckByLightningSuperiors = value;
+        afterOnStruckByLightningSuperiors = value;
     }
 
     public void setAfterOnStruckByLightningInferiors(String[] value) {
-        this.afterOnStruckByLightningInferiors = value;
+        afterOnStruckByLightningInferiors = value;
     }
 
     public String[] getBeforeOnUpdateSuperiors() {
-        return this.beforeOnUpdateSuperiors;
+        return beforeOnUpdateSuperiors;
     }
 
     public String[] getBeforeOnUpdateInferiors() {
-        return this.beforeOnUpdateInferiors;
+        return beforeOnUpdateInferiors;
     }
 
     public String[] getOverrideOnUpdateSuperiors() {
-        return this.overrideOnUpdateSuperiors;
+        return overrideOnUpdateSuperiors;
     }
 
     public String[] getOverrideOnUpdateInferiors() {
-        return this.overrideOnUpdateInferiors;
+        return overrideOnUpdateInferiors;
     }
 
     public String[] getAfterOnUpdateSuperiors() {
-        return this.afterOnUpdateSuperiors;
+        return afterOnUpdateSuperiors;
     }
 
     public String[] getAfterOnUpdateInferiors() {
-        return this.afterOnUpdateInferiors;
+        return afterOnUpdateInferiors;
     }
 
     public void setBeforeOnUpdateSuperiors(String[] value) {
-        this.beforeOnUpdateSuperiors = value;
+        beforeOnUpdateSuperiors = value;
     }
 
     public void setBeforeOnUpdateInferiors(String[] value) {
-        this.beforeOnUpdateInferiors = value;
+        beforeOnUpdateInferiors = value;
     }
 
     public void setOverrideOnUpdateSuperiors(String[] value) {
-        this.overrideOnUpdateSuperiors = value;
+        overrideOnUpdateSuperiors = value;
     }
 
     public void setOverrideOnUpdateInferiors(String[] value) {
-        this.overrideOnUpdateInferiors = value;
+        overrideOnUpdateInferiors = value;
     }
 
     public void setAfterOnUpdateSuperiors(String[] value) {
-        this.afterOnUpdateSuperiors = value;
+        afterOnUpdateSuperiors = value;
     }
 
     public void setAfterOnUpdateInferiors(String[] value) {
-        this.afterOnUpdateInferiors = value;
+        afterOnUpdateInferiors = value;
     }
 
     public String[] getBeforePlayStepSoundSuperiors() {
-        return this.beforePlayStepSoundSuperiors;
+        return beforePlayStepSoundSuperiors;
     }
 
     public String[] getBeforePlayStepSoundInferiors() {
-        return this.beforePlayStepSoundInferiors;
+        return beforePlayStepSoundInferiors;
     }
 
     public String[] getOverridePlayStepSoundSuperiors() {
-        return this.overridePlayStepSoundSuperiors;
+        return overridePlayStepSoundSuperiors;
     }
 
     public String[] getOverridePlayStepSoundInferiors() {
-        return this.overridePlayStepSoundInferiors;
+        return overridePlayStepSoundInferiors;
     }
 
     public String[] getAfterPlayStepSoundSuperiors() {
-        return this.afterPlayStepSoundSuperiors;
+        return afterPlayStepSoundSuperiors;
     }
 
     public String[] getAfterPlayStepSoundInferiors() {
-        return this.afterPlayStepSoundInferiors;
+        return afterPlayStepSoundInferiors;
     }
 
     public void setBeforePlayStepSoundSuperiors(String[] value) {
-        this.beforePlayStepSoundSuperiors = value;
+        beforePlayStepSoundSuperiors = value;
     }
 
     public void setBeforePlayStepSoundInferiors(String[] value) {
-        this.beforePlayStepSoundInferiors = value;
+        beforePlayStepSoundInferiors = value;
     }
 
     public void setOverridePlayStepSoundSuperiors(String[] value) {
-        this.overridePlayStepSoundSuperiors = value;
+        overridePlayStepSoundSuperiors = value;
     }
 
     public void setOverridePlayStepSoundInferiors(String[] value) {
-        this.overridePlayStepSoundInferiors = value;
+        overridePlayStepSoundInferiors = value;
     }
 
     public void setAfterPlayStepSoundSuperiors(String[] value) {
-        this.afterPlayStepSoundSuperiors = value;
+        afterPlayStepSoundSuperiors = value;
     }
 
     public void setAfterPlayStepSoundInferiors(String[] value) {
-        this.afterPlayStepSoundInferiors = value;
+        afterPlayStepSoundInferiors = value;
     }
 
     public String[] getBeforePushOutOfBlocksSuperiors() {
-        return this.beforePushOutOfBlocksSuperiors;
+        return beforePushOutOfBlocksSuperiors;
     }
 
     public String[] getBeforePushOutOfBlocksInferiors() {
-        return this.beforePushOutOfBlocksInferiors;
+        return beforePushOutOfBlocksInferiors;
     }
 
     public String[] getOverridePushOutOfBlocksSuperiors() {
-        return this.overridePushOutOfBlocksSuperiors;
+        return overridePushOutOfBlocksSuperiors;
     }
 
     public String[] getOverridePushOutOfBlocksInferiors() {
-        return this.overridePushOutOfBlocksInferiors;
+        return overridePushOutOfBlocksInferiors;
     }
 
     public String[] getAfterPushOutOfBlocksSuperiors() {
-        return this.afterPushOutOfBlocksSuperiors;
+        return afterPushOutOfBlocksSuperiors;
     }
 
     public String[] getAfterPushOutOfBlocksInferiors() {
-        return this.afterPushOutOfBlocksInferiors;
+        return afterPushOutOfBlocksInferiors;
     }
 
     public void setBeforePushOutOfBlocksSuperiors(String[] value) {
-        this.beforePushOutOfBlocksSuperiors = value;
+        beforePushOutOfBlocksSuperiors = value;
     }
 
     public void setBeforePushOutOfBlocksInferiors(String[] value) {
-        this.beforePushOutOfBlocksInferiors = value;
+        beforePushOutOfBlocksInferiors = value;
     }
 
     public void setOverridePushOutOfBlocksSuperiors(String[] value) {
-        this.overridePushOutOfBlocksSuperiors = value;
+        overridePushOutOfBlocksSuperiors = value;
     }
 
     public void setOverridePushOutOfBlocksInferiors(String[] value) {
-        this.overridePushOutOfBlocksInferiors = value;
+        overridePushOutOfBlocksInferiors = value;
     }
 
     public void setAfterPushOutOfBlocksSuperiors(String[] value) {
-        this.afterPushOutOfBlocksSuperiors = value;
+        afterPushOutOfBlocksSuperiors = value;
     }
 
     public void setAfterPushOutOfBlocksInferiors(String[] value) {
-        this.afterPushOutOfBlocksInferiors = value;
+        afterPushOutOfBlocksInferiors = value;
     }
 
     public String[] getBeforeRayTraceSuperiors() {
-        return this.beforeRayTraceSuperiors;
+        return beforeRayTraceSuperiors;
     }
 
     public String[] getBeforeRayTraceInferiors() {
-        return this.beforeRayTraceInferiors;
+        return beforeRayTraceInferiors;
     }
 
     public String[] getOverrideRayTraceSuperiors() {
-        return this.overrideRayTraceSuperiors;
+        return overrideRayTraceSuperiors;
     }
 
     public String[] getOverrideRayTraceInferiors() {
-        return this.overrideRayTraceInferiors;
+        return overrideRayTraceInferiors;
     }
 
     public String[] getAfterRayTraceSuperiors() {
-        return this.afterRayTraceSuperiors;
+        return afterRayTraceSuperiors;
     }
 
     public String[] getAfterRayTraceInferiors() {
-        return this.afterRayTraceInferiors;
+        return afterRayTraceInferiors;
     }
 
     public void setBeforeRayTraceSuperiors(String[] value) {
-        this.beforeRayTraceSuperiors = value;
+        beforeRayTraceSuperiors = value;
     }
 
     public void setBeforeRayTraceInferiors(String[] value) {
-        this.beforeRayTraceInferiors = value;
+        beforeRayTraceInferiors = value;
     }
 
     public void setOverrideRayTraceSuperiors(String[] value) {
-        this.overrideRayTraceSuperiors = value;
+        overrideRayTraceSuperiors = value;
     }
 
     public void setOverrideRayTraceInferiors(String[] value) {
-        this.overrideRayTraceInferiors = value;
+        overrideRayTraceInferiors = value;
     }
 
     public void setAfterRayTraceSuperiors(String[] value) {
-        this.afterRayTraceSuperiors = value;
+        afterRayTraceSuperiors = value;
     }
 
     public void setAfterRayTraceInferiors(String[] value) {
-        this.afterRayTraceInferiors = value;
+        afterRayTraceInferiors = value;
     }
 
     public String[] getBeforeReadEntityFromNBTSuperiors() {
-        return this.beforeReadEntityFromNBTSuperiors;
+        return beforeReadEntityFromNBTSuperiors;
     }
 
     public String[] getBeforeReadEntityFromNBTInferiors() {
-        return this.beforeReadEntityFromNBTInferiors;
+        return beforeReadEntityFromNBTInferiors;
     }
 
     public String[] getOverrideReadEntityFromNBTSuperiors() {
-        return this.overrideReadEntityFromNBTSuperiors;
+        return overrideReadEntityFromNBTSuperiors;
     }
 
     public String[] getOverrideReadEntityFromNBTInferiors() {
-        return this.overrideReadEntityFromNBTInferiors;
+        return overrideReadEntityFromNBTInferiors;
     }
 
     public String[] getAfterReadEntityFromNBTSuperiors() {
-        return this.afterReadEntityFromNBTSuperiors;
+        return afterReadEntityFromNBTSuperiors;
     }
 
     public String[] getAfterReadEntityFromNBTInferiors() {
-        return this.afterReadEntityFromNBTInferiors;
+        return afterReadEntityFromNBTInferiors;
     }
 
     public void setBeforeReadEntityFromNBTSuperiors(String[] value) {
-        this.beforeReadEntityFromNBTSuperiors = value;
+        beforeReadEntityFromNBTSuperiors = value;
     }
 
     public void setBeforeReadEntityFromNBTInferiors(String[] value) {
-        this.beforeReadEntityFromNBTInferiors = value;
+        beforeReadEntityFromNBTInferiors = value;
     }
 
     public void setOverrideReadEntityFromNBTSuperiors(String[] value) {
-        this.overrideReadEntityFromNBTSuperiors = value;
+        overrideReadEntityFromNBTSuperiors = value;
     }
 
     public void setOverrideReadEntityFromNBTInferiors(String[] value) {
-        this.overrideReadEntityFromNBTInferiors = value;
+        overrideReadEntityFromNBTInferiors = value;
     }
 
     public void setAfterReadEntityFromNBTSuperiors(String[] value) {
-        this.afterReadEntityFromNBTSuperiors = value;
+        afterReadEntityFromNBTSuperiors = value;
     }
 
     public void setAfterReadEntityFromNBTInferiors(String[] value) {
-        this.afterReadEntityFromNBTInferiors = value;
+        afterReadEntityFromNBTInferiors = value;
     }
 
     public String[] getBeforeRespawnPlayerSuperiors() {
-        return this.beforeRespawnPlayerSuperiors;
+        return beforeRespawnPlayerSuperiors;
     }
 
     public String[] getBeforeRespawnPlayerInferiors() {
-        return this.beforeRespawnPlayerInferiors;
+        return beforeRespawnPlayerInferiors;
     }
 
     public String[] getOverrideRespawnPlayerSuperiors() {
-        return this.overrideRespawnPlayerSuperiors;
+        return overrideRespawnPlayerSuperiors;
     }
 
     public String[] getOverrideRespawnPlayerInferiors() {
-        return this.overrideRespawnPlayerInferiors;
+        return overrideRespawnPlayerInferiors;
     }
 
     public String[] getAfterRespawnPlayerSuperiors() {
-        return this.afterRespawnPlayerSuperiors;
+        return afterRespawnPlayerSuperiors;
     }
 
     public String[] getAfterRespawnPlayerInferiors() {
-        return this.afterRespawnPlayerInferiors;
+        return afterRespawnPlayerInferiors;
     }
 
     public void setBeforeRespawnPlayerSuperiors(String[] value) {
-        this.beforeRespawnPlayerSuperiors = value;
+        beforeRespawnPlayerSuperiors = value;
     }
 
     public void setBeforeRespawnPlayerInferiors(String[] value) {
-        this.beforeRespawnPlayerInferiors = value;
+        beforeRespawnPlayerInferiors = value;
     }
 
     public void setOverrideRespawnPlayerSuperiors(String[] value) {
-        this.overrideRespawnPlayerSuperiors = value;
+        overrideRespawnPlayerSuperiors = value;
     }
 
     public void setOverrideRespawnPlayerInferiors(String[] value) {
-        this.overrideRespawnPlayerInferiors = value;
+        overrideRespawnPlayerInferiors = value;
     }
 
     public void setAfterRespawnPlayerSuperiors(String[] value) {
-        this.afterRespawnPlayerSuperiors = value;
+        afterRespawnPlayerSuperiors = value;
     }
 
     public void setAfterRespawnPlayerInferiors(String[] value) {
-        this.afterRespawnPlayerInferiors = value;
+        afterRespawnPlayerInferiors = value;
     }
 
     public String[] getBeforeSetDeadSuperiors() {
-        return this.beforeSetDeadSuperiors;
+        return beforeSetDeadSuperiors;
     }
 
     public String[] getBeforeSetDeadInferiors() {
-        return this.beforeSetDeadInferiors;
+        return beforeSetDeadInferiors;
     }
 
     public String[] getOverrideSetDeadSuperiors() {
-        return this.overrideSetDeadSuperiors;
+        return overrideSetDeadSuperiors;
     }
 
     public String[] getOverrideSetDeadInferiors() {
-        return this.overrideSetDeadInferiors;
+        return overrideSetDeadInferiors;
     }
 
     public String[] getAfterSetDeadSuperiors() {
-        return this.afterSetDeadSuperiors;
+        return afterSetDeadSuperiors;
     }
 
     public String[] getAfterSetDeadInferiors() {
-        return this.afterSetDeadInferiors;
+        return afterSetDeadInferiors;
     }
 
     public void setBeforeSetDeadSuperiors(String[] value) {
-        this.beforeSetDeadSuperiors = value;
+        beforeSetDeadSuperiors = value;
     }
 
     public void setBeforeSetDeadInferiors(String[] value) {
-        this.beforeSetDeadInferiors = value;
+        beforeSetDeadInferiors = value;
     }
 
     public void setOverrideSetDeadSuperiors(String[] value) {
-        this.overrideSetDeadSuperiors = value;
+        overrideSetDeadSuperiors = value;
     }
 
     public void setOverrideSetDeadInferiors(String[] value) {
-        this.overrideSetDeadInferiors = value;
+        overrideSetDeadInferiors = value;
     }
 
     public void setAfterSetDeadSuperiors(String[] value) {
-        this.afterSetDeadSuperiors = value;
+        afterSetDeadSuperiors = value;
     }
 
     public void setAfterSetDeadInferiors(String[] value) {
-        this.afterSetDeadInferiors = value;
+        afterSetDeadInferiors = value;
     }
 
     public String[] getBeforeSetPlayerSPHealthSuperiors() {
-        return this.beforeSetPlayerSPHealthSuperiors;
+        return beforeSetPlayerSPHealthSuperiors;
     }
 
     public String[] getBeforeSetPlayerSPHealthInferiors() {
-        return this.beforeSetPlayerSPHealthInferiors;
+        return beforeSetPlayerSPHealthInferiors;
     }
 
     public String[] getOverrideSetPlayerSPHealthSuperiors() {
-        return this.overrideSetPlayerSPHealthSuperiors;
+        return overrideSetPlayerSPHealthSuperiors;
     }
 
     public String[] getOverrideSetPlayerSPHealthInferiors() {
-        return this.overrideSetPlayerSPHealthInferiors;
+        return overrideSetPlayerSPHealthInferiors;
     }
 
     public String[] getAfterSetPlayerSPHealthSuperiors() {
-        return this.afterSetPlayerSPHealthSuperiors;
+        return afterSetPlayerSPHealthSuperiors;
     }
 
     public String[] getAfterSetPlayerSPHealthInferiors() {
-        return this.afterSetPlayerSPHealthInferiors;
+        return afterSetPlayerSPHealthInferiors;
     }
 
     public void setBeforeSetPlayerSPHealthSuperiors(String[] value) {
-        this.beforeSetPlayerSPHealthSuperiors = value;
+        beforeSetPlayerSPHealthSuperiors = value;
     }
 
     public void setBeforeSetPlayerSPHealthInferiors(String[] value) {
-        this.beforeSetPlayerSPHealthInferiors = value;
+        beforeSetPlayerSPHealthInferiors = value;
     }
 
     public void setOverrideSetPlayerSPHealthSuperiors(String[] value) {
-        this.overrideSetPlayerSPHealthSuperiors = value;
+        overrideSetPlayerSPHealthSuperiors = value;
     }
 
     public void setOverrideSetPlayerSPHealthInferiors(String[] value) {
-        this.overrideSetPlayerSPHealthInferiors = value;
+        overrideSetPlayerSPHealthInferiors = value;
     }
 
     public void setAfterSetPlayerSPHealthSuperiors(String[] value) {
-        this.afterSetPlayerSPHealthSuperiors = value;
+        afterSetPlayerSPHealthSuperiors = value;
     }
 
     public void setAfterSetPlayerSPHealthInferiors(String[] value) {
-        this.afterSetPlayerSPHealthInferiors = value;
+        afterSetPlayerSPHealthInferiors = value;
     }
 
     public String[] getBeforeSetPositionAndRotationSuperiors() {
-        return this.beforeSetPositionAndRotationSuperiors;
+        return beforeSetPositionAndRotationSuperiors;
     }
 
     public String[] getBeforeSetPositionAndRotationInferiors() {
-        return this.beforeSetPositionAndRotationInferiors;
+        return beforeSetPositionAndRotationInferiors;
     }
 
     public String[] getOverrideSetPositionAndRotationSuperiors() {
-        return this.overrideSetPositionAndRotationSuperiors;
+        return overrideSetPositionAndRotationSuperiors;
     }
 
     public String[] getOverrideSetPositionAndRotationInferiors() {
-        return this.overrideSetPositionAndRotationInferiors;
+        return overrideSetPositionAndRotationInferiors;
     }
 
     public String[] getAfterSetPositionAndRotationSuperiors() {
-        return this.afterSetPositionAndRotationSuperiors;
+        return afterSetPositionAndRotationSuperiors;
     }
 
     public String[] getAfterSetPositionAndRotationInferiors() {
-        return this.afterSetPositionAndRotationInferiors;
+        return afterSetPositionAndRotationInferiors;
     }
 
     public void setBeforeSetPositionAndRotationSuperiors(String[] value) {
-        this.beforeSetPositionAndRotationSuperiors = value;
+        beforeSetPositionAndRotationSuperiors = value;
     }
 
     public void setBeforeSetPositionAndRotationInferiors(String[] value) {
-        this.beforeSetPositionAndRotationInferiors = value;
+        beforeSetPositionAndRotationInferiors = value;
     }
 
     public void setOverrideSetPositionAndRotationSuperiors(String[] value) {
-        this.overrideSetPositionAndRotationSuperiors = value;
+        overrideSetPositionAndRotationSuperiors = value;
     }
 
     public void setOverrideSetPositionAndRotationInferiors(String[] value) {
-        this.overrideSetPositionAndRotationInferiors = value;
+        overrideSetPositionAndRotationInferiors = value;
     }
 
     public void setAfterSetPositionAndRotationSuperiors(String[] value) {
-        this.afterSetPositionAndRotationSuperiors = value;
+        afterSetPositionAndRotationSuperiors = value;
     }
 
     public void setAfterSetPositionAndRotationInferiors(String[] value) {
-        this.afterSetPositionAndRotationInferiors = value;
+        afterSetPositionAndRotationInferiors = value;
     }
 
     public String[] getBeforeSetSneakingSuperiors() {
-        return this.beforeSetSneakingSuperiors;
+        return beforeSetSneakingSuperiors;
     }
 
     public String[] getBeforeSetSneakingInferiors() {
-        return this.beforeSetSneakingInferiors;
+        return beforeSetSneakingInferiors;
     }
 
     public String[] getOverrideSetSneakingSuperiors() {
-        return this.overrideSetSneakingSuperiors;
+        return overrideSetSneakingSuperiors;
     }
 
     public String[] getOverrideSetSneakingInferiors() {
-        return this.overrideSetSneakingInferiors;
+        return overrideSetSneakingInferiors;
     }
 
     public String[] getAfterSetSneakingSuperiors() {
-        return this.afterSetSneakingSuperiors;
+        return afterSetSneakingSuperiors;
     }
 
     public String[] getAfterSetSneakingInferiors() {
-        return this.afterSetSneakingInferiors;
+        return afterSetSneakingInferiors;
     }
 
     public void setBeforeSetSneakingSuperiors(String[] value) {
-        this.beforeSetSneakingSuperiors = value;
+        beforeSetSneakingSuperiors = value;
     }
 
     public void setBeforeSetSneakingInferiors(String[] value) {
-        this.beforeSetSneakingInferiors = value;
+        beforeSetSneakingInferiors = value;
     }
 
     public void setOverrideSetSneakingSuperiors(String[] value) {
-        this.overrideSetSneakingSuperiors = value;
+        overrideSetSneakingSuperiors = value;
     }
 
     public void setOverrideSetSneakingInferiors(String[] value) {
-        this.overrideSetSneakingInferiors = value;
+        overrideSetSneakingInferiors = value;
     }
 
     public void setAfterSetSneakingSuperiors(String[] value) {
-        this.afterSetSneakingSuperiors = value;
+        afterSetSneakingSuperiors = value;
     }
 
     public void setAfterSetSneakingInferiors(String[] value) {
-        this.afterSetSneakingInferiors = value;
+        afterSetSneakingInferiors = value;
     }
 
     public String[] getBeforeSetSprintingSuperiors() {
-        return this.beforeSetSprintingSuperiors;
+        return beforeSetSprintingSuperiors;
     }
 
     public String[] getBeforeSetSprintingInferiors() {
-        return this.beforeSetSprintingInferiors;
+        return beforeSetSprintingInferiors;
     }
 
     public String[] getOverrideSetSprintingSuperiors() {
-        return this.overrideSetSprintingSuperiors;
+        return overrideSetSprintingSuperiors;
     }
 
     public String[] getOverrideSetSprintingInferiors() {
-        return this.overrideSetSprintingInferiors;
+        return overrideSetSprintingInferiors;
     }
 
     public String[] getAfterSetSprintingSuperiors() {
-        return this.afterSetSprintingSuperiors;
+        return afterSetSprintingSuperiors;
     }
 
     public String[] getAfterSetSprintingInferiors() {
-        return this.afterSetSprintingInferiors;
+        return afterSetSprintingInferiors;
     }
 
     public void setBeforeSetSprintingSuperiors(String[] value) {
-        this.beforeSetSprintingSuperiors = value;
+        beforeSetSprintingSuperiors = value;
     }
 
     public void setBeforeSetSprintingInferiors(String[] value) {
-        this.beforeSetSprintingInferiors = value;
+        beforeSetSprintingInferiors = value;
     }
 
     public void setOverrideSetSprintingSuperiors(String[] value) {
-        this.overrideSetSprintingSuperiors = value;
+        overrideSetSprintingSuperiors = value;
     }
 
     public void setOverrideSetSprintingInferiors(String[] value) {
-        this.overrideSetSprintingInferiors = value;
+        overrideSetSprintingInferiors = value;
     }
 
     public void setAfterSetSprintingSuperiors(String[] value) {
-        this.afterSetSprintingSuperiors = value;
+        afterSetSprintingSuperiors = value;
     }
 
     public void setAfterSetSprintingInferiors(String[] value) {
-        this.afterSetSprintingInferiors = value;
+        afterSetSprintingInferiors = value;
     }
 
     public String[] getBeforeSleepInBedAtSuperiors() {
-        return this.beforeSleepInBedAtSuperiors;
+        return beforeSleepInBedAtSuperiors;
     }
 
     public String[] getBeforeSleepInBedAtInferiors() {
-        return this.beforeSleepInBedAtInferiors;
+        return beforeSleepInBedAtInferiors;
     }
 
     public String[] getOverrideSleepInBedAtSuperiors() {
-        return this.overrideSleepInBedAtSuperiors;
+        return overrideSleepInBedAtSuperiors;
     }
 
     public String[] getOverrideSleepInBedAtInferiors() {
-        return this.overrideSleepInBedAtInferiors;
+        return overrideSleepInBedAtInferiors;
     }
 
     public String[] getAfterSleepInBedAtSuperiors() {
-        return this.afterSleepInBedAtSuperiors;
+        return afterSleepInBedAtSuperiors;
     }
 
     public String[] getAfterSleepInBedAtInferiors() {
-        return this.afterSleepInBedAtInferiors;
+        return afterSleepInBedAtInferiors;
     }
 
     public void setBeforeSleepInBedAtSuperiors(String[] value) {
-        this.beforeSleepInBedAtSuperiors = value;
+        beforeSleepInBedAtSuperiors = value;
     }
 
     public void setBeforeSleepInBedAtInferiors(String[] value) {
-        this.beforeSleepInBedAtInferiors = value;
+        beforeSleepInBedAtInferiors = value;
     }
 
     public void setOverrideSleepInBedAtSuperiors(String[] value) {
-        this.overrideSleepInBedAtSuperiors = value;
+        overrideSleepInBedAtSuperiors = value;
     }
 
     public void setOverrideSleepInBedAtInferiors(String[] value) {
-        this.overrideSleepInBedAtInferiors = value;
+        overrideSleepInBedAtInferiors = value;
     }
 
     public void setAfterSleepInBedAtSuperiors(String[] value) {
-        this.afterSleepInBedAtSuperiors = value;
+        afterSleepInBedAtSuperiors = value;
     }
 
     public void setAfterSleepInBedAtInferiors(String[] value) {
-        this.afterSleepInBedAtInferiors = value;
+        afterSleepInBedAtInferiors = value;
     }
 
     public String[] getBeforeSwingItemSuperiors() {
-        return this.beforeSwingItemSuperiors;
+        return beforeSwingItemSuperiors;
     }
 
     public String[] getBeforeSwingItemInferiors() {
-        return this.beforeSwingItemInferiors;
+        return beforeSwingItemInferiors;
     }
 
     public String[] getOverrideSwingItemSuperiors() {
-        return this.overrideSwingItemSuperiors;
+        return overrideSwingItemSuperiors;
     }
 
     public String[] getOverrideSwingItemInferiors() {
-        return this.overrideSwingItemInferiors;
+        return overrideSwingItemInferiors;
     }
 
     public String[] getAfterSwingItemSuperiors() {
-        return this.afterSwingItemSuperiors;
+        return afterSwingItemSuperiors;
     }
 
     public String[] getAfterSwingItemInferiors() {
-        return this.afterSwingItemInferiors;
+        return afterSwingItemInferiors;
     }
 
     public void setBeforeSwingItemSuperiors(String[] value) {
-        this.beforeSwingItemSuperiors = value;
+        beforeSwingItemSuperiors = value;
     }
 
     public void setBeforeSwingItemInferiors(String[] value) {
-        this.beforeSwingItemInferiors = value;
+        beforeSwingItemInferiors = value;
     }
 
     public void setOverrideSwingItemSuperiors(String[] value) {
-        this.overrideSwingItemSuperiors = value;
+        overrideSwingItemSuperiors = value;
     }
 
     public void setOverrideSwingItemInferiors(String[] value) {
-        this.overrideSwingItemInferiors = value;
+        overrideSwingItemInferiors = value;
     }
 
     public void setAfterSwingItemSuperiors(String[] value) {
-        this.afterSwingItemSuperiors = value;
+        afterSwingItemSuperiors = value;
     }
 
     public void setAfterSwingItemInferiors(String[] value) {
-        this.afterSwingItemInferiors = value;
+        afterSwingItemInferiors = value;
     }
 
     public String[] getBeforeUpdateEntityActionStateSuperiors() {
-        return this.beforeUpdateEntityActionStateSuperiors;
+        return beforeUpdateEntityActionStateSuperiors;
     }
 
     public String[] getBeforeUpdateEntityActionStateInferiors() {
-        return this.beforeUpdateEntityActionStateInferiors;
+        return beforeUpdateEntityActionStateInferiors;
     }
 
     public String[] getOverrideUpdateEntityActionStateSuperiors() {
-        return this.overrideUpdateEntityActionStateSuperiors;
+        return overrideUpdateEntityActionStateSuperiors;
     }
 
     public String[] getOverrideUpdateEntityActionStateInferiors() {
-        return this.overrideUpdateEntityActionStateInferiors;
+        return overrideUpdateEntityActionStateInferiors;
     }
 
     public String[] getAfterUpdateEntityActionStateSuperiors() {
-        return this.afterUpdateEntityActionStateSuperiors;
+        return afterUpdateEntityActionStateSuperiors;
     }
 
     public String[] getAfterUpdateEntityActionStateInferiors() {
-        return this.afterUpdateEntityActionStateInferiors;
+        return afterUpdateEntityActionStateInferiors;
     }
 
     public void setBeforeUpdateEntityActionStateSuperiors(String[] value) {
-        this.beforeUpdateEntityActionStateSuperiors = value;
+        beforeUpdateEntityActionStateSuperiors = value;
     }
 
     public void setBeforeUpdateEntityActionStateInferiors(String[] value) {
-        this.beforeUpdateEntityActionStateInferiors = value;
+        beforeUpdateEntityActionStateInferiors = value;
     }
 
     public void setOverrideUpdateEntityActionStateSuperiors(String[] value) {
-        this.overrideUpdateEntityActionStateSuperiors = value;
+        overrideUpdateEntityActionStateSuperiors = value;
     }
 
     public void setOverrideUpdateEntityActionStateInferiors(String[] value) {
-        this.overrideUpdateEntityActionStateInferiors = value;
+        overrideUpdateEntityActionStateInferiors = value;
     }
 
     public void setAfterUpdateEntityActionStateSuperiors(String[] value) {
-        this.afterUpdateEntityActionStateSuperiors = value;
+        afterUpdateEntityActionStateSuperiors = value;
     }
 
     public void setAfterUpdateEntityActionStateInferiors(String[] value) {
-        this.afterUpdateEntityActionStateInferiors = value;
+        afterUpdateEntityActionStateInferiors = value;
     }
 
     public String[] getBeforeUpdateRiddenSuperiors() {
-        return this.beforeUpdateRiddenSuperiors;
+        return beforeUpdateRiddenSuperiors;
     }
 
     public String[] getBeforeUpdateRiddenInferiors() {
-        return this.beforeUpdateRiddenInferiors;
+        return beforeUpdateRiddenInferiors;
     }
 
     public String[] getOverrideUpdateRiddenSuperiors() {
-        return this.overrideUpdateRiddenSuperiors;
+        return overrideUpdateRiddenSuperiors;
     }
 
     public String[] getOverrideUpdateRiddenInferiors() {
-        return this.overrideUpdateRiddenInferiors;
+        return overrideUpdateRiddenInferiors;
     }
 
     public String[] getAfterUpdateRiddenSuperiors() {
-        return this.afterUpdateRiddenSuperiors;
+        return afterUpdateRiddenSuperiors;
     }
 
     public String[] getAfterUpdateRiddenInferiors() {
-        return this.afterUpdateRiddenInferiors;
+        return afterUpdateRiddenInferiors;
     }
 
     public void setBeforeUpdateRiddenSuperiors(String[] value) {
-        this.beforeUpdateRiddenSuperiors = value;
+        beforeUpdateRiddenSuperiors = value;
     }
 
     public void setBeforeUpdateRiddenInferiors(String[] value) {
-        this.beforeUpdateRiddenInferiors = value;
+        beforeUpdateRiddenInferiors = value;
     }
 
     public void setOverrideUpdateRiddenSuperiors(String[] value) {
-        this.overrideUpdateRiddenSuperiors = value;
+        overrideUpdateRiddenSuperiors = value;
     }
 
     public void setOverrideUpdateRiddenInferiors(String[] value) {
-        this.overrideUpdateRiddenInferiors = value;
+        overrideUpdateRiddenInferiors = value;
     }
 
     public void setAfterUpdateRiddenSuperiors(String[] value) {
-        this.afterUpdateRiddenSuperiors = value;
+        afterUpdateRiddenSuperiors = value;
     }
 
     public void setAfterUpdateRiddenInferiors(String[] value) {
-        this.afterUpdateRiddenInferiors = value;
+        afterUpdateRiddenInferiors = value;
     }
 
     public String[] getBeforeWakeUpPlayerSuperiors() {
-        return this.beforeWakeUpPlayerSuperiors;
+        return beforeWakeUpPlayerSuperiors;
     }
 
     public String[] getBeforeWakeUpPlayerInferiors() {
-        return this.beforeWakeUpPlayerInferiors;
+        return beforeWakeUpPlayerInferiors;
     }
 
     public String[] getOverrideWakeUpPlayerSuperiors() {
-        return this.overrideWakeUpPlayerSuperiors;
+        return overrideWakeUpPlayerSuperiors;
     }
 
     public String[] getOverrideWakeUpPlayerInferiors() {
-        return this.overrideWakeUpPlayerInferiors;
+        return overrideWakeUpPlayerInferiors;
     }
 
     public String[] getAfterWakeUpPlayerSuperiors() {
-        return this.afterWakeUpPlayerSuperiors;
+        return afterWakeUpPlayerSuperiors;
     }
 
     public String[] getAfterWakeUpPlayerInferiors() {
-        return this.afterWakeUpPlayerInferiors;
+        return afterWakeUpPlayerInferiors;
     }
 
     public void setBeforeWakeUpPlayerSuperiors(String[] value) {
-        this.beforeWakeUpPlayerSuperiors = value;
+        beforeWakeUpPlayerSuperiors = value;
     }
 
     public void setBeforeWakeUpPlayerInferiors(String[] value) {
-        this.beforeWakeUpPlayerInferiors = value;
+        beforeWakeUpPlayerInferiors = value;
     }
 
     public void setOverrideWakeUpPlayerSuperiors(String[] value) {
-        this.overrideWakeUpPlayerSuperiors = value;
+        overrideWakeUpPlayerSuperiors = value;
     }
 
     public void setOverrideWakeUpPlayerInferiors(String[] value) {
-        this.overrideWakeUpPlayerInferiors = value;
+        overrideWakeUpPlayerInferiors = value;
     }
 
     public void setAfterWakeUpPlayerSuperiors(String[] value) {
-        this.afterWakeUpPlayerSuperiors = value;
+        afterWakeUpPlayerSuperiors = value;
     }
 
     public void setAfterWakeUpPlayerInferiors(String[] value) {
-        this.afterWakeUpPlayerInferiors = value;
+        afterWakeUpPlayerInferiors = value;
     }
 
     public String[] getBeforeWriteEntityToNBTSuperiors() {
-        return this.beforeWriteEntityToNBTSuperiors;
+        return beforeWriteEntityToNBTSuperiors;
     }
 
     public String[] getBeforeWriteEntityToNBTInferiors() {
-        return this.beforeWriteEntityToNBTInferiors;
+        return beforeWriteEntityToNBTInferiors;
     }
 
     public String[] getOverrideWriteEntityToNBTSuperiors() {
-        return this.overrideWriteEntityToNBTSuperiors;
+        return overrideWriteEntityToNBTSuperiors;
     }
 
     public String[] getOverrideWriteEntityToNBTInferiors() {
-        return this.overrideWriteEntityToNBTInferiors;
+        return overrideWriteEntityToNBTInferiors;
     }
 
     public String[] getAfterWriteEntityToNBTSuperiors() {
-        return this.afterWriteEntityToNBTSuperiors;
+        return afterWriteEntityToNBTSuperiors;
     }
 
     public String[] getAfterWriteEntityToNBTInferiors() {
-        return this.afterWriteEntityToNBTInferiors;
+        return afterWriteEntityToNBTInferiors;
     }
 
     public void setBeforeWriteEntityToNBTSuperiors(String[] value) {
-        this.beforeWriteEntityToNBTSuperiors = value;
+        beforeWriteEntityToNBTSuperiors = value;
     }
 
     public void setBeforeWriteEntityToNBTInferiors(String[] value) {
-        this.beforeWriteEntityToNBTInferiors = value;
+        beforeWriteEntityToNBTInferiors = value;
     }
 
     public void setOverrideWriteEntityToNBTSuperiors(String[] value) {
-        this.overrideWriteEntityToNBTSuperiors = value;
+        overrideWriteEntityToNBTSuperiors = value;
     }
 
     public void setOverrideWriteEntityToNBTInferiors(String[] value) {
-        this.overrideWriteEntityToNBTInferiors = value;
+        overrideWriteEntityToNBTInferiors = value;
     }
 
     public void setAfterWriteEntityToNBTSuperiors(String[] value) {
-        this.afterWriteEntityToNBTSuperiors = value;
+        afterWriteEntityToNBTSuperiors = value;
     }
 
     public void setAfterWriteEntityToNBTInferiors(String[] value) {
-        this.afterWriteEntityToNBTInferiors = value;
+        afterWriteEntityToNBTInferiors = value;
     }
 }

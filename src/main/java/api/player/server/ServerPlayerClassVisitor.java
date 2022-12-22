@@ -1,15 +1,29 @@
+// ==================================================================
+// This file is part of Player API.
+//
+// Player API is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Player API is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License and the GNU General Public License along with Player API.
+// If not, see <http://www.gnu.org/licenses/>.
+// ==================================================================
+
 package api.player.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import java.io.*;
+import org.objectweb.asm.*;
 
 public final class ServerPlayerClassVisitor extends ClassVisitor {
     public static final String targetClassName = "net.minecraft.entity.player.EntityPlayerMP";
+
     private boolean hadLocalAddExhaustion;
     private boolean hadLocalAddExperience;
     private boolean hadLocalAddExperienceLevel;
@@ -66,15 +80,16 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
     private boolean hadLocalUpdateRidden;
     private boolean hadLocalWakeUpPlayer;
     private boolean hadLocalWriteEntityToNBT;
-    private final boolean isObfuscated;
 
     public static byte[] transform(byte[] bytes, boolean isObfuscated) {
         try {
             ByteArrayInputStream in = new ByteArrayInputStream(bytes);
             ClassReader cr = new ClassReader(in);
-            ClassWriter cw = new ClassWriter(1);
+            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             ServerPlayerClassVisitor p = new ServerPlayerClassVisitor(cw, isObfuscated);
+
             cr.accept(p, 0);
+
             byte[] result = cw.toByteArray();
             in.close();
             return result;
@@ -83,302 +98,409 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         }
     }
 
+    private final boolean isObfuscated;
+
     public ServerPlayerClassVisitor(ClassVisitor classVisitor, boolean isObfuscated) {
         super(262144, classVisitor);
         this.isObfuscated = isObfuscated;
     }
 
-    @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         String[] newInterfaces = new String[interfaces.length + 1];
-
-        System.arraycopy(interfaces, 0, newInterfaces, 0, interfaces.length);
-
+        for (int i = 0; i < interfaces.length; i++) newInterfaces[i] = interfaces[i];
         newInterfaces[interfaces.length] = "api/player/server/IServerPlayerAPI";
         super.visit(version, access, name, signature, superName, newInterfaces);
     }
 
-    @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        if (name.equals("<init>")) {
+        if (name.equals("<init>"))
             return new ServerPlayerConstructorVisitor(
-                    super.visitMethod(access, name, desc, signature, exceptions), this.isObfuscated);
-        } else if (name.equals(this.isObfuscated ? "a" : "addExhaustion") && desc.equals("(F)V")) {
-            this.hadLocalAddExhaustion = true;
+                    super.visitMethod(access, name, desc, signature, exceptions), isObfuscated);
+
+        if (name.equals(isObfuscated ? "a" : "addExhaustion") && desc.equals("(F)V")) {
+            hadLocalAddExhaustion = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExhaustion", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "v" : "addExperience") && desc.equals("(I)V")) {
-            this.hadLocalAddExperience = true;
+        }
+
+        if (name.equals(isObfuscated ? "v" : "addExperience") && desc.equals("(I)V")) {
+            hadLocalAddExperience = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperience", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "addExperienceLevel") && desc.equals("(I)V")) {
-            this.hadLocalAddExperienceLevel = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "addExperienceLevel") && desc.equals("(I)V")) {
+            hadLocalAddExperienceLevel = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperienceLevel", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "k" : "addMovementStat") && desc.equals("(DDD)V")) {
-            this.hadLocalAddMovementStat = true;
+        }
+
+        if (name.equals(isObfuscated ? "k" : "addMovementStat") && desc.equals("(DDD)V")) {
+            hadLocalAddMovementStat = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddMovementStat", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "attackEntityFrom")
-                && desc.equals(this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z")) {
-            this.hadLocalAttackEntityFrom = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "attackEntityFrom")
+                && desc.equals(isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z")) {
+            hadLocalAttackEntityFrom = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAttackEntityFrom", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem")
-                && desc.equals(this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V")) {
-            this.hadLocalAttackTargetEntityWithCurrentItem = true;
+        }
+
+        if (name.equals(isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem")
+                && desc.equals(isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V")) {
+            hadLocalAttackTargetEntityWithCurrentItem = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localAttackTargetEntityWithCurrentItem",
                     desc,
                     signature,
                     exceptions);
-        } else if (name.equals(this.isObfuscated ? "aE" : "canBreatheUnderwater") && desc.equals("()Z")) {
-            this.hadLocalCanBreatheUnderwater = true;
+        }
+
+        if (name.equals(isObfuscated ? "aE" : "canBreatheUnderwater") && desc.equals("()Z")) {
+            hadLocalCanBreatheUnderwater = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanBreatheUnderwater", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "canHarvestBlock")
-                && desc.equals(this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z")) {
-            this.hadLocalCanHarvestBlock = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "canHarvestBlock")
+                && desc.equals(isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z")) {
+            hadLocalCanHarvestBlock = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanHarvestBlock", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "canPlayerEdit")
-                && desc.equals(this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z")) {
-            this.hadLocalCanPlayerEdit = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "canPlayerEdit")
+                && desc.equals(isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z")) {
+            hadLocalCanPlayerEdit = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanPlayerEdit", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "g_" : "canTriggerWalking") && desc.equals("()Z")) {
-            this.hadLocalCanTriggerWalking = true;
+        }
+
+        if (name.equals(isObfuscated ? "g_" : "canTriggerWalking") && desc.equals("()Z")) {
+            hadLocalCanTriggerWalking = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanTriggerWalking", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "clonePlayer")
-                && desc.equals(this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V")) {
-            this.hadLocalClonePlayer = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "clonePlayer")
+                && desc.equals(isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V")) {
+            hadLocalClonePlayer = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localClonePlayer", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "d" : "damageEntity")
-                && desc.equals(this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V")) {
-            this.hadLocalDamageEntity = true;
+        }
+
+        if (name.equals(isObfuscated ? "d" : "damageEntity")
+                && desc.equals(isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V")) {
+            hadLocalDamageEntity = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDamageEntity", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "displayGUIChest")
-                && desc.equals(this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V")) {
-            this.hadLocalDisplayGUIChest = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "displayGUIChest")
+                && desc.equals(isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V")) {
+            hadLocalDisplayGUIChest = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIChest", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "func_146102_a")
-                && desc.equals(this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V")) {
-            this.hadLocalDisplayGUIDispenser = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "func_146102_a")
+                && desc.equals(isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V")) {
+            hadLocalDisplayGUIDispenser = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIDispenser", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "func_146101_a")
-                && desc.equals(this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V")) {
-            this.hadLocalDisplayGUIFurnace = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "func_146101_a")
+                && desc.equals(isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V")) {
+            hadLocalDisplayGUIFurnace = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIFurnace", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "b" : "displayGUIWorkbench") && desc.equals("(III)V")) {
-            this.hadLocalDisplayGUIWorkbench = true;
+        }
+
+        if (name.equals(isObfuscated ? "b" : "displayGUIWorkbench") && desc.equals("(III)V")) {
+            hadLocalDisplayGUIWorkbench = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIWorkbench", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "dropOneItem")
-                && desc.equals(this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;")) {
-            this.hadLocalDropOneItem = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "dropOneItem")
+                && desc.equals(isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;")) {
+            hadLocalDropOneItem = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDropOneItem", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "dropPlayerItemWithRandomChoice")
+        }
+
+        if (name.equals(isObfuscated ? "a" : "dropPlayerItemWithRandomChoice")
                 && desc.equals(
-                        this.isObfuscated
+                        isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")) {
-            this.hadLocalDropPlayerItem = true;
+            hadLocalDropPlayerItem = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDropPlayerItem", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "b" : "fall") && desc.equals("(F)V")) {
-            this.hadLocalFall = true;
+        }
+
+        if (name.equals(isObfuscated ? "b" : "fall") && desc.equals("(F)V")) {
+            hadLocalFall = true;
             return super.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localFall", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "bl" : "getAIMoveSpeed") && desc.equals("()F")) {
-            this.hadLocalGetAIMoveSpeed = true;
+        }
+
+        if (name.equals(isObfuscated ? "bl" : "getAIMoveSpeed") && desc.equals("()F")) {
+            hadLocalGetAIMoveSpeed = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetAIMoveSpeed", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "getCurrentPlayerStrVsBlock")
-                && desc.equals(this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F")) {
-            this.hadLocalGetCurrentPlayerStrVsBlock = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "getCurrentPlayerStrVsBlock")
+                && desc.equals(isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F")) {
+            hadLocalGetCurrentPlayerStrVsBlock = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localGetCurrentPlayerStrVsBlock",
                     desc,
                     signature,
                     exceptions);
-        } else if (name.equals("getBreakSpeed")
-                && desc.equals(this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F")) {
-            this.hadLocalGetCurrentPlayerStrVsBlockForge = true;
+        }
+
+        if (name.equals("getBreakSpeed")
+                && desc.equals(isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F")) {
+            hadLocalGetCurrentPlayerStrVsBlockForge = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localGetCurrentPlayerStrVsBlockForge",
                     desc,
                     signature,
                     exceptions);
-        } else if (name.equals(this.isObfuscated ? "e" : "getDistanceSq") && desc.equals("(DDD)D")) {
-            this.hadLocalGetDistanceSq = true;
+        }
+
+        if (name.equals(isObfuscated ? "e" : "getDistanceSq") && desc.equals("(DDD)D")) {
+            hadLocalGetDistanceSq = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetDistanceSq", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "d" : "getBrightness") && desc.equals("(F)F")) {
-            this.hadLocalGetBrightness = true;
+        }
+
+        if (name.equals(isObfuscated ? "d" : "getBrightness") && desc.equals("(F)F")) {
+            hadLocalGetBrightness = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetBrightness", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "g" : "getEyeHeight") && desc.equals("()F")) {
-            this.hadLocalGetEyeHeight = true;
+        }
+
+        if (name.equals(isObfuscated ? "g" : "getEyeHeight") && desc.equals("()F")) {
+            hadLocalGetEyeHeight = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetEyeHeight", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "f" : "heal") && desc.equals("(F)V")) {
-            this.hadLocalHeal = true;
+        }
+
+        if (name.equals(isObfuscated ? "f" : "heal") && desc.equals("(F)V")) {
+            hadLocalHeal = true;
             return super.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localHeal", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "aa" : "isEntityInsideOpaqueBlock") && desc.equals("()Z")) {
-            this.hadLocalIsEntityInsideOpaqueBlock = true;
+        }
+
+        if (name.equals(isObfuscated ? "aa" : "isEntityInsideOpaqueBlock") && desc.equals("()Z")) {
+            hadLocalIsEntityInsideOpaqueBlock = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localIsEntityInsideOpaqueBlock",
                     desc,
                     signature,
                     exceptions);
-        } else if (name.equals(this.isObfuscated ? "M" : "isInWater") && desc.equals("()Z")) {
-            this.hadLocalIsInWater = true;
+        }
+
+        if (name.equals(isObfuscated ? "M" : "isInWater") && desc.equals("()Z")) {
+            hadLocalIsInWater = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInWater", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "isInsideOfMaterial")
-                && desc.equals(this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z")) {
-            this.hadLocalIsInsideOfMaterial = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "isInsideOfMaterial")
+                && desc.equals(isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z")) {
+            hadLocalIsInsideOfMaterial = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInsideOfMaterial", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "h_" : "isOnLadder") && desc.equals("()Z")) {
-            this.hadLocalIsOnLadder = true;
+        }
+
+        if (name.equals(isObfuscated ? "h_" : "isOnLadder") && desc.equals("()Z")) {
+            hadLocalIsOnLadder = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsOnLadder", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "bm" : "isPlayerSleeping") && desc.equals("()Z")) {
-            this.hadLocalIsPlayerSleeping = true;
+        }
+
+        if (name.equals(isObfuscated ? "bm" : "isPlayerSleeping") && desc.equals("()Z")) {
+            hadLocalIsPlayerSleeping = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsPlayerSleeping", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "an" : "isSneaking") && desc.equals("()Z")) {
-            this.hadLocalIsSneaking = true;
+        }
+
+        if (name.equals(isObfuscated ? "an" : "isSneaking") && desc.equals("()Z")) {
+            hadLocalIsSneaking = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsSneaking", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "bj" : "jump") && desc.equals("()V")) {
-            this.hadLocalJump = true;
+        }
+
+        if (name.equals(isObfuscated ? "bj" : "jump") && desc.equals("()V")) {
+            hadLocalJump = true;
             return super.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localJump", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "knockBack")
-                && desc.equals(this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V")) {
-            this.hadLocalKnockBack = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "knockBack")
+                && desc.equals(isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V")) {
+            hadLocalKnockBack = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localKnockBack", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "mountEntity")
-                && desc.equals(this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V")) {
-            this.hadLocalMountEntity = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "mountEntity")
+                && desc.equals(isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V")) {
+            hadLocalMountEntity = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMountEntity", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "d" : "moveEntity") && desc.equals("(DDD)V")) {
-            this.hadLocalMoveEntity = true;
+        }
+
+        if (name.equals(isObfuscated ? "d" : "moveEntity") && desc.equals("(DDD)V")) {
+            hadLocalMoveEntity = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntity", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "e" : "moveEntityWithHeading") && desc.equals("(FF)V")) {
-            this.hadLocalMoveEntityWithHeading = true;
+        }
+
+        if (name.equals(isObfuscated ? "e" : "moveEntityWithHeading") && desc.equals("(FF)V")) {
+            hadLocalMoveEntityWithHeading = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntityWithHeading", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "moveFlying") && desc.equals("(FFF)V")) {
-            this.hadLocalMoveFlying = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "moveFlying") && desc.equals("(FFF)V")) {
+            hadLocalMoveFlying = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveFlying", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "onDeath")
-                && desc.equals(this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V")) {
-            this.hadLocalOnDeath = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "onDeath")
+                && desc.equals(isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V")) {
+            hadLocalOnDeath = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnDeath", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "e" : "onLivingUpdate") && desc.equals("()V")) {
-            this.hadLocalOnLivingUpdate = true;
+        }
+
+        if (name.equals(isObfuscated ? "e" : "onLivingUpdate") && desc.equals("()V")) {
+            hadLocalOnLivingUpdate = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnLivingUpdate", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "onKillEntity")
-                && desc.equals(this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V")) {
-            this.hadLocalOnKillEntity = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "onKillEntity")
+                && desc.equals(isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V")) {
+            hadLocalOnKillEntity = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnKillEntity", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "onStruckByLightning")
-                && desc.equals(
-                        this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V")) {
-            this.hadLocalOnStruckByLightning = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "onStruckByLightning")
+                && desc.equals(isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V")) {
+            hadLocalOnStruckByLightning = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnStruckByLightning", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "h" : "onUpdate") && desc.equals("()V")) {
-            this.hadLocalOnUpdate = true;
+        }
+
+        if (name.equals(isObfuscated ? "h" : "onUpdate") && desc.equals("()V")) {
+            hadLocalOnUpdate = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdate", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "i" : "onUpdateEntity") && desc.equals("()V")) {
-            this.hadLocalOnUpdateEntity = true;
+        }
+
+        if (name.equals(isObfuscated ? "i" : "onUpdateEntity") && desc.equals("()V")) {
+            hadLocalOnUpdateEntity = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdateEntity", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "readEntityFromNBT")
-                && desc.equals(this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
-            this.hadLocalReadEntityFromNBT = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "readEntityFromNBT")
+                && desc.equals(isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
+            hadLocalReadEntityFromNBT = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localReadEntityFromNBT", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "B" : "setDead") && desc.equals("()V")) {
-            this.hadLocalSetDead = true;
+        }
+
+        if (name.equals(isObfuscated ? "B" : "setDead") && desc.equals("()V")) {
+            hadLocalSetDead = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetDead", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "setEntityActionState") && desc.equals("(FFZZ)V")) {
-            this.hadLocalSetEntityActionState = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "setEntityActionState") && desc.equals("(FFZZ)V")) {
+            hadLocalSetEntityActionState = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetEntityActionState", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "b" : "setPosition") && desc.equals("(DDD)V")) {
-            this.hadLocalSetPosition = true;
+        }
+
+        if (name.equals(isObfuscated ? "b" : "setPosition") && desc.equals("(DDD)V")) {
+            hadLocalSetPosition = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetPosition", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "b" : "setSneaking") && desc.equals("(Z)V")) {
-            this.hadLocalSetSneaking = true;
+        }
+
+        if (name.equals(isObfuscated ? "b" : "setSneaking") && desc.equals("(Z)V")) {
+            hadLocalSetSneaking = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSneaking", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "c" : "setSprinting") && desc.equals("(Z)V")) {
-            this.hadLocalSetSprinting = true;
+        }
+
+        if (name.equals(isObfuscated ? "c" : "setSprinting") && desc.equals("(Z)V")) {
+            hadLocalSetSprinting = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSprinting", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "ba" : "swingItem") && desc.equals("()V")) {
-            this.hadLocalSwingItem = true;
+        }
+
+        if (name.equals(isObfuscated ? "ba" : "swingItem") && desc.equals("()V")) {
+            hadLocalSwingItem = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSwingItem", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "bq" : "updateEntityActionState") && desc.equals("()V")) {
-            this.hadLocalUpdateEntityActionState = true;
+        }
+
+        if (name.equals(isObfuscated ? "bq" : "updateEntityActionState") && desc.equals("()V")) {
+            hadLocalUpdateEntityActionState = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localUpdateEntityActionState",
                     desc,
                     signature,
                     exceptions);
-        } else if (name.equals(this.isObfuscated ? "aO" : "updatePotionEffects") && desc.equals("()V")) {
-            this.hadLocalUpdatePotionEffects = true;
+        }
+
+        if (name.equals(isObfuscated ? "aO" : "updatePotionEffects") && desc.equals("()V")) {
+            hadLocalUpdatePotionEffects = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdatePotionEffects", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "ab" : "updateRidden") && desc.equals("()V")) {
-            this.hadLocalUpdateRidden = true;
+        }
+
+        if (name.equals(isObfuscated ? "ab" : "updateRidden") && desc.equals("()V")) {
+            hadLocalUpdateRidden = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateRidden", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "a" : "wakeUpPlayer") && desc.equals("(ZZZ)V")) {
-            this.hadLocalWakeUpPlayer = true;
+        }
+
+        if (name.equals(isObfuscated ? "a" : "wakeUpPlayer") && desc.equals("(ZZZ)V")) {
+            hadLocalWakeUpPlayer = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWakeUpPlayer", desc, signature, exceptions);
-        } else if (name.equals(this.isObfuscated ? "b" : "writeEntityToNBT")
-                && desc.equals(this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
-            this.hadLocalWriteEntityToNBT = true;
+        }
+
+        if (name.equals(isObfuscated ? "b" : "writeEntityToNBT")
+                && desc.equals(isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
+            hadLocalWriteEntityToNBT = true;
             return super.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWriteEntityToNBT", desc, signature, exceptions);
-        } else {
-            return super.visitMethod(access, name, desc, signature, exceptions);
         }
+
+        return super.visitMethod(access, name, desc, signature, exceptions);
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
     public void visitEnd() {
-        MethodVisitor mv =
-                this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "a" : "addExhaustion", "(F)V", null, null);
+        MethodVisitor mv;
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "a" : "addExhaustion", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
@@ -389,43 +511,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExhaustion", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExhaustion", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "addExhaustion",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "addExhaustion",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExhaustion", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExhaustion", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "addExhaustion",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "addExhaustion",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAddExhaustion) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExhaustion", "(F)V", null, null);
+
+        if (!hadLocalAddExhaustion) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExhaustion", "(F)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "addExhaustion",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "addExhaustion",
                     "(F)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "v" : "addExperience", "(I)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "v" : "addExperience", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
@@ -436,44 +561,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExperience", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExperience", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "v" : "addExperience",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "v" : "addExperience",
                 "(I)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExperience", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExperience", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "v" : "addExperience",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "v" : "addExperience",
                 "(I)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAddExperience) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperience", "(I)V", null, null);
+
+        if (!hadLocalAddExperience) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperience", "(I)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "v" : "addExperience",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "v" : "addExperience",
                     "(I)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "a" : "addExperienceLevel", "(I)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "a" : "addExperienceLevel", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
@@ -484,44 +611,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExperienceLevel", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddExperienceLevel", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "addExperienceLevel",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "addExperienceLevel",
                 "(I)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExperienceLevel", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddExperienceLevel", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "addExperienceLevel",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "addExperienceLevel",
                 "(I)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAddExperienceLevel) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperienceLevel", "(I)V", null, null);
+
+        if (!hadLocalAddExperienceLevel) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperienceLevel", "(I)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "addExperienceLevel",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "addExperienceLevel",
                     "(I)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "k" : "addMovementStat", "(DDD)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "k" : "addMovementStat", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
@@ -534,53 +663,55 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddMovementStat", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realAddMovementStat", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "k" : "addMovementStat",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "k" : "addMovementStat",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddMovementStat", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superAddMovementStat", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "k" : "addMovementStat",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "k" : "addMovementStat",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAddMovementStat) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddMovementStat", "(DDD)V", null, null);
+
+        if (!hadLocalAddMovementStat) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddMovementStat", "(DDD)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.DLOAD, 1);
             mv.visitVarInsn(Opcodes.DLOAD, 3);
             mv.visitVarInsn(Opcodes.DLOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "k" : "addMovementStat",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "k" : "addMovementStat",
                     "(DDD)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "attackEntityFrom",
-                "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
+                isObfuscated ? "a" : "attackEntityFrom",
+                "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -591,14 +722,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "attackEntityFrom",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")Z");
+                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realAttackEntityFrom",
-                "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
+                "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -606,16 +738,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "attackEntityFrom",
-                "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "attackEntityFrom",
+                "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superAttackEntityFrom",
-                "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
+                "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -623,17 +756,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "attackEntityFrom",
-                "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "attackEntityFrom",
+                "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAttackEntityFrom) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalAttackEntityFrom) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localAttackEntityFrom",
-                    "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
+                    "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -641,18 +775,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.FLOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "attackEntityFrom",
-                    "" + (this.isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "attackEntityFrom",
+                    "" + (isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z") + "");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -661,64 +795,66 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "attackTargetEntityWithCurrentItem",
-                "(Lapi/player/server/IServerPlayerAPI;" + (this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;")
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;")
                         + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realAttackTargetEntityWithCurrentItem",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superAttackTargetEntityWithCurrentItem",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalAttackTargetEntityWithCurrentItem) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalAttackTargetEntityWithCurrentItem) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localAttackTargetEntityWithCurrentItem",
-                    "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                    "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
-                    "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem",
+                    "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "aE" : "canBreatheUnderwater", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "aE" : "canBreatheUnderwater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -728,45 +864,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realCanBreatheUnderwater", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realCanBreatheUnderwater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aE" : "canBreatheUnderwater",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aE" : "canBreatheUnderwater",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superCanBreatheUnderwater", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superCanBreatheUnderwater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "aE" : "canBreatheUnderwater",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "aE" : "canBreatheUnderwater",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalCanBreatheUnderwater) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanBreatheUnderwater", "()Z", null, null);
+
+        if (!hadLocalCanBreatheUnderwater) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanBreatheUnderwater", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "aE" : "canBreatheUnderwater",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "aE" : "canBreatheUnderwater",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "canHarvestBlock",
-                "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
+                isObfuscated ? "a" : "canHarvestBlock",
+                "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -775,66 +912,69 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "canHarvestBlock",
-                "(Lapi/player/server/IServerPlayerAPI;" + (this.isObfuscated ? "Laji;" : "Lnet/minecraft/block/Block;")
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Laji;" : "Lnet/minecraft/block/Block;")
                         + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realCanHarvestBlock",
-                "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
+                "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "canHarvestBlock",
-                "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "canHarvestBlock",
+                "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superCanHarvestBlock",
-                "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
+                "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "canHarvestBlock",
-                "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "canHarvestBlock",
+                "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalCanHarvestBlock) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalCanHarvestBlock) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localCanHarvestBlock",
-                    "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
+                    "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "canHarvestBlock",
-                    "" + (this.isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "canHarvestBlock",
+                    "" + (isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z") + "");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "canPlayerEdit",
-                "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
+                isObfuscated ? "a" : "canPlayerEdit",
+                "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -848,14 +988,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "canPlayerEdit",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "IIIILadd;" : "IIIILnet/minecraft/item/ItemStack;") + ")Z");
+                        + (isObfuscated ? "IIIILadd;" : "IIIILnet/minecraft/item/ItemStack;") + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realCanPlayerEdit",
-                "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
+                "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -866,16 +1007,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "canPlayerEdit",
-                "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "canPlayerEdit",
+                "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superCanPlayerEdit",
-                "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
+                "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -886,17 +1028,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "canPlayerEdit",
-                "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "canPlayerEdit",
+                "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalCanPlayerEdit) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalCanPlayerEdit) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localCanPlayerEdit",
-                    "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
+                    "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -907,15 +1050,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ALOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "canPlayerEdit",
-                    "" + (this.isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "canPlayerEdit",
+                    "" + (isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z") + "");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "g_" : "canTriggerWalking", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "g_" : "canTriggerWalking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -925,44 +1068,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realCanTriggerWalking", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realCanTriggerWalking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "g_" : "canTriggerWalking",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "g_" : "canTriggerWalking",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superCanTriggerWalking", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superCanTriggerWalking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "g_" : "canTriggerWalking",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "g_" : "canTriggerWalking",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalCanTriggerWalking) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanTriggerWalking", "()Z", null, null);
+
+        if (!hadLocalCanTriggerWalking) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanTriggerWalking", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "g_" : "canTriggerWalking",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "g_" : "canTriggerWalking",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "clonePlayer",
-                "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
+                isObfuscated ? "a" : "clonePlayer",
+                "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -973,14 +1118,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "clonePlayer",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lyz;Z" : "Lnet/minecraft/entity/player/EntityPlayer;Z") + ")V");
+                        + (isObfuscated ? "Lyz;Z" : "Lnet/minecraft/entity/player/EntityPlayer;Z") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realClonePlayer",
-                "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
+                "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -988,16 +1134,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "clonePlayer",
-                "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "clonePlayer",
+                "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superClonePlayer",
-                "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
+                "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1005,17 +1152,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "clonePlayer",
-                "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "clonePlayer",
+                "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalClonePlayer) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalClonePlayer) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localClonePlayer",
-                    "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
+                    "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1023,18 +1171,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "clonePlayer",
-                    "" + (this.isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "clonePlayer",
+                    "" + (isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "d" : "damageEntity",
-                "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
+                isObfuscated ? "d" : "damageEntity",
+                "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1045,14 +1193,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "damageEntity",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")V");
+                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDamageEntity",
-                "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
+                "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1060,16 +1209,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "d" : "damageEntity",
-                "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "d" : "damageEntity",
+                "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDamageEntity",
-                "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
+                "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1077,17 +1227,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "d" : "damageEntity",
-                "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "d" : "damageEntity",
+                "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDamageEntity) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDamageEntity) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDamageEntity",
-                    "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
+                    "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1095,18 +1246,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.FLOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "d" : "damageEntity",
-                    "" + (this.isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "d" : "damageEntity",
+                    "" + (isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "displayGUIChest",
-                "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
+                isObfuscated ? "a" : "displayGUIChest",
+                "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1116,65 +1267,68 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIChest",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lrb;" : "Lnet/minecraft/inventory/IInventory;") + ")V");
+                        + (isObfuscated ? "Lrb;" : "Lnet/minecraft/inventory/IInventory;") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDisplayGUIChest",
-                "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
+                "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "displayGUIChest",
-                "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "displayGUIChest",
+                "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDisplayGUIChest",
-                "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
+                "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "displayGUIChest",
-                "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "displayGUIChest",
+                "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDisplayGUIChest) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDisplayGUIChest) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDisplayGUIChest",
-                    "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
+                    "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "displayGUIChest",
-                    "" + (this.isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "displayGUIChest",
+                    "" + (isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "func_146102_a",
-                "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
+                isObfuscated ? "a" : "func_146102_a",
+                "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1184,65 +1338,68 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIDispenser",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lapb;" : "Lnet/minecraft/tileentity/TileEntityDispenser;") + ")V");
+                        + (isObfuscated ? "Lapb;" : "Lnet/minecraft/tileentity/TileEntityDispenser;") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDisplayGUIDispenser",
-                "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
+                "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "func_146102_a",
-                "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "func_146102_a",
+                "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDisplayGUIDispenser",
-                "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
+                "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "func_146102_a",
-                "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "func_146102_a",
+                "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDisplayGUIDispenser) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDisplayGUIDispenser) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDisplayGUIDispenser",
-                    "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
+                    "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "func_146102_a",
-                    "" + (this.isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "func_146102_a",
+                    "" + (isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "func_146101_a",
-                "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
+                isObfuscated ? "a" : "func_146101_a",
+                "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1252,63 +1409,65 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIFurnace",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lapg;" : "Lnet/minecraft/tileentity/TileEntityFurnace;") + ")V");
+                        + (isObfuscated ? "Lapg;" : "Lnet/minecraft/tileentity/TileEntityFurnace;") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDisplayGUIFurnace",
-                "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
+                "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "func_146101_a",
-                "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "func_146101_a",
+                "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDisplayGUIFurnace",
-                "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
+                "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "func_146101_a",
-                "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "func_146101_a",
+                "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDisplayGUIFurnace) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDisplayGUIFurnace) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDisplayGUIFurnace",
-                    "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
+                    "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "func_146101_a",
-                    "" + (this.isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "func_146101_a",
+                    "" + (isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "b" : "displayGUIWorkbench", "(III)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "b" : "displayGUIWorkbench", "(III)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
@@ -1321,36 +1480,37 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realDisplayGUIWorkbench", "(III)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realDisplayGUIWorkbench", "(III)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "displayGUIWorkbench",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "displayGUIWorkbench",
                 "(III)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superDisplayGUIWorkbench", "(III)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superDisplayGUIWorkbench", "(III)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "b" : "displayGUIWorkbench",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "b" : "displayGUIWorkbench",
                 "(III)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDisplayGUIWorkbench) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDisplayGUIWorkbench) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIWorkbench", "(III)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
@@ -1358,18 +1518,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 3);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "b" : "displayGUIWorkbench",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "b" : "displayGUIWorkbench",
                     "(III)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "dropOneItem",
-                "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
+                isObfuscated ? "a" : "dropOneItem",
+                "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1379,66 +1539,69 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "dropOneItem",
                 "(Lapi/player/server/IServerPlayerAPI;Z)"
-                        + (this.isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
+                        + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDropOneItem",
-                "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
+                "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "dropOneItem",
-                "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "dropOneItem",
+                "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDropOneItem",
-                "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
+                "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "dropOneItem",
-                "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "dropOneItem",
+                "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDropOneItem) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDropOneItem) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDropOneItem",
-                    "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
+                    "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "dropOneItem",
-                    "" + (this.isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "dropOneItem",
+                    "" + (isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;") + "");
             mv.visitInsn(Opcodes.ARETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
+                isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
                 ""
-                        + (this.isObfuscated
+                        + (isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                         + "",
@@ -1451,17 +1614,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "dropPlayerItem",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Ladd;Z" : "Lnet/minecraft/item/ItemStack;Z") + ")"
-                        + (this.isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Ladd;Z" : "Lnet/minecraft/item/ItemStack;Z")
+                        + ")" + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDropPlayerItem",
                 ""
-                        + (this.isObfuscated
+                        + (isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                         + "",
@@ -1472,21 +1635,22 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
                 ""
-                        + (this.isObfuscated
+                        + (isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                         + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDropPlayerItem",
                 ""
-                        + (this.isObfuscated
+                        + (isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                         + "",
@@ -1497,22 +1661,23 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
                 ""
-                        + (this.isObfuscated
+                        + (isObfuscated
                                 ? "(Ladd;Z)Lxk;"
                                 : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                         + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalDropPlayerItem) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalDropPlayerItem) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDropPlayerItem",
                     ""
-                            + (this.isObfuscated
+                            + (isObfuscated
                                     ? "(Ladd;Z)Lxk;"
                                     : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                             + "",
@@ -1523,10 +1688,10 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
                     ""
-                            + (this.isObfuscated
+                            + (isObfuscated
                                     ? "(Ladd;Z)Lxk;"
                                     : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
                             + "");
@@ -1535,7 +1700,7 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "b" : "fall", "(F)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "b" : "fall", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
@@ -1546,43 +1711,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realFall", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realFall", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "fall",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "fall",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superFall", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superFall", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "b" : "fall",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "b" : "fall",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalFall) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localFall", "(F)V", null, null);
+
+        if (!hadLocalFall) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localFall", "(F)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "b" : "fall",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "b" : "fall",
                     "(F)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "bl" : "getAIMoveSpeed", "()F", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "bl" : "getAIMoveSpeed", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -1592,43 +1760,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetAIMoveSpeed", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetAIMoveSpeed", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bl" : "getAIMoveSpeed",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bl" : "getAIMoveSpeed",
                 "()F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetAIMoveSpeed", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetAIMoveSpeed", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "bl" : "getAIMoveSpeed",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "bl" : "getAIMoveSpeed",
                 "()F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetAIMoveSpeed) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetAIMoveSpeed", "()F", null, null);
+
+        if (!hadLocalGetAIMoveSpeed) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetAIMoveSpeed", "()F", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "bl" : "getAIMoveSpeed",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "bl" : "getAIMoveSpeed",
                     "()F");
             mv.visitInsn(Opcodes.FRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
-                "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
+                isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
+                "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1638,15 +1809,16 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "getCurrentPlayerStrVsBlock",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Laji;Z" : "Lnet/minecraft/block/Block;Z") + ")F");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Laji;Z" : "Lnet/minecraft/block/Block;Z")
+                        + ")F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realGetCurrentPlayerStrVsBlock",
-                "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
+                "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1654,16 +1826,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
-                "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
+                "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superGetCurrentPlayerStrVsBlock",
-                "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
+                "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1671,17 +1844,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
-                "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
+                "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetCurrentPlayerStrVsBlock) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalGetCurrentPlayerStrVsBlock) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localGetCurrentPlayerStrVsBlock",
-                    "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
+                    "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1689,18 +1863,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
-                    "" + (this.isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "getCurrentPlayerStrVsBlock",
+                    "" + (isObfuscated ? "(Laji;Z)F" : "(Lnet/minecraft/block/Block;Z)F") + "");
             mv.visitInsn(Opcodes.FRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
                 "getBreakSpeed",
-                "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
+                "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1711,15 +1885,16 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "getCurrentPlayerStrVsBlockForge",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Laji;ZI" : "Lnet/minecraft/block/Block;ZI") + ")F");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Laji;ZI" : "Lnet/minecraft/block/Block;ZI")
+                        + ")F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realGetCurrentPlayerStrVsBlockForge",
-                "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
+                "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1728,16 +1903,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
                 "getBreakSpeed",
-                "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
+                "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superGetCurrentPlayerStrVsBlockForge",
-                "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
+                "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1746,17 +1922,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
                 "getBreakSpeed",
-                "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
+                "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetCurrentPlayerStrVsBlockForge) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalGetCurrentPlayerStrVsBlockForge) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localGetCurrentPlayerStrVsBlockForge",
-                    "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
+                    "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1765,15 +1942,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 3);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
                     "getBreakSpeed",
-                    "" + (this.isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
+                    "" + (isObfuscated ? "(Laji;ZI)F" : "(Lnet/minecraft/block/Block;ZI)F") + "");
             mv.visitInsn(Opcodes.FRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "e" : "getDistanceSq", "(DDD)D", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "e" : "getDistanceSq", "(DDD)D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
@@ -1786,50 +1963,52 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetDistanceSq", "(DDD)D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetDistanceSq", "(DDD)D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "e" : "getDistanceSq",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "e" : "getDistanceSq",
                 "(DDD)D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetDistanceSq", "(DDD)D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetDistanceSq", "(DDD)D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "e" : "getDistanceSq",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "e" : "getDistanceSq",
                 "(DDD)D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetDistanceSq) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetDistanceSq", "(DDD)D", null, null);
+
+        if (!hadLocalGetDistanceSq) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetDistanceSq", "(DDD)D", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.DLOAD, 1);
             mv.visitVarInsn(Opcodes.DLOAD, 3);
             mv.visitVarInsn(Opcodes.DLOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "e" : "getDistanceSq",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "e" : "getDistanceSq",
                     "(DDD)D");
             mv.visitInsn(Opcodes.DRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "d" : "getBrightness", "(F)F", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "d" : "getBrightness", "(F)F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
@@ -1840,43 +2019,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetBrightness", "(F)F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetBrightness", "(F)F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "d" : "getBrightness",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "d" : "getBrightness",
                 "(F)F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetBrightness", "(F)F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetBrightness", "(F)F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "d" : "getBrightness",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "d" : "getBrightness",
                 "(F)F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetBrightness) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetBrightness", "(F)F", null, null);
+
+        if (!hadLocalGetBrightness) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetBrightness", "(F)F", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "d" : "getBrightness",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "d" : "getBrightness",
                     "(F)F");
             mv.visitInsn(Opcodes.FRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "g" : "getEyeHeight", "()F", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "g" : "getEyeHeight", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -1886,40 +2068,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetEyeHeight", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realGetEyeHeight", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "g" : "getEyeHeight",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "g" : "getEyeHeight",
                 "()F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetEyeHeight", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superGetEyeHeight", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "g" : "getEyeHeight",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "g" : "getEyeHeight",
                 "()F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalGetEyeHeight) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetEyeHeight", "()F", null, null);
+
+        if (!hadLocalGetEyeHeight) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetEyeHeight", "()F", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "g" : "getEyeHeight",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "g" : "getEyeHeight",
                     "()F");
             mv.visitInsn(Opcodes.FRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "f" : "heal", "(F)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "f" : "heal", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
@@ -1930,44 +2115,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realHeal", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realHeal", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "f" : "heal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "f" : "heal",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superHeal", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superHeal", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "f" : "heal",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "f" : "heal",
                 "(F)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalHeal) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localHeal", "(F)V", null, null);
+
+        if (!hadLocalHeal) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localHeal", "(F)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "f" : "heal",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "f" : "heal",
                     "(F)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "aa" : "isEntityInsideOpaqueBlock", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "aa" : "isEntityInsideOpaqueBlock", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -1977,43 +2164,45 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsEntityInsideOpaqueBlock", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsEntityInsideOpaqueBlock", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsEntityInsideOpaqueBlock", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsEntityInsideOpaqueBlock) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalIsEntityInsideOpaqueBlock) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsEntityInsideOpaqueBlock", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "aa" : "isEntityInsideOpaqueBlock",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "M" : "isInWater", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "M" : "isInWater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2023,43 +2212,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsInWater", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsInWater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "M" : "isInWater",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "M" : "isInWater",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsInWater", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsInWater", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "M" : "isInWater",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "M" : "isInWater",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsInWater) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInWater", "()Z", null, null);
+
+        if (!hadLocalIsInWater) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInWater", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "M" : "isInWater",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "M" : "isInWater",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "isInsideOfMaterial",
-                "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
+                isObfuscated ? "a" : "isInsideOfMaterial",
+                "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2069,62 +2261,65 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "isInsideOfMaterial",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lawt;" : "Lnet/minecraft/block/material/Material;") + ")Z");
+                        + (isObfuscated ? "Lawt;" : "Lnet/minecraft/block/material/Material;") + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realIsInsideOfMaterial",
-                "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
+                "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "isInsideOfMaterial",
-                "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "isInsideOfMaterial",
+                "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superIsInsideOfMaterial",
-                "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
+                "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "isInsideOfMaterial",
-                "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "isInsideOfMaterial",
+                "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsInsideOfMaterial) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalIsInsideOfMaterial) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localIsInsideOfMaterial",
-                    "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
+                    "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "isInsideOfMaterial",
-                    "" + (this.isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "isInsideOfMaterial",
+                    "" + (isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z") + "");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "h_" : "isOnLadder", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "h_" : "isOnLadder", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2134,40 +2329,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsOnLadder", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsOnLadder", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "h_" : "isOnLadder",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "h_" : "isOnLadder",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsOnLadder", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsOnLadder", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "h_" : "isOnLadder",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "h_" : "isOnLadder",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsOnLadder) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsOnLadder", "()Z", null, null);
+
+        if (!hadLocalIsOnLadder) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsOnLadder", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "h_" : "isOnLadder",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "h_" : "isOnLadder",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "bm" : "isPlayerSleeping", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "bm" : "isPlayerSleeping", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2177,41 +2375,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsPlayerSleeping", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsPlayerSleeping", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bm" : "isPlayerSleeping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bm" : "isPlayerSleeping",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsPlayerSleeping", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsPlayerSleeping", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "bm" : "isPlayerSleeping",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "bm" : "isPlayerSleeping",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsPlayerSleeping) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsPlayerSleeping", "()Z", null, null);
+
+        if (!hadLocalIsPlayerSleeping) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsPlayerSleeping", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "bm" : "isPlayerSleeping",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "bm" : "isPlayerSleeping",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "an" : "isSneaking", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "an" : "isSneaking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2221,40 +2421,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsSneaking", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realIsSneaking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "an" : "isSneaking",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "an" : "isSneaking",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsSneaking", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsSneaking", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "an" : "isSneaking",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "an" : "isSneaking",
                 "()Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalIsSneaking) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsSneaking", "()Z", null, null);
+
+        if (!hadLocalIsSneaking) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsSneaking", "()Z", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "an" : "isSneaking",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "an" : "isSneaking",
                     "()Z");
             mv.visitInsn(Opcodes.IRETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "bj" : "jump", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "bj" : "jump", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2264,43 +2467,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realJump", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realJump", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bj" : "jump",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bj" : "jump",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superJump", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superJump", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "bj" : "jump",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "bj" : "jump",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalJump) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localJump", "()V", null, null);
+
+        if (!hadLocalJump) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localJump", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "bj" : "jump",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "bj" : "jump",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "knockBack",
-                "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
+                isObfuscated ? "a" : "knockBack",
+                "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2313,14 +2519,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "knockBack",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lsa;FDD" : "Lnet/minecraft/entity/Entity;FDD") + ")V");
+                        + (isObfuscated ? "Lsa;FDD" : "Lnet/minecraft/entity/Entity;FDD") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realKnockBack",
-                "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
+                "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2330,16 +2537,17 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "knockBack",
-                "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "knockBack",
+                "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superKnockBack",
-                "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
+                "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2349,17 +2557,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "knockBack",
-                "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "knockBack",
+                "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalKnockBack) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalKnockBack) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localKnockBack",
-                    "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
+                    "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2369,18 +2578,18 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.DLOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "knockBack",
-                    "" + (this.isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "knockBack",
+                    "" + (isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "mountEntity",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                isObfuscated ? "a" : "mountEntity",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2389,63 +2598,66 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "mountEntity",
-                "(Lapi/player/server/IServerPlayerAPI;" + (this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;")
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;")
                         + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realMountEntity",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "mountEntity",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "mountEntity",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superMountEntity",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "mountEntity",
-                "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "mountEntity",
+                "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalMountEntity) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalMountEntity) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localMountEntity",
-                    "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
+                    "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "mountEntity",
-                    "" + (this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "mountEntity",
+                    "" + (isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "d" : "moveEntity", "(DDD)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "d" : "moveEntity", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
@@ -2458,50 +2670,52 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveEntity", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveEntity", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "d" : "moveEntity",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "d" : "moveEntity",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveEntity", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveEntity", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "d" : "moveEntity",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "d" : "moveEntity",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalMoveEntity) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntity", "(DDD)V", null, null);
+
+        if (!hadLocalMoveEntity) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntity", "(DDD)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.DLOAD, 1);
             mv.visitVarInsn(Opcodes.DLOAD, 3);
             mv.visitVarInsn(Opcodes.DLOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "d" : "moveEntity",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "d" : "moveEntity",
                     "(DDD)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "e" : "moveEntityWithHeading", "(FF)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "e" : "moveEntityWithHeading", "(FF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -2513,49 +2727,50 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveEntityWithHeading", "(FF)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveEntityWithHeading", "(FF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "e" : "moveEntityWithHeading",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "e" : "moveEntityWithHeading",
                 "(FF)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveEntityWithHeading", "(FF)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveEntityWithHeading", "(FF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "e" : "moveEntityWithHeading",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "e" : "moveEntityWithHeading",
                 "(FF)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalMoveEntityWithHeading) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalMoveEntityWithHeading) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntityWithHeading", "(FF)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitVarInsn(Opcodes.FLOAD, 2);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "e" : "moveEntityWithHeading",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "e" : "moveEntityWithHeading",
                     "(FF)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "a" : "moveFlying", "(FFF)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "a" : "moveFlying", "(FFF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -2568,52 +2783,55 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveFlying", "(FFF)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realMoveFlying", "(FFF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitVarInsn(Opcodes.FLOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "moveFlying",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "moveFlying",
                 "(FFF)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveFlying", "(FFF)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superMoveFlying", "(FFF)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
         mv.visitVarInsn(Opcodes.FLOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "moveFlying",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "moveFlying",
                 "(FFF)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalMoveFlying) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveFlying", "(FFF)V", null, null);
+
+        if (!hadLocalMoveFlying) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveFlying", "(FFF)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitVarInsn(Opcodes.FLOAD, 2);
             mv.visitVarInsn(Opcodes.FLOAD, 3);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "moveFlying",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "moveFlying",
                     "(FFF)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "onDeath",
-                "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
+                isObfuscated ? "a" : "onDeath",
+                "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2622,63 +2840,66 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "onDeath",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lro;" : "Lnet/minecraft/util/DamageSource;") + ")V");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Lro;" : "Lnet/minecraft/util/DamageSource;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realOnDeath",
-                "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
+                "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "onDeath",
-                "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "onDeath",
+                "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superOnDeath",
-                "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
+                "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "onDeath",
-                "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "onDeath",
+                "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnDeath) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalOnDeath) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localOnDeath",
-                    "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
+                    "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "onDeath",
-                    "" + (this.isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "onDeath",
+                    "" + (isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "e" : "onLivingUpdate", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "e" : "onLivingUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2688,43 +2909,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnLivingUpdate", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnLivingUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "e" : "onLivingUpdate",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "e" : "onLivingUpdate",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnLivingUpdate", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnLivingUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "e" : "onLivingUpdate",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "e" : "onLivingUpdate",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnLivingUpdate) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnLivingUpdate", "()V", null, null);
+
+        if (!hadLocalOnLivingUpdate) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnLivingUpdate", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "e" : "onLivingUpdate",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "e" : "onLivingUpdate",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "onKillEntity",
-                "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
+                isObfuscated ? "a" : "onKillEntity",
+                "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2734,65 +2958,68 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "onKillEntity",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lsv;" : "Lnet/minecraft/entity/EntityLivingBase;") + ")V");
+                        + (isObfuscated ? "Lsv;" : "Lnet/minecraft/entity/EntityLivingBase;") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realOnKillEntity",
-                "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
+                "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "onKillEntity",
-                "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "onKillEntity",
+                "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superOnKillEntity",
-                "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
+                "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "onKillEntity",
-                "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "onKillEntity",
+                "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnKillEntity) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalOnKillEntity) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localOnKillEntity",
-                    "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
+                    "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "onKillEntity",
-                    "" + (this.isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "onKillEntity",
+                    "" + (isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "onStruckByLightning",
-                "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
+                isObfuscated ? "a" : "onStruckByLightning",
+                "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2802,62 +3029,65 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "onStruckByLightning",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Lxh;" : "Lnet/minecraft/entity/effect/EntityLightningBolt;") + ")V");
+                        + (isObfuscated ? "Lxh;" : "Lnet/minecraft/entity/effect/EntityLightningBolt;") + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realOnStruckByLightning",
-                "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
+                "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "onStruckByLightning",
-                "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "onStruckByLightning",
+                "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superOnStruckByLightning",
-                "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
+                "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "onStruckByLightning",
-                "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "onStruckByLightning",
+                "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnStruckByLightning) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalOnStruckByLightning) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localOnStruckByLightning",
-                    "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
+                    "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "onStruckByLightning",
-                    "" + (this.isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "onStruckByLightning",
+                    "" + (isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "h" : "onUpdate", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "h" : "onUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2867,40 +3097,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnUpdate", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "h" : "onUpdate",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "h" : "onUpdate",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnUpdate", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnUpdate", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "h" : "onUpdate",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "h" : "onUpdate",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnUpdate) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdate", "()V", null, null);
+
+        if (!hadLocalOnUpdate) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdate", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "h" : "onUpdate",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "h" : "onUpdate",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "i" : "onUpdateEntity", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "i" : "onUpdateEntity", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -2910,43 +3143,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnUpdateEntity", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realOnUpdateEntity", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "i" : "onUpdateEntity",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "i" : "onUpdateEntity",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnUpdateEntity", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superOnUpdateEntity", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "i" : "onUpdateEntity",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "i" : "onUpdateEntity",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalOnUpdateEntity) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdateEntity", "()V", null, null);
+
+        if (!hadLocalOnUpdateEntity) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdateEntity", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "i" : "onUpdateEntity",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "i" : "onUpdateEntity",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "a" : "readEntityFromNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                isObfuscated ? "a" : "readEntityFromNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -2955,63 +3191,66 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "readEntityFromNBT",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Ldh;" : "Lnet/minecraft/nbt/NBTTagCompound;") + ")V");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Ldh;" : "Lnet/minecraft/nbt/NBTTagCompound;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realReadEntityFromNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "readEntityFromNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "readEntityFromNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superReadEntityFromNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "readEntityFromNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "readEntityFromNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalReadEntityFromNBT) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalReadEntityFromNBT) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localReadEntityFromNBT",
-                    "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                    "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "readEntityFromNBT",
-                    "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "readEntityFromNBT",
+                    "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "B" : "setDead", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "B" : "setDead", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -3021,41 +3260,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetDead", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetDead", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "B" : "setDead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "B" : "setDead",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetDead", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetDead", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "B" : "setDead",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "B" : "setDead",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSetDead) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetDead", "()V", null, null);
+
+        if (!hadLocalSetDead) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetDead", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "B" : "setDead",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "B" : "setDead",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "a" : "setEntityActionState", "(FFZZ)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "a" : "setEntityActionState", "(FFZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -3069,8 +3310,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetEntityActionState", "(FFZZ)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetEntityActionState", "(FFZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -3078,14 +3319,14 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 4);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "setEntityActionState",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "setEntityActionState",
                 "(FFZZ)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetEntityActionState", "(FFZZ)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetEntityActionState", "(FFZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -3093,14 +3334,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ILOAD, 4);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "setEntityActionState",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "setEntityActionState",
                 "(FFZZ)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSetEntityActionState) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalSetEntityActionState) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetEntityActionState", "(FFZZ)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
@@ -3109,15 +3351,15 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv.visitVarInsn(Opcodes.ILOAD, 4);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "setEntityActionState",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "setEntityActionState",
                     "(FFZZ)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "b" : "setPosition", "(DDD)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "b" : "setPosition", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
@@ -3130,49 +3372,52 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetPosition", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetPosition", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "setPosition",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "setPosition",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetPosition", "(DDD)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetPosition", "(DDD)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitVarInsn(Opcodes.DLOAD, 3);
         mv.visitVarInsn(Opcodes.DLOAD, 5);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "b" : "setPosition",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "b" : "setPosition",
                 "(DDD)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSetPosition) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetPosition", "(DDD)V", null, null);
+
+        if (!hadLocalSetPosition) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetPosition", "(DDD)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.DLOAD, 1);
             mv.visitVarInsn(Opcodes.DLOAD, 3);
             mv.visitVarInsn(Opcodes.DLOAD, 5);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "b" : "setPosition",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "b" : "setPosition",
                     "(DDD)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "b" : "setSneaking", "(Z)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "b" : "setSneaking", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
@@ -3183,43 +3428,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetSneaking", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetSneaking", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "setSneaking",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "setSneaking",
                 "(Z)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetSneaking", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetSneaking", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "b" : "setSneaking",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "b" : "setSneaking",
                 "(Z)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSetSneaking) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSneaking", "(Z)V", null, null);
+
+        if (!hadLocalSetSneaking) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSneaking", "(Z)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "b" : "setSneaking",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "b" : "setSneaking",
                     "(Z)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "c" : "setSprinting", "(Z)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "c" : "setSprinting", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
@@ -3230,43 +3478,46 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetSprinting", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSetSprinting", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "c" : "setSprinting",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "c" : "setSprinting",
                 "(Z)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetSprinting", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSetSprinting", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "c" : "setSprinting",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "c" : "setSprinting",
                 "(Z)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSetSprinting) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSprinting", "(Z)V", null, null);
+
+        if (!hadLocalSetSprinting) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSprinting", "(Z)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "c" : "setSprinting",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "c" : "setSprinting",
                     "(Z)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "ba" : "swingItem", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "ba" : "swingItem", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -3276,41 +3527,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSwingItem", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realSwingItem", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ba" : "swingItem",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ba" : "swingItem",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSwingItem", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superSwingItem", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "ba" : "swingItem",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "ba" : "swingItem",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalSwingItem) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSwingItem", "()V", null, null);
+
+        if (!hadLocalSwingItem) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSwingItem", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "ba" : "swingItem",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "ba" : "swingItem",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "bq" : "updateEntityActionState", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "bq" : "updateEntityActionState", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -3320,44 +3573,44 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdateEntityActionState", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdateEntityActionState", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bq" : "updateEntityActionState",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bq" : "updateEntityActionState",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdateEntityActionState", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdateEntityActionState", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "bq" : "updateEntityActionState",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "bq" : "updateEntityActionState",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalUpdateEntityActionState) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalUpdateEntityActionState) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateEntityActionState", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "bq" : "updateEntityActionState",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "bq" : "updateEntityActionState",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC, this.isObfuscated ? "aO" : "updatePotionEffects", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "aO" : "updatePotionEffects", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -3367,41 +3620,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdatePotionEffects", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdatePotionEffects", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aO" : "updatePotionEffects",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aO" : "updatePotionEffects",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdatePotionEffects", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdatePotionEffects", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "aO" : "updatePotionEffects",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "aO" : "updatePotionEffects",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalUpdatePotionEffects) {
-            mv = this.cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdatePotionEffects", "()V", null, null);
+
+        if (!hadLocalUpdatePotionEffects) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdatePotionEffects", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "aO" : "updatePotionEffects",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "aO" : "updatePotionEffects",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "ab" : "updateRidden", "()V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "ab" : "updateRidden", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,
@@ -3411,40 +3666,43 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdateRidden", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realUpdateRidden", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ab" : "updateRidden",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ab" : "updateRidden",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdateRidden", "()V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superUpdateRidden", "()V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "ab" : "updateRidden",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "ab" : "updateRidden",
                 "()V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalUpdateRidden) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateRidden", "()V", null, null);
+
+        if (!hadLocalUpdateRidden) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateRidden", "()V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "ab" : "updateRidden",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "ab" : "updateRidden",
                     "()V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC, this.isObfuscated ? "a" : "wakeUpPlayer", "(ZZZ)V", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC, isObfuscated ? "a" : "wakeUpPlayer", "(ZZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
@@ -3457,52 +3715,55 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realWakeUpPlayer", "(ZZZ)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "realWakeUpPlayer", "(ZZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "wakeUpPlayer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "wakeUpPlayer",
                 "(ZZZ)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superWakeUpPlayer", "(ZZZ)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superWakeUpPlayer", "(ZZZ)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitVarInsn(Opcodes.ILOAD, 2);
         mv.visitVarInsn(Opcodes.ILOAD, 3);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "a" : "wakeUpPlayer",
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "a" : "wakeUpPlayer",
                 "(ZZZ)V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalWakeUpPlayer) {
-            mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWakeUpPlayer", "(ZZZ)V", null, null);
+
+        if (!hadLocalWakeUpPlayer) {
+            mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWakeUpPlayer", "(ZZZ)V", null, null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitVarInsn(Opcodes.ILOAD, 2);
             mv.visitVarInsn(Opcodes.ILOAD, 3);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "a" : "wakeUpPlayer",
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "a" : "wakeUpPlayer",
                     "(ZZZ)V");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
-                this.isObfuscated ? "b" : "writeEntityToNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                isObfuscated ? "b" : "writeEntityToNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -3511,475 +3772,513 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESTATIC,
                 "api/player/server/ServerPlayerAPI",
                 "writeEntityToNBT",
-                "(Lapi/player/server/IServerPlayerAPI;"
-                        + (this.isObfuscated ? "Ldh;" : "Lnet/minecraft/nbt/NBTTagCompound;") + ")V");
+                "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Ldh;" : "Lnet/minecraft/nbt/NBTTagCompound;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realWriteEntityToNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKEVIRTUAL,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "writeEntityToNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "writeEntityToNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superWriteEntityToNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
-                this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                this.isObfuscated ? "b" : "writeEntityToNBT",
-                "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                isObfuscated ? "b" : "writeEntityToNBT",
+                "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        if (!this.hadLocalWriteEntityToNBT) {
-            mv = this.cv.visitMethod(
+
+        if (!hadLocalWriteEntityToNBT) {
+            mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localWriteEntityToNBT",
-                    "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
+                    "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ALOAD, 1);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
-                    this.isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
-                    this.isObfuscated ? "b" : "writeEntityToNBT",
-                    "" + (this.isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
+                    isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
+                    isObfuscated ? "b" : "writeEntityToNBT",
+                    "" + (isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V") + "");
             mv.visitInsn(Opcodes.RETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
 
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAddedToChunkField", "()Z", null, null);
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAddedToChunkField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ag" : "addedToChunk",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ag" : "addedToChunk",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAddedToChunkField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAddedToChunkField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ag" : "addedToChunk",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ag" : "addedToChunk",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getArrowHitTimerField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getArrowHitTimerField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "av" : "arrowHitTimer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "av" : "arrowHitTimer",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setArrowHitTimerField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setArrowHitTimerField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "av" : "arrowHitTimer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "av" : "arrowHitTimer",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAttackTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAttackTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aB" : "attackTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aB" : "attackTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAttackTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAttackTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aB" : "attackTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aB" : "attackTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAttackedAtYawField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getAttackedAtYawField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "az" : "attackedAtYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "az" : "attackedAtYaw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAttackedAtYawField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setAttackedAtYawField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "az" : "attackedAtYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "az" : "attackedAtYaw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getAttackingPlayerField",
-                this.isObfuscated ? "()Lyz;" : "()Lnet/minecraft/entity/player/EntityPlayer;",
+                isObfuscated ? "()Lyz;" : "()Lnet/minecraft/entity/player/EntityPlayer;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aR" : "attackingPlayer",
-                this.isObfuscated ? "Lyz;" : "Lnet/minecraft/entity/player/EntityPlayer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aR" : "attackingPlayer",
+                isObfuscated ? "Lyz;" : "Lnet/minecraft/entity/player/EntityPlayer;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setAttackingPlayerField",
-                this.isObfuscated ? "(Lyz;)V" : "(Lnet/minecraft/entity/player/EntityPlayer;)V",
+                isObfuscated ? "(Lyz;)V" : "(Lnet/minecraft/entity/player/EntityPlayer;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aR" : "attackingPlayer",
-                this.isObfuscated ? "Lyz;" : "Lnet/minecraft/entity/player/EntityPlayer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aR" : "attackingPlayer",
+                isObfuscated ? "Lyz;" : "Lnet/minecraft/entity/player/EntityPlayer;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getBoundingBoxField",
-                this.isObfuscated ? "()Lazt;" : "()Lnet/minecraft/util/AxisAlignedBB;",
+                isObfuscated ? "()Lazt;" : "()Lnet/minecraft/util/AxisAlignedBB;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "C" : "boundingBox",
-                this.isObfuscated ? "Lazt;" : "Lnet/minecraft/util/AxisAlignedBB;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "C" : "boundingBox",
+                isObfuscated ? "Lazt;" : "Lnet/minecraft/util/AxisAlignedBB;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCameraPitchField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCameraPitchField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aJ" : "cameraPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aJ" : "cameraPitch",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCameraPitchField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCameraPitchField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aJ" : "cameraPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aJ" : "cameraPitch",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCameraYawField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCameraYawField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bs" : "cameraYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bs" : "cameraYaw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCameraYawField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCameraYawField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bs" : "cameraYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bs" : "cameraYaw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getCapabilitiesField",
-                this.isObfuscated ? "()Lyw;" : "()Lnet/minecraft/entity/player/PlayerCapabilities;",
+                isObfuscated ? "()Lyw;" : "()Lnet/minecraft/entity/player/PlayerCapabilities;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bE" : "capabilities",
-                this.isObfuscated ? "Lyw;" : "Lnet/minecraft/entity/player/PlayerCapabilities;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bE" : "capabilities",
+                isObfuscated ? "Lyw;" : "Lnet/minecraft/entity/player/PlayerCapabilities;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setCapabilitiesField",
-                this.isObfuscated ? "(Lyw;)V" : "(Lnet/minecraft/entity/player/PlayerCapabilities;)V",
+                isObfuscated ? "(Lyw;)V" : "(Lnet/minecraft/entity/player/PlayerCapabilities;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bE" : "capabilities",
-                this.isObfuscated ? "Lyw;" : "Lnet/minecraft/entity/player/PlayerCapabilities;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bE" : "capabilities",
+                isObfuscated ? "Lyw;" : "Lnet/minecraft/entity/player/PlayerCapabilities;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChatColoursField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChatColoursField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bW" : "chatColours",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bW" : "chatColours",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChatColoursField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChatColoursField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bW" : "chatColours",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bW" : "chatColours",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getChatVisibilityField",
-                this.isObfuscated ? "()Lzb;" : "()Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;",
+                isObfuscated ? "()Lzb;" : "()Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bV" : "chatVisibility",
-                this.isObfuscated ? "Lzb;" : "Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bV" : "chatVisibility",
+                isObfuscated ? "Lzb;" : "Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setChatVisibilityField",
-                this.isObfuscated ? "(Lzb;)V" : "(Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;)V",
+                isObfuscated ? "(Lzb;)V" : "(Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bV" : "chatVisibility",
-                this.isObfuscated ? "Lzb;" : "Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bV" : "chatVisibility",
+                isObfuscated ? "Lzb;" : "Lnet/minecraft/entity/player/EntityPlayer$EnumChatVisibility;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordXField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordXField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ah" : "chunkCoordX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ah" : "chunkCoordX",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordXField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordXField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ah" : "chunkCoordX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ah" : "chunkCoordX",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordYField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordYField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ai" : "chunkCoordY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ai" : "chunkCoordY",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordYField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordYField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ai" : "chunkCoordY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ai" : "chunkCoordY",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordZField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getChunkCoordZField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aj" : "chunkCoordZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aj" : "chunkCoordZ",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordZField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setChunkCoordZField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aj" : "chunkCoordZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aj" : "chunkCoordZ",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCurrentWindowIdField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getCurrentWindowIdField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bY" : "currentWindowId",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bY" : "currentWindowId",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCurrentWindowIdField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setCurrentWindowIdField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bY" : "currentWindowId",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bY" : "currentWindowId",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getDataWatcherField",
-                this.isObfuscated ? "()Lte;" : "()Lnet/minecraft/entity/DataWatcher;",
+                isObfuscated ? "()Lte;" : "()Lnet/minecraft/entity/DataWatcher;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "af" : "dataWatcher",
-                this.isObfuscated ? "Lte;" : "Lnet/minecraft/entity/DataWatcher;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "af" : "dataWatcher",
+                isObfuscated ? "Lte;" : "Lnet/minecraft/entity/DataWatcher;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setDataWatcherField",
-                this.isObfuscated ? "(Lte;)V" : "(Lnet/minecraft/entity/DataWatcher;)V",
+                isObfuscated ? "(Lte;)V" : "(Lnet/minecraft/entity/DataWatcher;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "af" : "dataWatcher",
-                this.isObfuscated ? "Lte;" : "Lnet/minecraft/entity/DataWatcher;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "af" : "dataWatcher",
+                isObfuscated ? "Lte;" : "Lnet/minecraft/entity/DataWatcher;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDeadField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDeadField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aT" : "dead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aT" : "dead",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDeadField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDeadField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aT" : "dead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aT" : "dead",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDeathTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDeathTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aA" : "deathTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aA" : "deathTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDeathTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDeathTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aA" : "deathTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aA" : "deathTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getDestroyedItemsNetCacheField",
                 "()Ljava/util/List;",
@@ -3988,1424 +4287,1543 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bN" : "destroyedItemsNetCache",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bN" : "destroyedItemsNetCache",
                 "Ljava/util/List;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDimensionField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDimensionField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ap" : "dimension",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ap" : "dimension",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDimensionField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDimensionField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ap" : "dimension",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ap" : "dimension",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDistanceWalkedModifiedField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "P" : "distanceWalkedModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "P" : "distanceWalkedModified",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDistanceWalkedModifiedField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "P" : "distanceWalkedModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "P" : "distanceWalkedModified",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDistanceWalkedOnStepModifiedField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Q" : "distanceWalkedOnStepModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Q" : "distanceWalkedOnStepModified",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDistanceWalkedOnStepModifiedField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Q" : "distanceWalkedOnStepModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Q" : "distanceWalkedOnStepModified",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityAgeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityAgeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aU" : "entityAge",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aU" : "entityAge",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityAgeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityAgeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aU" : "entityAge",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aU" : "entityAge",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityCollisionReductionField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Y" : "entityCollisionReduction",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Y" : "entityCollisionReduction",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityCollisionReductionField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Y" : "entityCollisionReduction",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Y" : "entityCollisionReduction",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityUniqueIDField", "()Ljava/util/UUID;", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ar" : "entityUniqueID",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ar" : "entityUniqueID",
                 "Ljava/util/UUID;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityUniqueIDField", "(Ljava/util/UUID;)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ar" : "entityUniqueID",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ar" : "entityUniqueID",
                 "Ljava/util/UUID;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bH" : "experience",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bH" : "experience",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bH" : "experience",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bH" : "experience",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceLevelField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceLevelField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bF" : "experienceLevel",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bF" : "experienceLevel",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceLevelField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceLevelField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bF" : "experienceLevel",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bF" : "experienceLevel",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceTotalField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getExperienceTotalField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bG" : "experienceTotal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bG" : "experienceTotal",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceTotalField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setExperienceTotalField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bG" : "experienceTotal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bG" : "experienceTotal",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFallDistanceField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFallDistanceField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "R" : "fallDistance",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "R" : "fallDistance",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFallDistanceField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFallDistanceField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "R" : "fallDistance",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "R" : "fallDistance",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_110154_aXField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_110154_aXField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aW" : "field_110154_aX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aW" : "field_110154_aX",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_110154_aXField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_110154_aXField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aW" : "field_110154_aX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aW" : "field_110154_aX",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_130068_bOField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_130068_bOField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bP" : "field_130068_bO",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bP" : "field_130068_bO",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_130068_bOField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_130068_bOField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bP" : "field_130068_bO",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bP" : "field_130068_bO",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_143005_bXField", "()J", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_143005_bXField", "()J", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bX" : "field_143005_bX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bX" : "field_143005_bX",
                 "J");
-        mv.visitInsn(173);
+        mv.visitInsn(Opcodes.LRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_143005_bXField", "(J)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_143005_bXField", "(J)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
-        mv.visitVarInsn(22, 1);
+        mv.visitVarInsn(Opcodes.LLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bX" : "field_143005_bX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bX" : "field_143005_bX",
                 "J");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_147101_bUField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_147101_bUField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bU" : "field_147101_bU",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bU" : "field_147101_bU",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_147101_bUField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_147101_bUField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bU" : "field_147101_bU",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bU" : "field_147101_bU",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getField_147103_bOField",
-                this.isObfuscated ? "()Lpg;" : "()Lnet/minecraft/stats/StatisticsFile;",
+                isObfuscated ? "()Lpg;" : "()Lnet/minecraft/stats/StatisticsFile;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bO" : "field_147103_bO",
-                this.isObfuscated ? "Lpg;" : "Lnet/minecraft/stats/StatisticsFile;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bO" : "field_147103_bO",
+                isObfuscated ? "Lpg;" : "Lnet/minecraft/stats/StatisticsFile;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70135_KField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70135_KField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "J" : "field_70135_K",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "J" : "field_70135_K",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70135_KField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70135_KField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "J" : "field_70135_K",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "J" : "field_70135_K",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70741_aBField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70741_aBField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aZ" : "field_70741_aB",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aZ" : "field_70741_aB",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70741_aBField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70741_aBField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aZ" : "field_70741_aB",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aZ" : "field_70741_aB",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70763_axField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70763_axField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aY" : "field_70763_ax",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aY" : "field_70763_ax",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70763_axField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70763_axField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aY" : "field_70763_ax",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aY" : "field_70763_ax",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70764_awField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70764_awField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aX" : "field_70764_aw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aX" : "field_70764_aw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70764_awField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70764_awField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aX" : "field_70764_aw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aX" : "field_70764_aw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70768_auField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70768_auField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aV" : "field_70768_au",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aV" : "field_70768_au",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70768_auField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70768_auField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aV" : "field_70768_au",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aV" : "field_70768_au",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70769_aoField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70769_aoField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aK" : "field_70769_ao",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aK" : "field_70769_ao",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70769_aoField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70769_aoField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aK" : "field_70769_ao",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aK" : "field_70769_ao",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70770_apField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_70770_apField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aL" : "field_70770_ap",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aL" : "field_70770_ap",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70770_apField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_70770_apField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aL" : "field_70770_ap",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aL" : "field_70770_ap",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71079_bUField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71079_bUField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bC" : "field_71079_bU",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bC" : "field_71079_bU",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71079_bUField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71079_bUField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bC" : "field_71079_bU",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bC" : "field_71079_bU",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71082_cxField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71082_cxField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "cc" : "field_71082_cx",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "cc" : "field_71082_cx",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71082_cxField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71082_cxField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "cc" : "field_71082_cx",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "cc" : "field_71082_cx",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71085_bRField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71085_bRField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bz" : "field_71085_bR",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bz" : "field_71085_bR",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71085_bRField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71085_bRField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bz" : "field_71085_bR",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bz" : "field_71085_bR",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71089_bVField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71089_bVField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bD" : "field_71089_bV",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bD" : "field_71089_bV",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71089_bVField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71089_bVField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bD" : "field_71089_bV",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bD" : "field_71089_bV",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71091_bMField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71091_bMField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bu" : "field_71091_bM",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bu" : "field_71091_bM",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71091_bMField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71091_bMField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bu" : "field_71091_bM",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bu" : "field_71091_bM",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71094_bPField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71094_bPField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bx" : "field_71094_bP",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bx" : "field_71094_bP",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71094_bPField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71094_bPField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bx" : "field_71094_bP",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bx" : "field_71094_bP",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71095_bQField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71095_bQField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "by" : "field_71095_bQ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "by" : "field_71095_bQ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71095_bQField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71095_bQField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "by" : "field_71095_bQ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "by" : "field_71095_bQ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71096_bNField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71096_bNField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bv" : "field_71096_bN",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bv" : "field_71096_bN",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71096_bNField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71096_bNField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bv" : "field_71096_bN",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bv" : "field_71096_bN",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71097_bOField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getField_71097_bOField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bw" : "field_71097_bO",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bw" : "field_71097_bO",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71097_bOField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setField_71097_bOField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bw" : "field_71097_bO",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bw" : "field_71097_bO",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFireResistanceField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFireResistanceField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ab" : "fireResistance",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ab" : "fireResistance",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFireResistanceField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFireResistanceField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ab" : "fireResistance",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ab" : "fireResistance",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getFishEntityField",
-                this.isObfuscated ? "()Lxe;" : "()Lnet/minecraft/entity/projectile/EntityFishHook;",
+                isObfuscated ? "()Lxe;" : "()Lnet/minecraft/entity/projectile/EntityFishHook;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bK" : "fishEntity",
-                this.isObfuscated ? "Lxe;" : "Lnet/minecraft/entity/projectile/EntityFishHook;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bK" : "fishEntity",
+                isObfuscated ? "Lxe;" : "Lnet/minecraft/entity/projectile/EntityFishHook;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setFishEntityField",
-                this.isObfuscated ? "(Lxe;)V" : "(Lnet/minecraft/entity/projectile/EntityFishHook;)V",
+                isObfuscated ? "(Lxe;)V" : "(Lnet/minecraft/entity/projectile/EntityFishHook;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bK" : "fishEntity",
-                this.isObfuscated ? "Lxe;" : "Lnet/minecraft/entity/projectile/EntityFishHook;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bK" : "fishEntity",
+                isObfuscated ? "Lxe;" : "Lnet/minecraft/entity/projectile/EntityFishHook;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFlyToggleTimerField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getFlyToggleTimerField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bq" : "flyToggleTimer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bq" : "flyToggleTimer",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFlyToggleTimerField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setFlyToggleTimerField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bq" : "flyToggleTimer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bq" : "flyToggleTimer",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getFoodStatsField",
-                this.isObfuscated ? "()Lzr;" : "()Lnet/minecraft/util/FoodStats;",
+                isObfuscated ? "()Lzr;" : "()Lnet/minecraft/util/FoodStats;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bp" : "foodStats",
-                this.isObfuscated ? "Lzr;" : "Lnet/minecraft/util/FoodStats;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bp" : "foodStats",
+                isObfuscated ? "Lzr;" : "Lnet/minecraft/util/FoodStats;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setFoodStatsField",
-                this.isObfuscated ? "(Lzr;)V" : "(Lnet/minecraft/util/FoodStats;)V",
+                isObfuscated ? "(Lzr;)V" : "(Lnet/minecraft/util/FoodStats;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bp" : "foodStats",
-                this.isObfuscated ? "Lzr;" : "Lnet/minecraft/util/FoodStats;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bp" : "foodStats",
+                isObfuscated ? "Lzr;" : "Lnet/minecraft/util/FoodStats;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getForceSpawnField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getForceSpawnField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "n" : "forceSpawn",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "n" : "forceSpawn",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setForceSpawnField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setForceSpawnField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "n" : "forceSpawn",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "n" : "forceSpawn",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHeightField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHeightField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "N" : "height",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "N" : "height",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHeightField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHeightField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "N" : "height",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "N" : "height",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHurtResistantTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHurtResistantTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ad" : "hurtResistantTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ad" : "hurtResistantTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHurtResistantTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHurtResistantTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ad" : "hurtResistantTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ad" : "hurtResistantTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHurtTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getHurtTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ax" : "hurtTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ax" : "hurtTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHurtTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setHurtTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ax" : "hurtTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ax" : "hurtTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIgnoreFrustumCheckField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIgnoreFrustumCheckField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ak" : "ignoreFrustumCheck",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ak" : "ignoreFrustumCheck",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIgnoreFrustumCheckField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIgnoreFrustumCheckField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ak" : "ignoreFrustumCheck",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ak" : "ignoreFrustumCheck",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getInPortalField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getInPortalField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "an" : "inPortal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "an" : "inPortal",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setInPortalField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setInPortalField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "an" : "inPortal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "an" : "inPortal",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getInWaterField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getInWaterField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ac" : "inWater",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ac" : "inWater",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setInWaterField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setInWaterField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ac" : "inWater",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ac" : "inWater",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getInventoryField",
-                this.isObfuscated ? "()Lyx;" : "()Lnet/minecraft/entity/player/InventoryPlayer;",
+                isObfuscated ? "()Lyx;" : "()Lnet/minecraft/entity/player/InventoryPlayer;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bm" : "inventory",
-                this.isObfuscated ? "Lyx;" : "Lnet/minecraft/entity/player/InventoryPlayer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bm" : "inventory",
+                isObfuscated ? "Lyx;" : "Lnet/minecraft/entity/player/InventoryPlayer;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setInventoryField",
-                this.isObfuscated ? "(Lyx;)V" : "(Lnet/minecraft/entity/player/InventoryPlayer;)V",
+                isObfuscated ? "(Lyx;)V" : "(Lnet/minecraft/entity/player/InventoryPlayer;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bm" : "inventory",
-                this.isObfuscated ? "Lyx;" : "Lnet/minecraft/entity/player/InventoryPlayer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bm" : "inventory",
+                isObfuscated ? "Lyx;" : "Lnet/minecraft/entity/player/InventoryPlayer;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getInventoryContainerField",
-                this.isObfuscated ? "()Lzs;" : "()Lnet/minecraft/inventory/Container;",
+                isObfuscated ? "()Lzs;" : "()Lnet/minecraft/inventory/Container;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bn" : "inventoryContainer",
-                this.isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bn" : "inventoryContainer",
+                isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setInventoryContainerField",
-                this.isObfuscated ? "(Lzs;)V" : "(Lnet/minecraft/inventory/Container;)V",
+                isObfuscated ? "(Lzs;)V" : "(Lnet/minecraft/inventory/Container;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bn" : "inventoryContainer",
-                this.isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bn" : "inventoryContainer",
+                isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsAirBorneField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsAirBorneField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "al" : "isAirBorne",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "al" : "isAirBorne",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsAirBorneField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsAirBorneField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "al" : "isAirBorne",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "al" : "isAirBorne",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsChangingQuantityOnlyField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "g" : "isChangingQuantityOnly",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "g" : "isChangingQuantityOnly",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsChangingQuantityOnlyField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "g" : "isChangingQuantityOnly",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "g" : "isChangingQuantityOnly",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "G" : "isCollided",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "G" : "isCollided",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "G" : "isCollided",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "G" : "isCollided",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedHorizontallyField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "E" : "isCollidedHorizontally",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "E" : "isCollidedHorizontally",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedHorizontallyField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "E" : "isCollidedHorizontally",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "E" : "isCollidedHorizontally",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedVerticallyField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedVerticallyField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "F" : "isCollidedVertically",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "F" : "isCollidedVertically",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedVerticallyField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedVerticallyField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "F" : "isCollidedVertically",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "F" : "isCollidedVertically",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsDeadField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsDeadField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "K" : "isDead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "K" : "isDead",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsDeadField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsDeadField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "K" : "isDead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "K" : "isDead",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsImmuneToFireField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsImmuneToFireField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ae" : "isImmuneToFire",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ae" : "isImmuneToFire",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsImmuneToFireField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsImmuneToFireField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ae" : "isImmuneToFire",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ae" : "isImmuneToFire",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsInWebField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsInWebField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "I" : "isInWeb",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "I" : "isInWeb",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsInWebField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsInWebField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "I" : "isInWeb",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "I" : "isInWeb",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsJumpingField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsJumpingField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bc" : "isJumping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bc" : "isJumping",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsJumpingField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsJumpingField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bc" : "isJumping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bc" : "isJumping",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsSwingInProgressField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsSwingInProgressField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "at" : "isSwingInProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "at" : "isSwingInProgress",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsSwingInProgressField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsSwingInProgressField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "at" : "isSwingInProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "at" : "isSwingInProgress",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getJumpMovementFactorField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getJumpMovementFactorField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aQ" : "jumpMovementFactor",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aQ" : "jumpMovementFactor",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setJumpMovementFactorField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setJumpMovementFactorField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aQ" : "jumpMovementFactor",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aQ" : "jumpMovementFactor",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastDamageField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastDamageField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bb" : "lastDamage",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bb" : "lastDamage",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastDamageField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastDamageField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bb" : "lastDamage",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bb" : "lastDamage",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastExperienceField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastExperienceField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bT" : "lastExperience",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bT" : "lastExperience",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastExperienceField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastExperienceField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bT" : "lastExperience",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bT" : "lastExperience",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastFoodLevelField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastFoodLevelField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bR" : "lastFoodLevel",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bR" : "lastFoodLevel",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastFoodLevelField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastFoodLevelField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bR" : "lastFoodLevel",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bR" : "lastFoodLevel",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastHealthField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastHealthField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bQ" : "lastHealth",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bQ" : "lastHealth",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastHealthField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastHealthField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bQ" : "lastHealth",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bQ" : "lastHealth",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "S" : "lastTickPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "S" : "lastTickPosX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "S" : "lastTickPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "S" : "lastTickPosX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosYField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosYField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "T" : "lastTickPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "T" : "lastTickPosY",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosYField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosYField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "T" : "lastTickPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "T" : "lastTickPosY",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLastTickPosZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "U" : "lastTickPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "U" : "lastTickPosZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLastTickPosZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "U" : "lastTickPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "U" : "lastTickPosZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLimbSwingField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLimbSwingField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aG" : "limbSwing",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aG" : "limbSwing",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLimbSwingField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLimbSwingField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aG" : "limbSwing",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aG" : "limbSwing",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLimbSwingAmountField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLimbSwingAmountField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aF" : "limbSwingAmount",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aF" : "limbSwingAmount",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLimbSwingAmountField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setLimbSwingAmountField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aF" : "limbSwingAmount",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aF" : "limbSwingAmount",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLoadedChunksField", "()Ljava/util/List;", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "f" : "loadedChunks",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "f" : "loadedChunks",
                 "Ljava/util/List;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getLoggerField",
                 "()Lorg/apache/logging/log4j/Logger;",
@@ -5414,99 +5832,106 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bL" : "logger",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bL" : "logger",
                 "Lorg/apache/logging/log4j/Logger;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getManagedPosXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getManagedPosXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "d" : "managedPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "d" : "managedPosX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setManagedPosXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setManagedPosXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "d" : "managedPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "d" : "managedPosX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getManagedPosZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getManagedPosZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "e" : "managedPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "e" : "managedPosZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setManagedPosZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setManagedPosZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "e" : "managedPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "e" : "managedPosZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMaxHurtResistantTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMaxHurtResistantTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aH" : "maxHurtResistantTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aH" : "maxHurtResistantTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMaxHurtResistantTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMaxHurtResistantTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aH" : "maxHurtResistantTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aH" : "maxHurtResistantTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMaxHurtTimeField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMaxHurtTimeField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ay" : "maxHurtTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ay" : "maxHurtTime",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMaxHurtTimeField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMaxHurtTimeField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ay" : "maxHurtTime",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ay" : "maxHurtTime",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getMcServerField",
                 "()Lnet/minecraft/server/MinecraftServer;",
@@ -5515,1556 +5940,1673 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "b" : "mcServer",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "b" : "mcServer",
                 "Lnet/minecraft/server/MinecraftServer;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "v" : "motionX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "v" : "motionX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "v" : "motionX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "v" : "motionX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionYField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionYField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "w" : "motionY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "w" : "motionY",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionYField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionYField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "w" : "motionY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "w" : "motionY",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMotionZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "x" : "motionZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "x" : "motionZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMotionZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "x" : "motionZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "x" : "motionZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMoveForwardField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMoveForwardField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "be" : "moveForward",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "be" : "moveForward",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMoveForwardField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMoveForwardField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "be" : "moveForward",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "be" : "moveForward",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMoveStrafingField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getMoveStrafingField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bd" : "moveStrafing",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bd" : "moveStrafing",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMoveStrafingField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setMoveStrafingField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bd" : "moveStrafing",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bd" : "moveStrafing",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getMyEntitySizeField",
-                this.isObfuscated ? "()Lse;" : "()Lnet/minecraft/entity/Entity$EnumEntitySize;",
+                isObfuscated ? "()Lse;" : "()Lnet/minecraft/entity/Entity$EnumEntitySize;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "as" : "myEntitySize",
-                this.isObfuscated ? "Lse;" : "Lnet/minecraft/entity/Entity$EnumEntitySize;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "as" : "myEntitySize",
+                isObfuscated ? "Lse;" : "Lnet/minecraft/entity/Entity$EnumEntitySize;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setMyEntitySizeField",
-                this.isObfuscated ? "(Lse;)V" : "(Lnet/minecraft/entity/Entity$EnumEntitySize;)V",
+                isObfuscated ? "(Lse;)V" : "(Lnet/minecraft/entity/Entity$EnumEntitySize;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "as" : "myEntitySize",
-                this.isObfuscated ? "Lse;" : "Lnet/minecraft/entity/Entity$EnumEntitySize;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "as" : "myEntitySize",
+                isObfuscated ? "Lse;" : "Lnet/minecraft/entity/Entity$EnumEntitySize;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosRotationIncrementsField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bg" : "newPosRotationIncrements",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bg" : "newPosRotationIncrements",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosRotationIncrementsField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bg" : "newPosRotationIncrements",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bg" : "newPosRotationIncrements",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bh" : "newPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bh" : "newPosX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bh" : "newPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bh" : "newPosX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosYField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosYField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bi" : "newPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bi" : "newPosY",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosYField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosYField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bi" : "newPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bi" : "newPosY",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bj" : "newPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bj" : "newPosZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bj" : "newPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bj" : "newPosZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewRotationPitchField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewRotationPitchField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bl" : "newRotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bl" : "newRotationPitch",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewRotationPitchField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewRotationPitchField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bl" : "newRotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bl" : "newRotationPitch",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewRotationYawField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewRotationYawField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bk" : "newRotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bk" : "newRotationYaw",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewRotationYawField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewRotationYawField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bk" : "newRotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bk" : "newRotationYaw",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNoClipField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNoClipField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "X" : "noClip",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "X" : "noClip",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNoClipField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNoClipField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "X" : "noClip",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "X" : "noClip",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getOnGroundField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getOnGroundField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "D" : "onGround",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "D" : "onGround",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setOnGroundField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setOnGroundField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "D" : "onGround",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "D" : "onGround",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getOpenContainerField",
-                this.isObfuscated ? "()Lzs;" : "()Lnet/minecraft/inventory/Container;",
+                isObfuscated ? "()Lzs;" : "()Lnet/minecraft/inventory/Container;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bo" : "openContainer",
-                this.isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bo" : "openContainer",
+                isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setOpenContainerField",
-                this.isObfuscated ? "(Lzs;)V" : "(Lnet/minecraft/inventory/Container;)V",
+                isObfuscated ? "(Lzs;)V" : "(Lnet/minecraft/inventory/Container;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bo" : "openContainer",
-                this.isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bo" : "openContainer",
+                isObfuscated ? "Lzs;" : "Lnet/minecraft/inventory/Container;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPingField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPingField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "h" : "ping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "h" : "ping",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPingField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPingField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "h" : "ping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "h" : "ping",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPlayerConqueredTheEndField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPlayerConqueredTheEndField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "i" : "playerConqueredTheEnd",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "i" : "playerConqueredTheEnd",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPlayerConqueredTheEndField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "i" : "playerConqueredTheEnd",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "i" : "playerConqueredTheEnd",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getPlayerLocationField",
-                this.isObfuscated ? "()Lr;" : "()Lnet/minecraft/util/ChunkCoordinates;",
+                isObfuscated ? "()Lr;" : "()Lnet/minecraft/util/ChunkCoordinates;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bB" : "playerLocation",
-                this.isObfuscated ? "Lr;" : "Lnet/minecraft/util/ChunkCoordinates;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bB" : "playerLocation",
+                isObfuscated ? "Lr;" : "Lnet/minecraft/util/ChunkCoordinates;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setPlayerLocationField",
-                this.isObfuscated ? "(Lr;)V" : "(Lnet/minecraft/util/ChunkCoordinates;)V",
+                isObfuscated ? "(Lr;)V" : "(Lnet/minecraft/util/ChunkCoordinates;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bB" : "playerLocation",
-                this.isObfuscated ? "Lr;" : "Lnet/minecraft/util/ChunkCoordinates;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bB" : "playerLocation",
+                isObfuscated ? "Lr;" : "Lnet/minecraft/util/ChunkCoordinates;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getPlayerNetServerHandlerField",
-                this.isObfuscated ? "()Lnh;" : "()Lnet/minecraft/network/NetHandlerPlayServer;",
+                isObfuscated ? "()Lnh;" : "()Lnet/minecraft/network/NetHandlerPlayServer;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "playerNetServerHandler",
-                this.isObfuscated ? "Lnh;" : "Lnet/minecraft/network/NetHandlerPlayServer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "playerNetServerHandler",
+                isObfuscated ? "Lnh;" : "Lnet/minecraft/network/NetHandlerPlayServer;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setPlayerNetServerHandlerField",
-                this.isObfuscated ? "(Lnh;)V" : "(Lnet/minecraft/network/NetHandlerPlayServer;)V",
+                isObfuscated ? "(Lnh;)V" : "(Lnet/minecraft/network/NetHandlerPlayServer;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "a" : "playerNetServerHandler",
-                this.isObfuscated ? "Lnh;" : "Lnet/minecraft/network/NetHandlerPlayServer;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "a" : "playerNetServerHandler",
+                isObfuscated ? "Lnh;" : "Lnet/minecraft/network/NetHandlerPlayServer;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPortalCounterField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPortalCounterField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ao" : "portalCounter",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ao" : "portalCounter",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPortalCounterField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPortalCounterField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ao" : "portalCounter",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ao" : "portalCounter",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "s" : "posX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "s" : "posX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "s" : "posX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "s" : "posX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosYField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosYField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "t" : "posY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "t" : "posY",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosYField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosYField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "t" : "posY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "t" : "posY",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPosZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "u" : "posZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "u" : "posZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPosZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "u" : "posZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "u" : "posZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevCameraPitchField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevCameraPitchField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aI" : "prevCameraPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aI" : "prevCameraPitch",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevCameraPitchField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevCameraPitchField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aI" : "prevCameraPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aI" : "prevCameraPitch",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevCameraYawField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevCameraYawField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "br" : "prevCameraYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "br" : "prevCameraYaw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevCameraYawField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevCameraYawField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "br" : "prevCameraYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "br" : "prevCameraYaw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevDistanceWalkedModifiedField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "O" : "prevDistanceWalkedModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "O" : "prevDistanceWalkedModified",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevDistanceWalkedModifiedField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "O" : "prevDistanceWalkedModified",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "O" : "prevDistanceWalkedModified",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevHealthField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevHealthField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aw" : "prevHealth",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aw" : "prevHealth",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevHealthField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevHealthField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aw" : "prevHealth",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aw" : "prevHealth",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevLimbSwingAmountField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevLimbSwingAmountField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aE" : "prevLimbSwingAmount",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aE" : "prevLimbSwingAmount",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevLimbSwingAmountField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevLimbSwingAmountField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aE" : "prevLimbSwingAmount",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aE" : "prevLimbSwingAmount",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosXField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosXField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "p" : "prevPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "p" : "prevPosX",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosXField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosXField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "p" : "prevPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "p" : "prevPosX",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosYField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosYField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "q" : "prevPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "q" : "prevPosY",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosYField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosYField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "q" : "prevPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "q" : "prevPosY",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosZField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevPosZField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "r" : "prevPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "r" : "prevPosZ",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosZField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevPosZField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "r" : "prevPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "r" : "prevPosZ",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRenderYawOffsetField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRenderYawOffsetField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aN" : "prevRenderYawOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aN" : "prevRenderYawOffset",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRenderYawOffsetField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRenderYawOffsetField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aN" : "prevRenderYawOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aN" : "prevRenderYawOffset",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationPitchField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationPitchField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "B" : "prevRotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "B" : "prevRotationPitch",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationPitchField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationPitchField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "B" : "prevRotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "B" : "prevRotationPitch",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationYawField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationYawField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "A" : "prevRotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "A" : "prevRotationYaw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationYawField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationYawField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "A" : "prevRotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "A" : "prevRotationYaw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationYawHeadField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevRotationYawHeadField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aP" : "prevRotationYawHead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aP" : "prevRotationYawHead",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationYawHeadField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevRotationYawHeadField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aP" : "prevRotationYawHead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aP" : "prevRotationYawHead",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevSwingProgressField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevSwingProgressField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aC" : "prevSwingProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aC" : "prevSwingProgress",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevSwingProgressField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevSwingProgressField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aC" : "prevSwingProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aC" : "prevSwingProgress",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPreventEntitySpawningField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPreventEntitySpawningField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "k" : "preventEntitySpawning",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "k" : "preventEntitySpawning",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPreventEntitySpawningField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "k" : "preventEntitySpawning",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "k" : "preventEntitySpawning",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRandField", "()Ljava/util/Random;", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRandField", "()Ljava/util/Random;", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Z" : "rand",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Z" : "rand",
                 "Ljava/util/Random;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRandField", "(Ljava/util/Random;)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "Z" : "rand",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "Z" : "rand",
                 "Ljava/util/Random;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRandomYawVelocityField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRandomYawVelocityField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bf" : "randomYawVelocity",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bf" : "randomYawVelocity",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRandomYawVelocityField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRandomYawVelocityField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bf" : "randomYawVelocity",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bf" : "randomYawVelocity",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRecentlyHitField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRecentlyHitField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aS" : "recentlyHit",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aS" : "recentlyHit",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRecentlyHitField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRecentlyHitField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aS" : "recentlyHit",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aS" : "recentlyHit",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRenderDistanceWeightField", "()D", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRenderDistanceWeightField", "()D", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "j" : "renderDistanceWeight",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "j" : "renderDistanceWeight",
                 "D");
         mv.visitInsn(Opcodes.DRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRenderDistanceWeightField", "(D)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRenderDistanceWeightField", "(D)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.DLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "j" : "renderDistanceWeight",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "j" : "renderDistanceWeight",
                 "D");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRenderYawOffsetField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRenderYawOffsetField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aM" : "renderYawOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aM" : "renderYawOffset",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRenderYawOffsetField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRenderYawOffsetField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aM" : "renderYawOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aM" : "renderYawOffset",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getRiddenByEntityField",
-                this.isObfuscated ? "()Lsa;" : "()Lnet/minecraft/entity/Entity;",
+                isObfuscated ? "()Lsa;" : "()Lnet/minecraft/entity/Entity;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "l" : "riddenByEntity",
-                this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "l" : "riddenByEntity",
+                isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setRiddenByEntityField",
-                this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V",
+                isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "l" : "riddenByEntity",
-                this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "l" : "riddenByEntity",
+                isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getRidingEntityField",
-                this.isObfuscated ? "()Lsa;" : "()Lnet/minecraft/entity/Entity;",
+                isObfuscated ? "()Lsa;" : "()Lnet/minecraft/entity/Entity;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "m" : "ridingEntity",
-                this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "m" : "ridingEntity",
+                isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setRidingEntityField",
-                this.isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V",
+                isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "m" : "ridingEntity",
-                this.isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "m" : "ridingEntity",
+                isObfuscated ? "Lsa;" : "Lnet/minecraft/entity/Entity;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationPitchField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationPitchField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "z" : "rotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "z" : "rotationPitch",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationPitchField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationPitchField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "z" : "rotationPitch",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "z" : "rotationPitch",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationYawField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationYawField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "y" : "rotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "y" : "rotationYaw",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationYawField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationYawField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "y" : "rotationYaw",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "y" : "rotationYaw",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationYawHeadField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getRotationYawHeadField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aO" : "rotationYawHead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aO" : "rotationYawHead",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationYawHeadField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRotationYawHeadField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aO" : "rotationYawHead",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aO" : "rotationYawHead",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getScoreValueField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getScoreValueField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ba" : "scoreValue",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ba" : "scoreValue",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setScoreValueField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setScoreValueField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ba" : "scoreValue",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ba" : "scoreValue",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosXField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosXField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bZ" : "serverPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bZ" : "serverPosX",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosXField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosXField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bZ" : "serverPosX",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bZ" : "serverPosX",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosYField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosYField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ca" : "serverPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ca" : "serverPosY",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosYField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosYField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "ca" : "serverPosY",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "ca" : "serverPosY",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosZField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPosZField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "cb" : "serverPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "cb" : "serverPosZ",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosZField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setServerPosZField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "cb" : "serverPosZ",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "cb" : "serverPosZ",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSleepingField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSleepingField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bA" : "sleeping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bA" : "sleeping",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSleepingField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSleepingField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bA" : "sleeping",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bA" : "sleeping",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSpeedInAirField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSpeedInAirField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bJ" : "speedInAir",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bJ" : "speedInAir",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSpeedInAirField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSpeedInAirField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bJ" : "speedInAir",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bJ" : "speedInAir",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSpeedOnGroundField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSpeedOnGroundField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bI" : "speedOnGround",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bI" : "speedOnGround",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSpeedOnGroundField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSpeedOnGroundField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bI" : "speedOnGround",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bI" : "speedOnGround",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getStepHeightField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getStepHeightField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "W" : "stepHeight",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "W" : "stepHeight",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setStepHeightField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setStepHeightField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "W" : "stepHeight",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "W" : "stepHeight",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSwingProgressField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSwingProgressField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aD" : "swingProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aD" : "swingProgress",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSwingProgressField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSwingProgressField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aD" : "swingProgress",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aD" : "swingProgress",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSwingProgressIntField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getSwingProgressIntField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "au" : "swingProgressInt",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "au" : "swingProgressInt",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSwingProgressIntField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setSwingProgressIntField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "au" : "swingProgressInt",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "au" : "swingProgressInt",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTeleportDirectionField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTeleportDirectionField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aq" : "teleportDirection",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aq" : "teleportDirection",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTeleportDirectionField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTeleportDirectionField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aq" : "teleportDirection",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aq" : "teleportDirection",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getTheItemInWorldManagerField",
-                this.isObfuscated ? "()Lmx;" : "()Lnet/minecraft/server/management/ItemInWorldManager;",
+                isObfuscated ? "()Lmx;" : "()Lnet/minecraft/server/management/ItemInWorldManager;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "c" : "theItemInWorldManager",
-                this.isObfuscated ? "Lmx;" : "Lnet/minecraft/server/management/ItemInWorldManager;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "c" : "theItemInWorldManager",
+                isObfuscated ? "Lmx;" : "Lnet/minecraft/server/management/ItemInWorldManager;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTicksExistedField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTicksExistedField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aa" : "ticksExisted",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aa" : "ticksExisted",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTicksExistedField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTicksExistedField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "aa" : "ticksExisted",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "aa" : "ticksExisted",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTimeUntilPortalField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTimeUntilPortalField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "am" : "timeUntilPortal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "am" : "timeUntilPortal",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTimeUntilPortalField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTimeUntilPortalField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "am" : "timeUntilPortal",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "am" : "timeUntilPortal",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTranslatorField", "()Ljava/lang/String;", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bM" : "translator",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bM" : "translator",
                 "Ljava/lang/String;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTranslatorField", "(Ljava/lang/String;)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bM" : "translator",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bM" : "translator",
                 "Ljava/lang/String;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getVelocityChangedField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getVelocityChangedField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "H" : "velocityChanged",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "H" : "velocityChanged",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setVelocityChangedField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setVelocityChangedField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "H" : "velocityChanged",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "H" : "velocityChanged",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getWasHungryField", "()Z", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getWasHungryField", "()Z", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bS" : "wasHungry",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bS" : "wasHungry",
                 "Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setWasHungryField", "(Z)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setWasHungryField", "(Z)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bS" : "wasHungry",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bS" : "wasHungry",
                 "Z");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getWidthField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getWidthField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "M" : "width",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "M" : "width",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setWidthField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setWidthField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "M" : "width",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "M" : "width",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getWorldObjField",
-                this.isObfuscated ? "()Lahb;" : "()Lnet/minecraft/world/World;",
+                isObfuscated ? "()Lahb;" : "()Lnet/minecraft/world/World;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "o" : "worldObj",
-                this.isObfuscated ? "Lahb;" : "Lnet/minecraft/world/World;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "o" : "worldObj",
+                isObfuscated ? "Lahb;" : "Lnet/minecraft/world/World;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "setWorldObjField",
-                this.isObfuscated ? "(Lahb;)V" : "(Lnet/minecraft/world/World;)V",
+                isObfuscated ? "(Lahb;)V" : "(Lnet/minecraft/world/World;)V",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "o" : "worldObj",
-                this.isObfuscated ? "Lahb;" : "Lnet/minecraft/world/World;");
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "o" : "worldObj",
+                isObfuscated ? "Lahb;" : "Lnet/minecraft/world/World;");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getXpCooldownField", "()I", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getXpCooldownField", "()I", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bt" : "xpCooldown",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bt" : "xpCooldown",
                 "I");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setXpCooldownField", "(I)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setXpCooldownField", "(I)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "bt" : "xpCooldown",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "bt" : "xpCooldown",
                 "I");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getYOffsetField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getYOffsetField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "L" : "yOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "L" : "yOffset",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setYOffsetField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setYOffsetField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "L" : "yOffset",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "L" : "yOffset",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getYSizeField", "()F", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getYSizeField", "()F", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "V" : "ySize",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "V" : "ySize",
                 "F");
         mv.visitInsn(Opcodes.FRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setYSizeField", "(F)V", null, null);
+
+        mv = cv.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setYSizeField", "(F)V", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
                 Opcodes.PUTFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
-                this.isObfuscated ? "V" : "ySize",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "V" : "ySize",
                 "F");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getServerPlayerBase",
                 "(Ljava/lang/String;)Lapi/player/server/ServerPlayerBase;",
@@ -7080,7 +7622,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPlayerBaseIds", "()Ljava/util/Set;", null, null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
@@ -7091,7 +7634,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "dynamic",
                 "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;",
@@ -7108,7 +7652,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getServerPlayerAPI",
                 "()Lapi/player/server/ServerPlayerAPI;",
@@ -7117,23 +7662,25 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
-                this.isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
+                isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
                 "serverPlayerAPI",
                 "Lapi/player/server/ServerPlayerAPI;");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        mv = this.cv.visitMethod(
+
+        mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "getEntityPlayerMP",
-                this.isObfuscated ? "()Lmw;" : "()Lnet/minecraft/entity/player/EntityPlayerMP;",
+                isObfuscated ? "()Lmw;" : "()Lnet/minecraft/entity/player/EntityPlayerMP;",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        this.cv.visitField(
+
+        cv.visitField(
                 Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL,
                 "serverPlayerAPI",
                 "Lapi/player/server/ServerPlayerAPI;",
