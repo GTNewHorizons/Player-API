@@ -19,6 +19,7 @@
 package api.player.server;
 
 public interface IServerPlayer {
+
     ServerPlayerBase getServerPlayerBase(String baseId);
 
     java.util.Set<String> getServerPlayerBaseIds();
@@ -73,14 +74,14 @@ public interface IServerPlayer {
 
     boolean localCanHarvestBlock(net.minecraft.block.Block paramBlock);
 
-    boolean realCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean realCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
-    boolean superCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean superCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
-    boolean localCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean localCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
     boolean realCanTriggerWalking();
 
@@ -130,14 +131,14 @@ public interface IServerPlayer {
 
     net.minecraft.entity.item.EntityItem localDropOneItem(boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem realDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem realDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem superDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem superDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem localDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem localDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
     void realFall(float paramFloat);
 
@@ -159,11 +160,11 @@ public interface IServerPlayer {
 
     float realGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
 
-    float superGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
+    float superGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt);
 
-    float localGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
+    float localGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt);
 
     double realGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -231,14 +232,14 @@ public interface IServerPlayer {
 
     void localJump();
 
-    void realKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void realKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
-    void superKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void superKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
-    void localKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void localKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
     void realMountEntity(net.minecraft.entity.Entity paramEntity);
 

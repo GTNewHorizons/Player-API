@@ -21,6 +21,7 @@ package api.player.client;
 import org.objectweb.asm.*;
 
 public final class ClientPlayerConstructorVisitor extends MethodVisitor {
+
     private final boolean isObfuscated;
 
     public ClientPlayerConstructorVisitor(MethodVisitor paramMethodVisitor, boolean isObfuscated) {

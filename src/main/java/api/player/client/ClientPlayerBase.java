@@ -19,6 +19,7 @@
 package api.player.client;
 
 public abstract class ClientPlayerBase {
+
     public ClientPlayerBase(ClientPlayerAPI playerAPI) {
         this.internalClientPlayerAPI = playerAPI;
         this.playerAPI = playerAPI.player;
@@ -29,17 +30,11 @@ public abstract class ClientPlayerBase {
 
     public void afterBaseAttach(boolean onTheFly) {}
 
-    public void beforeLocalConstructing(
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {}
+    public void beforeLocalConstructing(net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld, net.minecraft.util.Session paramSession, int paramInt) {}
 
-    public void afterLocalConstructing(
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {}
+    public void afterLocalConstructing(net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld, net.minecraft.util.Session paramSession, int paramInt) {}
 
     public void beforeBaseDetach(boolean onTheFly) {}
 
@@ -142,11 +137,11 @@ public abstract class ClientPlayerBase {
 
     public void afterCanHarvestBlock(net.minecraft.block.Block paramBlock) {}
 
-    public void beforeCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {}
+    public void beforeCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack) {}
 
-    public boolean canPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {
+    public boolean canPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenCanPlayerEdit(this);
 
         boolean _result;
@@ -159,8 +154,8 @@ public abstract class ClientPlayerBase {
         return _result;
     }
 
-    public void afterCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {}
+    public void afterCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack) {}
 
     public void beforeCanTriggerWalking() {}
 
@@ -295,8 +290,8 @@ public abstract class ClientPlayerBase {
 
     public void beforeDropPlayerItem(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {}
 
-    public net.minecraft.entity.item.EntityItem dropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
+    public net.minecraft.entity.item.EntityItem dropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenDropPlayerItem(this);
 
         net.minecraft.entity.item.EntityItem _result;
@@ -309,8 +304,8 @@ public abstract class ClientPlayerBase {
 
     public void afterDropPlayerItem(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {}
 
-    public void beforeDropPlayerItemWithRandomChoice(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {}
+    public void beforeDropPlayerItemWithRandomChoice(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1,
+            boolean paramBoolean2) {}
 
     public net.minecraft.entity.item.EntityItem dropPlayerItemWithRandomChoice(
             net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {
@@ -326,8 +321,8 @@ public abstract class ClientPlayerBase {
         return _result;
     }
 
-    public void afterDropPlayerItemWithRandomChoice(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {}
+    public void afterDropPlayerItemWithRandomChoice(net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1,
+            boolean paramBoolean2) {}
 
     public void beforeFall(float paramFloat) {}
 
@@ -415,11 +410,11 @@ public abstract class ClientPlayerBase {
 
     public void afterGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean) {}
 
-    public void beforeGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {}
+    public void beforeGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt) {}
 
-    public float getCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {
+    public float getCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenGetCurrentPlayerStrVsBlockForge(this);
 
         float _result;
@@ -432,8 +427,8 @@ public abstract class ClientPlayerBase {
         return _result;
     }
 
-    public void afterGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {}
+    public void afterGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt) {}
 
     public void beforeGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
@@ -682,19 +677,19 @@ public abstract class ClientPlayerBase {
 
     public void afterJump() {}
 
-    public void beforeKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {}
+    public void beforeKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2) {}
 
-    public void knockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {
+    public void knockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenKnockBack(this);
 
         if (overwritten == null) playerAPI.localKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
         else if (overwritten != this) overwritten.knockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
     }
 
-    public void afterKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {}
+    public void afterKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2) {}
 
     public void beforeMoveEntity(double paramDouble1, double paramDouble2, double paramDouble3) {}
 
@@ -784,8 +779,8 @@ public abstract class ClientPlayerBase {
 
     public void afterOnUpdate() {}
 
-    public void beforePlayStepSound(
-            int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {}
+    public void beforePlayStepSound(int paramInt1, int paramInt2, int paramInt3,
+            net.minecraft.block.Block paramBlock) {}
 
     public void playStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenPlayStepSound(this);
@@ -870,11 +865,11 @@ public abstract class ClientPlayerBase {
 
     public void afterSetPlayerSPHealth(float paramFloat) {}
 
-    public void beforeSetPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {}
+    public void beforeSetPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3,
+            float paramFloat1, float paramFloat2) {}
 
-    public void setPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {
+    public void setPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1,
+            float paramFloat2) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSetPositionAndRotation(this);
 
         if (overwritten == null)
@@ -883,8 +878,8 @@ public abstract class ClientPlayerBase {
             overwritten.setPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
     }
 
-    public void afterSetPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {}
+    public void afterSetPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3,
+            float paramFloat1, float paramFloat2) {}
 
     public void beforeSetSneaking(boolean paramBoolean) {}
 
@@ -910,8 +905,8 @@ public abstract class ClientPlayerBase {
 
     public void beforeSleepInBedAt(int paramInt1, int paramInt2, int paramInt3) {}
 
-    public net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(
-            int paramInt1, int paramInt2, int paramInt3) {
+    public net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(int paramInt1, int paramInt2,
+            int paramInt3) {
         ClientPlayerBase overwritten = internalClientPlayerAPI.GetOverwrittenSleepInBedAt(this);
 
         net.minecraft.entity.player.EntityPlayer.EnumStatus _result;

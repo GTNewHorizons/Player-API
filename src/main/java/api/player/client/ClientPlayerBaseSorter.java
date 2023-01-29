@@ -21,11 +21,9 @@ package api.player.client;
 import java.util.*;
 
 public final class ClientPlayerBaseSorter {
-    public ClientPlayerBaseSorter(
-            List<String> list,
-            Map<String, String[]> allBaseSuperiors,
-            Map<String, String[]> allBaseInferiors,
-            String methodName) {
+
+    public ClientPlayerBaseSorter(List<String> list, Map<String, String[]> allBaseSuperiors,
+            Map<String, String[]> allBaseInferiors, String methodName) {
         this.list = list;
         this.allBaseSuperiors = allBaseSuperiors;
         this.allBaseInferiors = allBaseInferiors;
@@ -62,47 +60,70 @@ public final class ClientPlayerBaseSorter {
                 explicitSuperiors = build(baseId, explicitSuperiors, null, directInferiorsMap, superiorNames);
         }
         if (directInferiorsMap != null) {
-            for (int i = 0; i < list.size() - 1; i++)
-                for (int n = i + 1; n < list.size(); n++) {
-                    String left = list.get(i);
-                    String right = list.get(n);
+            for (int i = 0; i < list.size() - 1; i++) for (int n = i + 1; n < list.size(); n++) {
+                String left = list.get(i);
+                String right = list.get(n);
 
-                    Set<String> leftInferiors = null, rightInferiors = null;
-                    if (explicitInferiors != null) {
-                        leftInferiors = explicitInferiors.get(left);
-                        rightInferiors = explicitInferiors.get(right);
-                    }
-
-                    Set<String> leftSuperiors = null, rightSuperiors = null;
-                    if (explicitSuperiors != null) {
-                        leftSuperiors = explicitSuperiors.get(left);
-                        rightSuperiors = explicitSuperiors.get(right);
-                    }
-
-                    boolean leftWantsToBeInferiorToRight = leftSuperiors != null && leftSuperiors.contains(right);
-                    boolean leftWantsToBeSuperiorToRight = leftInferiors != null && leftInferiors.contains(right);
-
-                    boolean rightWantsToBeInferiorToLeft = rightSuperiors != null && rightSuperiors.contains(left);
-                    boolean rightWantsToBeSuperiorToLeft = rightInferiors != null && rightInferiors.contains(left);
-
-                    if (leftWantsToBeInferiorToRight && rightWantsToBeInferiorToLeft)
-                        throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
-                                + methodName + "'. '" + left + "' wants to be inferior to '" + right + "' and '" + right
-                                + "' wants to be inferior to '" + left + "'");
-                    if (leftWantsToBeSuperiorToRight && rightWantsToBeSuperiorToLeft)
-                        throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
-                                + methodName + "'. '" + left + "' wants to be superior to '" + right + "' and '" + right
-                                + "' wants to be superior to '" + left + "'");
-
-                    if (leftWantsToBeInferiorToRight && leftWantsToBeSuperiorToRight)
-                        throw new UnsupportedOperationException(
-                                "Can not sort ClientPlayerBase classes for method '" + methodName + "'. '" + left
-                                        + "' wants to be superior and inferior to '" + right + "'");
-                    if (rightWantsToBeInferiorToLeft && rightWantsToBeSuperiorToLeft)
-                        throw new UnsupportedOperationException(
-                                "Can not sort ClientPlayerBase classes for method '" + methodName + "'. '" + right
-                                        + "' wants to be superior and inferior to '" + left + "'");
+                Set<String> leftInferiors = null, rightInferiors = null;
+                if (explicitInferiors != null) {
+                    leftInferiors = explicitInferiors.get(left);
+                    rightInferiors = explicitInferiors.get(right);
                 }
+
+                Set<String> leftSuperiors = null, rightSuperiors = null;
+                if (explicitSuperiors != null) {
+                    leftSuperiors = explicitSuperiors.get(left);
+                    rightSuperiors = explicitSuperiors.get(right);
+                }
+
+                boolean leftWantsToBeInferiorToRight = leftSuperiors != null && leftSuperiors.contains(right);
+                boolean leftWantsToBeSuperiorToRight = leftInferiors != null && leftInferiors.contains(right);
+
+                boolean rightWantsToBeInferiorToLeft = rightSuperiors != null && rightSuperiors.contains(left);
+                boolean rightWantsToBeSuperiorToLeft = rightInferiors != null && rightInferiors.contains(left);
+
+                if (leftWantsToBeInferiorToRight && rightWantsToBeInferiorToLeft)
+                    throw new UnsupportedOperationException(
+                            "Can not sort ClientPlayerBase classes for method '" + methodName
+                                    + "'. '"
+                                    + left
+                                    + "' wants to be inferior to '"
+                                    + right
+                                    + "' and '"
+                                    + right
+                                    + "' wants to be inferior to '"
+                                    + left
+                                    + "'");
+                if (leftWantsToBeSuperiorToRight && rightWantsToBeSuperiorToLeft)
+                    throw new UnsupportedOperationException(
+                            "Can not sort ClientPlayerBase classes for method '" + methodName
+                                    + "'. '"
+                                    + left
+                                    + "' wants to be superior to '"
+                                    + right
+                                    + "' and '"
+                                    + right
+                                    + "' wants to be superior to '"
+                                    + left
+                                    + "'");
+
+                if (leftWantsToBeInferiorToRight && leftWantsToBeSuperiorToRight)
+                    throw new UnsupportedOperationException(
+                            "Can not sort ClientPlayerBase classes for method '" + methodName
+                                    + "'. '"
+                                    + left
+                                    + "' wants to be superior and inferior to '"
+                                    + right
+                                    + "'");
+                if (rightWantsToBeInferiorToLeft && rightWantsToBeSuperiorToLeft)
+                    throw new UnsupportedOperationException(
+                            "Can not sort ClientPlayerBase classes for method '" + methodName
+                                    + "'. '"
+                                    + right
+                                    + "' wants to be superior and inferior to '"
+                                    + left
+                                    + "'");
+            }
 
             if (allInferiors == null) allInferiors = new Hashtable<String, Set<String>>();
 
@@ -118,11 +139,10 @@ public final class ClientPlayerBaseSorter {
             withoutSuperiors.clear();
             for (int i = offset; i < offset + size; i++) withoutSuperiors.add(list.get(i));
 
-            if (allInferiors != null)
-                for (int i = offset; i < offset + size; i++) {
-                    Set<String> inferiors = allInferiors.get(list.get(i));
-                    if (inferiors != null) withoutSuperiors.removeAll(inferiors);
-                }
+            if (allInferiors != null) for (int i = offset; i < offset + size; i++) {
+                Set<String> inferiors = allInferiors.get(list.get(i));
+                if (inferiors != null) withoutSuperiors.removeAll(inferiors);
+            }
 
             boolean initial = true;
             for (int i = offset; i < offset + size; i++) {
@@ -166,9 +186,11 @@ public final class ClientPlayerBaseSorter {
         Iterator<String> iter = directInferiors.iterator();
         while (iter.hasNext()) {
             String inferiorType = iter.next();
-            if (inferiorType == startType)
-                throw new UnsupportedOperationException("Can not sort ClientPlayerBase classes for method '"
-                        + methodName + "'. Circular superiosity found including '" + startType + "'");
+            if (inferiorType == startType) throw new UnsupportedOperationException(
+                    "Can not sort ClientPlayerBase classes for method '" + methodName
+                            + "'. Circular superiosity found including '"
+                            + startType
+                            + "'");
             if (list.contains(inferiorType)) inferiors.add(inferiorType);
 
             Set<String> inferiorSet;
@@ -177,7 +199,9 @@ public final class ClientPlayerBaseSorter {
             } catch (UnsupportedOperationException uoe) {
                 throw new UnsupportedOperationException(
                         "Can not sort ClientPlayerBase classes for method '" + methodName
-                                + "'. Circular superiosity found including '" + inferiorType + "'",
+                                + "'. Circular superiosity found including '"
+                                + inferiorType
+                                + "'",
                         uoe);
             }
 
@@ -186,12 +210,8 @@ public final class ClientPlayerBaseSorter {
         return inferiors;
     }
 
-    private static Map<String, Set<String>> build(
-            String baseId,
-            Map<String, Set<String>> map,
-            Map<String, Set<String>> directMap,
-            Map<String, Set<String>> otherDirectMap,
-            String[] names) {
+    private static Map<String, Set<String>> build(String baseId, Map<String, Set<String>> map,
+            Map<String, Set<String>> directMap, Map<String, Set<String>> otherDirectMap, String[] names) {
         if (map == null) map = new Hashtable<String, Set<String>>();
 
         Set<String> types = new HashSet<String>();

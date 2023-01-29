@@ -19,6 +19,7 @@
 package api.player.client;
 
 public interface IClientPlayer {
+
     ClientPlayerBase getClientPlayerBase(String baseId);
 
     java.util.Set<String> getClientPlayerBaseIds();
@@ -67,14 +68,14 @@ public interface IClientPlayer {
 
     boolean localCanHarvestBlock(net.minecraft.block.Block paramBlock);
 
-    boolean realCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean realCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
-    boolean superCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean superCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
-    boolean localCanPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack);
+    boolean localCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack);
 
     boolean realCanTriggerWalking();
 
@@ -142,17 +143,17 @@ public interface IClientPlayer {
 
     net.minecraft.entity.item.EntityItem localDropOneItem(boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem realDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem realDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem superDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem superDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem localDropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean);
+    net.minecraft.entity.item.EntityItem localDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem realDropPlayerItemWithRandomChoice(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2);
+    net.minecraft.entity.item.EntityItem realDropPlayerItemWithRandomChoice(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean1, boolean paramBoolean2);
 
     net.minecraft.entity.item.EntityItem superDropPlayerItemWithRandomChoice(
             net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2);
@@ -198,11 +199,11 @@ public interface IClientPlayer {
 
     float realGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
 
-    float superGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
+    float superGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt);
 
-    float localGetCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
+    float localGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt);
 
     double realGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -304,14 +305,14 @@ public interface IClientPlayer {
 
     void localJump();
 
-    void realKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void realKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
-    void superKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void superKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
-    void localKnockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
+    void localKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2);
 
     void realMoveEntity(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -401,14 +402,14 @@ public interface IClientPlayer {
 
     void localSetPlayerSPHealth(float paramFloat);
 
-    void realSetPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2);
+    void realSetPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1,
+            float paramFloat2);
 
-    void superSetPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2);
+    void superSetPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1,
+            float paramFloat2);
 
-    void localSetPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2);
+    void localSetPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1,
+            float paramFloat2);
 
     void realSetSneaking(boolean paramBoolean);
 

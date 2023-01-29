@@ -19,9 +19,11 @@
 package api.player.server;
 
 import java.io.*;
+
 import org.objectweb.asm.*;
 
 public final class ServerPlayerClassVisitor extends ClassVisitor {
+
     public static final String targetClassName = "net.minecraft.entity.player.EntityPlayerMP";
 
     private boolean hadLocalAddExhaustion;
@@ -113,39 +115,59 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
     }
 
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        if (name.equals("<init>"))
-            return new ServerPlayerConstructorVisitor(
-                    super.visitMethod(access, name, desc, signature, exceptions), isObfuscated);
+        if (name.equals("<init>")) return new ServerPlayerConstructorVisitor(
+                super.visitMethod(access, name, desc, signature, exceptions),
+                isObfuscated);
 
         if (name.equals(isObfuscated ? "a" : "addExhaustion") && desc.equals("(F)V")) {
             hadLocalAddExhaustion = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExhaustion", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localAddExhaustion",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "v" : "addExperience") && desc.equals("(I)V")) {
             hadLocalAddExperience = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperience", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localAddExperience",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "addExperienceLevel") && desc.equals("(I)V")) {
             hadLocalAddExperienceLevel = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddExperienceLevel", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localAddExperienceLevel",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "k" : "addMovementStat") && desc.equals("(DDD)V")) {
             hadLocalAddMovementStat = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAddMovementStat", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localAddMovementStat",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "attackEntityFrom")
                 && desc.equals(isObfuscated ? "(Lro;F)Z" : "(Lnet/minecraft/util/DamageSource;F)Z")) {
             hadLocalAttackEntityFrom = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localAttackEntityFrom", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localAttackEntityFrom",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "r" : "attackEntityPlayerMPEntityWithCurrentItem")
@@ -162,85 +184,131 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         if (name.equals(isObfuscated ? "aE" : "canBreatheUnderwater") && desc.equals("()Z")) {
             hadLocalCanBreatheUnderwater = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanBreatheUnderwater", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localCanBreatheUnderwater",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "canHarvestBlock")
                 && desc.equals(isObfuscated ? "(Laji;)Z" : "(Lnet/minecraft/block/Block;)Z")) {
             hadLocalCanHarvestBlock = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanHarvestBlock", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localCanHarvestBlock",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "canPlayerEdit")
                 && desc.equals(isObfuscated ? "(IIIILadd;)Z" : "(IIIILnet/minecraft/item/ItemStack;)Z")) {
             hadLocalCanPlayerEdit = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanPlayerEdit", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localCanPlayerEdit",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "g_" : "canTriggerWalking") && desc.equals("()Z")) {
             hadLocalCanTriggerWalking = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localCanTriggerWalking", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localCanTriggerWalking",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "clonePlayer")
                 && desc.equals(isObfuscated ? "(Lyz;Z)V" : "(Lnet/minecraft/entity/player/EntityPlayer;Z)V")) {
             hadLocalClonePlayer = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localClonePlayer", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localClonePlayer",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "d" : "damageEntity")
                 && desc.equals(isObfuscated ? "(Lro;F)V" : "(Lnet/minecraft/util/DamageSource;F)V")) {
             hadLocalDamageEntity = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDamageEntity", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDamageEntity",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "displayGUIChest")
                 && desc.equals(isObfuscated ? "(Lrb;)V" : "(Lnet/minecraft/inventory/IInventory;)V")) {
             hadLocalDisplayGUIChest = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIChest", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDisplayGUIChest",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "func_146102_a")
                 && desc.equals(isObfuscated ? "(Lapb;)V" : "(Lnet/minecraft/tileentity/TileEntityDispenser;)V")) {
             hadLocalDisplayGUIDispenser = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIDispenser", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDisplayGUIDispenser",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "func_146101_a")
                 && desc.equals(isObfuscated ? "(Lapg;)V" : "(Lnet/minecraft/tileentity/TileEntityFurnace;)V")) {
             hadLocalDisplayGUIFurnace = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIFurnace", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDisplayGUIFurnace",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "b" : "displayGUIWorkbench") && desc.equals("(III)V")) {
             hadLocalDisplayGUIWorkbench = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIWorkbench", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDisplayGUIWorkbench",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "dropOneItem")
                 && desc.equals(isObfuscated ? "(Z)Lxk;" : "(Z)Lnet/minecraft/entity/item/EntityItem;")) {
             hadLocalDropOneItem = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDropOneItem", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDropOneItem",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
-        if (name.equals(isObfuscated ? "a" : "dropPlayerItemWithRandomChoice")
-                && desc.equals(
-                        isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")) {
+        if (name.equals(isObfuscated ? "a" : "dropPlayerItemWithRandomChoice") && desc.equals(
+                isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")) {
             hadLocalDropPlayerItem = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDropPlayerItem", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDropPlayerItem",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "b" : "fall") && desc.equals("(F)V")) {
@@ -251,7 +319,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         if (name.equals(isObfuscated ? "bl" : "getAIMoveSpeed") && desc.equals("()F")) {
             hadLocalGetAIMoveSpeed = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetAIMoveSpeed", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localGetAIMoveSpeed",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "getCurrentPlayerStrVsBlock")
@@ -279,19 +351,31 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         if (name.equals(isObfuscated ? "e" : "getDistanceSq") && desc.equals("(DDD)D")) {
             hadLocalGetDistanceSq = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetDistanceSq", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localGetDistanceSq",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "d" : "getBrightness") && desc.equals("(F)F")) {
             hadLocalGetBrightness = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetBrightness", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localGetBrightness",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "g" : "getEyeHeight") && desc.equals("()F")) {
             hadLocalGetEyeHeight = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localGetEyeHeight", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localGetEyeHeight",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "f" : "heal") && desc.equals("(F)V")) {
@@ -312,32 +396,52 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         if (name.equals(isObfuscated ? "M" : "isInWater") && desc.equals("()Z")) {
             hadLocalIsInWater = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInWater", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsInWater",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "isInsideOfMaterial")
                 && desc.equals(isObfuscated ? "(Lawt;)Z" : "(Lnet/minecraft/block/material/Material;)Z")) {
             hadLocalIsInsideOfMaterial = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsInsideOfMaterial", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsInsideOfMaterial",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "h_" : "isOnLadder") && desc.equals("()Z")) {
             hadLocalIsOnLadder = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsOnLadder", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsOnLadder",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "bm" : "isPlayerSleeping") && desc.equals("()Z")) {
             hadLocalIsPlayerSleeping = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsPlayerSleeping", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsPlayerSleeping",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "an" : "isSneaking") && desc.equals("()Z")) {
             hadLocalIsSneaking = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsSneaking", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsSneaking",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "bj" : "jump") && desc.equals("()V")) {
@@ -349,114 +453,186 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 && desc.equals(isObfuscated ? "(Lsa;FDD)V" : "(Lnet/minecraft/entity/Entity;FDD)V")) {
             hadLocalKnockBack = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localKnockBack", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localKnockBack",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "mountEntity")
                 && desc.equals(isObfuscated ? "(Lsa;)V" : "(Lnet/minecraft/entity/Entity;)V")) {
             hadLocalMountEntity = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMountEntity", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localMountEntity",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "d" : "moveEntity") && desc.equals("(DDD)V")) {
             hadLocalMoveEntity = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntity", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localMoveEntity",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "e" : "moveEntityWithHeading") && desc.equals("(FF)V")) {
             hadLocalMoveEntityWithHeading = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntityWithHeading", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localMoveEntityWithHeading",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "moveFlying") && desc.equals("(FFF)V")) {
             hadLocalMoveFlying = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveFlying", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localMoveFlying",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "onDeath")
                 && desc.equals(isObfuscated ? "(Lro;)V" : "(Lnet/minecraft/util/DamageSource;)V")) {
             hadLocalOnDeath = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnDeath", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnDeath",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "e" : "onLivingUpdate") && desc.equals("()V")) {
             hadLocalOnLivingUpdate = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnLivingUpdate", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnLivingUpdate",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "onKillEntity")
                 && desc.equals(isObfuscated ? "(Lsv;)V" : "(Lnet/minecraft/entity/EntityLivingBase;)V")) {
             hadLocalOnKillEntity = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnKillEntity", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnKillEntity",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "onStruckByLightning")
                 && desc.equals(isObfuscated ? "(Lxh;)V" : "(Lnet/minecraft/entity/effect/EntityLightningBolt;)V")) {
             hadLocalOnStruckByLightning = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnStruckByLightning", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnStruckByLightning",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "h" : "onUpdate") && desc.equals("()V")) {
             hadLocalOnUpdate = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdate", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnUpdate",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "i" : "onUpdateEntity") && desc.equals("()V")) {
             hadLocalOnUpdateEntity = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localOnUpdateEntity", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localOnUpdateEntity",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "readEntityFromNBT")
                 && desc.equals(isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
             hadLocalReadEntityFromNBT = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localReadEntityFromNBT", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localReadEntityFromNBT",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "B" : "setDead") && desc.equals("()V")) {
             hadLocalSetDead = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetDead", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetDead",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "setEntityActionState") && desc.equals("(FFZZ)V")) {
             hadLocalSetEntityActionState = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetEntityActionState", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetEntityActionState",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "b" : "setPosition") && desc.equals("(DDD)V")) {
             hadLocalSetPosition = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetPosition", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetPosition",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "b" : "setSneaking") && desc.equals("(Z)V")) {
             hadLocalSetSneaking = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSneaking", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetSneaking",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "c" : "setSprinting") && desc.equals("(Z)V")) {
             hadLocalSetSprinting = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetSprinting", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetSprinting",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "ba" : "swingItem") && desc.equals("()V")) {
             hadLocalSwingItem = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSwingItem", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSwingItem",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "bq" : "updateEntityActionState") && desc.equals("()V")) {
@@ -472,26 +648,42 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         if (name.equals(isObfuscated ? "aO" : "updatePotionEffects") && desc.equals("()V")) {
             hadLocalUpdatePotionEffects = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdatePotionEffects", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localUpdatePotionEffects",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "ab" : "updateRidden") && desc.equals("()V")) {
             hadLocalUpdateRidden = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateRidden", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localUpdateRidden",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "a" : "wakeUpPlayer") && desc.equals("(ZZZ)V")) {
             hadLocalWakeUpPlayer = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWakeUpPlayer", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localWakeUpPlayer",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         if (name.equals(isObfuscated ? "b" : "writeEntityToNBT")
                 && desc.equals(isObfuscated ? "(Ldh;)V" : "(Lnet/minecraft/nbt/NBTTagCompound;)V")) {
             hadLocalWriteEntityToNBT = true;
             return super.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localWriteEntityToNBT", desc, signature, exceptions);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localWriteEntityToNBT",
+                    desc,
+                    signature,
+                    exceptions);
         }
 
         return super.visitMethod(access, name, desc, signature, exceptions);
@@ -722,7 +914,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "attackEntityFrom",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")Z");
+                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F")
+                        + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -988,7 +1181,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "canPlayerEdit",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "IIIILadd;" : "IIIILnet/minecraft/item/ItemStack;") + ")Z");
+                        + (isObfuscated ? "IIIILadd;" : "IIIILnet/minecraft/item/ItemStack;")
+                        + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1118,7 +1312,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "clonePlayer",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lyz;Z" : "Lnet/minecraft/entity/player/EntityPlayer;Z") + ")V");
+                        + (isObfuscated ? "Lyz;Z" : "Lnet/minecraft/entity/player/EntityPlayer;Z")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1193,7 +1388,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "damageEntity",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F") + ")V");
+                        + (isObfuscated ? "Lro;F" : "Lnet/minecraft/util/DamageSource;F")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1267,7 +1463,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIChest",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lrb;" : "Lnet/minecraft/inventory/IInventory;") + ")V");
+                        + (isObfuscated ? "Lrb;" : "Lnet/minecraft/inventory/IInventory;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1338,7 +1535,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIDispenser",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lapb;" : "Lnet/minecraft/tileentity/TileEntityDispenser;") + ")V");
+                        + (isObfuscated ? "Lapb;" : "Lnet/minecraft/tileentity/TileEntityDispenser;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1409,7 +1607,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "displayGUIFurnace",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lapg;" : "Lnet/minecraft/tileentity/TileEntityFurnace;") + ")V");
+                        + (isObfuscated ? "Lapg;" : "Lnet/minecraft/tileentity/TileEntityFurnace;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1511,7 +1710,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
 
         if (!hadLocalDisplayGUIWorkbench) {
             mv = cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localDisplayGUIWorkbench", "(III)V", null, null);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localDisplayGUIWorkbench",
+                    "(III)V",
+                    null,
+                    null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.ILOAD, 1);
             mv.visitVarInsn(Opcodes.ILOAD, 2);
@@ -1539,7 +1742,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "dropOneItem",
                 "(Lapi/player/server/IServerPlayerAPI;Z)"
-                        + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
+                        + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;")
+                        + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1600,11 +1804,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC,
                 isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
-                ""
-                        + (isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                        + "",
+                "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1615,7 +1816,9 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "dropPlayerItem",
                 "(Lapi/player/server/IServerPlayerAPI;" + (isObfuscated ? "Ladd;Z" : "Lnet/minecraft/item/ItemStack;Z")
-                        + ")" + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;") + "");
+                        + ")"
+                        + (isObfuscated ? "Lxk;" : "Lnet/minecraft/entity/item/EntityItem;")
+                        + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1623,11 +1826,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "realDropPlayerItem",
-                ""
-                        + (isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                        + "",
+                "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1637,11 +1837,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKEVIRTUAL,
                 isObfuscated ? "mw" : "net/minecraft/entity/player/EntityPlayerMP",
                 isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
-                ""
-                        + (isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                        + "");
+                "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1649,11 +1846,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv = cv.visitMethod(
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 "superDropPlayerItem",
-                ""
-                        + (isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                        + "",
+                "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                 null,
                 null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1663,11 +1857,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 Opcodes.INVOKESPECIAL,
                 isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
                 isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
-                ""
-                        + (isObfuscated
-                                ? "(Ladd;Z)Lxk;"
-                                : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                        + "");
+                "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                        : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "");
         mv.visitInsn(Opcodes.ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -1676,11 +1867,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
             mv = cv.visitMethod(
                     Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                     "localDropPlayerItem",
-                    ""
-                            + (isObfuscated
-                                    ? "(Ladd;Z)Lxk;"
-                                    : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                            + "",
+                    "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                            : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "",
                     null,
                     null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -1690,11 +1878,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                     Opcodes.INVOKESPECIAL,
                     isObfuscated ? "yz" : "net/minecraft/entity/player/EntityPlayer",
                     isObfuscated ? "a" : "dropPlayerItemWithRandomChoice",
-                    ""
-                            + (isObfuscated
-                                    ? "(Ladd;Z)Lxk;"
-                                    : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;")
-                            + "");
+                    "" + (isObfuscated ? "(Ladd;Z)Lxk;"
+                            : "(Lnet/minecraft/item/ItemStack;Z)Lnet/minecraft/entity/item/EntityItem;") + "");
             mv.visitInsn(Opcodes.ARETURN);
             mv.visitMaxs(0, 0);
             mv.visitEnd();
@@ -2177,7 +2362,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "superIsEntityInsideOpaqueBlock", "()Z", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "superIsEntityInsideOpaqueBlock",
+                "()Z",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESPECIAL,
@@ -2190,7 +2379,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
 
         if (!hadLocalIsEntityInsideOpaqueBlock) {
             mv = cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localIsEntityInsideOpaqueBlock", "()Z", null, null);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localIsEntityInsideOpaqueBlock",
+                    "()Z",
+                    null,
+                    null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
@@ -2261,7 +2454,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "isInsideOfMaterial",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lawt;" : "Lnet/minecraft/block/material/Material;") + ")Z");
+                        + (isObfuscated ? "Lawt;" : "Lnet/minecraft/block/material/Material;")
+                        + ")Z");
         mv.visitInsn(Opcodes.IRETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -2519,7 +2713,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "knockBack",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lsa;FDD" : "Lnet/minecraft/entity/Entity;FDD") + ")V");
+                        + (isObfuscated ? "Lsa;FDD" : "Lnet/minecraft/entity/Entity;FDD")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -2756,7 +2951,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
 
         if (!hadLocalMoveEntityWithHeading) {
             mv = cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localMoveEntityWithHeading", "(FF)V", null, null);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localMoveEntityWithHeading",
+                    "(FF)V",
+                    null,
+                    null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -2958,7 +3157,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "onKillEntity",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lsv;" : "Lnet/minecraft/entity/EntityLivingBase;") + ")V");
+                        + (isObfuscated ? "Lsv;" : "Lnet/minecraft/entity/EntityLivingBase;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -3029,7 +3229,8 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
                 "api/player/server/ServerPlayerAPI",
                 "onStruckByLightning",
                 "(Lapi/player/server/IServerPlayerAPI;"
-                        + (isObfuscated ? "Lxh;" : "Lnet/minecraft/entity/effect/EntityLightningBolt;") + ")V");
+                        + (isObfuscated ? "Lxh;" : "Lnet/minecraft/entity/effect/EntityLightningBolt;")
+                        + ")V");
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -3343,7 +3544,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
 
         if (!hadLocalSetEntityActionState) {
             mv = cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localSetEntityActionState", "(FFZZ)V", null, null);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localSetEntityActionState",
+                    "(FFZZ)V",
+                    null,
+                    null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitVarInsn(Opcodes.FLOAD, 1);
             mv.visitVarInsn(Opcodes.FLOAD, 2);
@@ -3598,7 +3803,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
 
         if (!hadLocalUpdateEntityActionState) {
             mv = cv.visitMethod(
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "localUpdateEntityActionState", "()V", null, null);
+                    Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                    "localUpdateEntityActionState",
+                    "()V",
+                    null,
+                    null);
             mv.visitVarInsn(Opcodes.ALOAD, 0);
             mv.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
@@ -4318,7 +4527,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDistanceWalkedModifiedField", "()F", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getDistanceWalkedModifiedField",
+                "()F",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -4330,7 +4543,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDistanceWalkedModifiedField", "(F)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setDistanceWalkedModifiedField",
+                "(F)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
@@ -4343,7 +4560,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getDistanceWalkedOnStepModifiedField", "()F", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getDistanceWalkedOnStepModifiedField",
+                "()F",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -4355,7 +4576,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setDistanceWalkedOnStepModifiedField", "(F)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setDistanceWalkedOnStepModifiedField",
+                "(F)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
@@ -4391,7 +4616,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityCollisionReductionField", "()F", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getEntityCollisionReductionField",
+                "()F",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -4403,7 +4632,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityCollisionReductionField", "(F)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setEntityCollisionReductionField",
+                "(F)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
@@ -4416,7 +4649,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getEntityUniqueIDField", "()Ljava/util/UUID;", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getEntityUniqueIDField",
+                "()Ljava/util/UUID;",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -4428,7 +4665,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setEntityUniqueIDField", "(Ljava/util/UUID;)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setEntityUniqueIDField",
+                "(Ljava/util/UUID;)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
@@ -5371,7 +5612,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsChangingQuantityOnlyField", "()Z", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getIsChangingQuantityOnlyField",
+                "()Z",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -5383,7 +5628,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsChangingQuantityOnlyField", "(Z)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setIsChangingQuantityOnlyField",
+                "(Z)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
@@ -5419,7 +5668,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getIsCollidedHorizontallyField", "()Z", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getIsCollidedHorizontallyField",
+                "()Z",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -5431,7 +5684,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setIsCollidedHorizontallyField", "(Z)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setIsCollidedHorizontallyField",
+                "(Z)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
@@ -5812,7 +6069,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getLoadedChunksField", "()Ljava/util/List;", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getLoadedChunksField",
+                "()Ljava/util/List;",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -6096,7 +6357,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getNewPosRotationIncrementsField", "()I", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getNewPosRotationIncrementsField",
+                "()I",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -6108,7 +6373,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setNewPosRotationIncrementsField", "(I)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setNewPosRotationIncrementsField",
+                "(I)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
@@ -6349,7 +6618,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPlayerConqueredTheEndField", "(Z)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setPlayerConqueredTheEndField",
+                "(Z)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
@@ -6566,7 +6839,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getPrevDistanceWalkedModifiedField", "()F", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getPrevDistanceWalkedModifiedField",
+                "()F",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -6578,7 +6855,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPrevDistanceWalkedModifiedField", "(F)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setPrevDistanceWalkedModifiedField",
+                "(F)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.FLOAD, 1);
         mv.visitFieldInsn(
@@ -6832,7 +7113,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setPreventEntitySpawningField", "(Z)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setPreventEntitySpawningField",
+                "(Z)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ILOAD, 1);
         mv.visitFieldInsn(
@@ -6856,7 +7141,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setRandField", "(Ljava/util/Random;)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setRandField",
+                "(Ljava/util/Random;)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
@@ -7411,7 +7700,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getTranslatorField", "()Ljava/lang/String;", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getTranslatorField",
+                "()Ljava/lang/String;",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitFieldInsn(
                 Opcodes.GETFIELD,
@@ -7423,7 +7716,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "setTranslatorField", "(Ljava/lang/String;)V", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "setTranslatorField",
+                "(Ljava/lang/String;)V",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitVarInsn(Opcodes.ALOAD, 1);
         mv.visitFieldInsn(
@@ -7624,7 +7921,11 @@ public final class ServerPlayerClassVisitor extends ClassVisitor {
         mv.visitEnd();
 
         mv = cv.visitMethod(
-                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "getServerPlayerBaseIds", "()Ljava/util/Set;", null, null);
+                Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
+                "getServerPlayerBaseIds",
+                "()Ljava/util/Set;",
+                null,
+                null);
         mv.visitVarInsn(Opcodes.ALOAD, 0);
         mv.visitMethodInsn(
                 Opcodes.INVOKESTATIC,

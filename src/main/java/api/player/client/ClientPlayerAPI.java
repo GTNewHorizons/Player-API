@@ -25,8 +25,9 @@ import java.util.*;
 import java.util.logging.*;
 
 public final class ClientPlayerAPI {
-    private static final Class<?>[] Class = new Class[] {ClientPlayerAPI.class};
-    private static final Class<?>[] Classes = new Class[] {ClientPlayerAPI.class, String.class};
+
+    private static final Class<?>[] Class = new Class[] { ClientPlayerAPI.class };
+    private static final Class<?>[] Classes = new Class[] { ClientPlayerAPI.class, String.class };
 
     private static boolean isCreated;
     private static final Logger logger = Logger.getLogger("ClientPlayerAPI");
@@ -54,42 +55,42 @@ public final class ClientPlayerAPI {
     private static void register(Class<?> baseClass, String id, ClientPlayerBaseSorting baseSorting) {
         if (!isCreated) {
             try {
-                Method mandatory =
-                        net.minecraft.client.entity.EntityPlayerSP.class.getMethod("getClientPlayerBase", String.class);
-                if (mandatory.getReturnType() != ClientPlayerBase.class)
-                    throw new NoSuchMethodException(ClientPlayerBase.class.getName() + " "
-                            + net.minecraft.client.entity.EntityPlayerSP.class.getName() + ".getClientPlayerBase("
-                            + String.class.getName() + ")");
+                Method mandatory = net.minecraft.client.entity.EntityPlayerSP.class
+                        .getMethod("getClientPlayerBase", String.class);
+                if (mandatory.getReturnType() != ClientPlayerBase.class) throw new NoSuchMethodException(
+                        ClientPlayerBase.class.getName() + " "
+                                + net.minecraft.client.entity.EntityPlayerSP.class.getName()
+                                + ".getClientPlayerBase("
+                                + String.class.getName()
+                                + ")");
             } catch (NoSuchMethodException exception) {
-                String[] errorMessageParts = new String[] {
-                    "========================================",
-                    "The API \"Client Player\" version " + api.player.forge.PlayerAPIPlugin.Version
-                            + " of the mod \"Player API Core " + api.player.forge.PlayerAPIPlugin.Version
-                            + "\" can not be created!",
-                    "----------------------------------------",
-                    "Mandatory member method \"{0} getClientPlayerBase({3})\" not found in class \"{1}\".",
-                    "There are three scenarios this can happen:",
-                    "* Minecraft Forge is missing a Player API Core which Minecraft version matches its own.",
-                    "  Download and install the latest Player API Core for the Minecraft version you were trying to run.",
-                    "* The code of the class \"{2}\" of Player API Core has been modified beyond recognition by another Minecraft Forge coremod.",
-                    "  Try temporary deinstallation of other core mods to find the culprit and deinstall it permanently to fix this specific problem.",
-                    "* Player API Core has not been installed correctly.",
-                    "  Deinstall Player API Core and install it again following the installation instructions in the readme file.",
-                    "========================================"
-                };
+                String[] errorMessageParts = new String[] { "========================================",
+                        "The API \"Client Player\" version " + api.player.forge.PlayerAPIPlugin.Version
+                                + " of the mod \"Player API Core "
+                                + api.player.forge.PlayerAPIPlugin.Version
+                                + "\" can not be created!",
+                        "----------------------------------------",
+                        "Mandatory member method \"{0} getClientPlayerBase({3})\" not found in class \"{1}\".",
+                        "There are three scenarios this can happen:",
+                        "* Minecraft Forge is missing a Player API Core which Minecraft version matches its own.",
+                        "  Download and install the latest Player API Core for the Minecraft version you were trying to run.",
+                        "* The code of the class \"{2}\" of Player API Core has been modified beyond recognition by another Minecraft Forge coremod.",
+                        "  Try temporary deinstallation of other core mods to find the culprit and deinstall it permanently to fix this specific problem.",
+                        "* Player API Core has not been installed correctly.",
+                        "  Deinstall Player API Core and install it again following the installation instructions in the readme file.",
+                        "========================================" };
 
                 String baseEntityPlayerSPClassName = ClientPlayerBase.class.getName();
                 String targetClassName = net.minecraft.client.entity.EntityPlayerSP.class.getName();
                 String targetClassFileName = targetClassName.replace(".", File.separator);
                 String stringClassName = String.class.getName();
 
-                for (int i = 0; i < errorMessageParts.length; i++)
-                    errorMessageParts[i] = MessageFormat.format(
-                            errorMessageParts[i],
-                            baseEntityPlayerSPClassName,
-                            targetClassName,
-                            targetClassFileName,
-                            stringClassName);
+                for (int i = 0; i < errorMessageParts.length; i++) errorMessageParts[i] = MessageFormat.format(
+                        errorMessageParts[i],
+                        baseEntityPlayerSPClassName,
+                        targetClassName,
+                        targetClassFileName,
+                        stringClassName);
 
                 for (String errorMessagePart : errorMessageParts) logger.severe(errorMessagePart);
 
@@ -109,11 +110,13 @@ public final class ClientPlayerAPI {
         if (baseClass == null) throw new NullPointerException("Argument 'baseClass' can not be null");
 
         Constructor<?> allreadyRegistered = allBaseConstructors.get(id);
-        if (allreadyRegistered != null)
-            throw new IllegalArgumentException("The class '" + baseClass.getName()
-                    + "' can not be registered with the id '" + id + "' because the class '"
-                    + allreadyRegistered.getDeclaringClass().getName()
-                    + "' has allready been registered with the same id");
+        if (allreadyRegistered != null) throw new IllegalArgumentException(
+                "The class '" + baseClass.getName()
+                        + "' can not be registered with the id '"
+                        + id
+                        + "' because the class '"
+                        + allreadyRegistered.getDeclaringClass().getName()
+                        + "' has allready been registered with the same id");
 
         Constructor<?> baseConstructor;
         try {
@@ -126,7 +129,8 @@ public final class ClientPlayerAPI {
                         "Can not find necessary constructor with one argument of type '"
                                 + ClientPlayerAPI.class.getName()
                                 + "' and eventually a second argument of type 'String' in the class '"
-                                + baseClass.getName() + "'",
+                                + baseClass.getName()
+                                + "'",
                         t);
             }
         }
@@ -170,9 +174,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeAttackEntityFromSuperiors, baseSorting.getBeforeAttackEntityFromSuperiors());
             addSorting(id, allBaseBeforeAttackEntityFromInferiors, baseSorting.getBeforeAttackEntityFromInferiors());
             addSorting(
-                    id, allBaseOverrideAttackEntityFromSuperiors, baseSorting.getOverrideAttackEntityFromSuperiors());
+                    id,
+                    allBaseOverrideAttackEntityFromSuperiors,
+                    baseSorting.getOverrideAttackEntityFromSuperiors());
             addSorting(
-                    id, allBaseOverrideAttackEntityFromInferiors, baseSorting.getOverrideAttackEntityFromInferiors());
+                    id,
+                    allBaseOverrideAttackEntityFromInferiors,
+                    baseSorting.getOverrideAttackEntityFromInferiors());
             addSorting(id, allBaseAfterAttackEntityFromSuperiors, baseSorting.getAfterAttackEntityFromSuperiors());
             addSorting(id, allBaseAfterAttackEntityFromInferiors, baseSorting.getAfterAttackEntityFromInferiors());
 
@@ -218,9 +226,13 @@ public final class ClientPlayerAPI {
                     allBaseOverrideCanBreatheUnderwaterInferiors,
                     baseSorting.getOverrideCanBreatheUnderwaterInferiors());
             addSorting(
-                    id, allBaseAfterCanBreatheUnderwaterSuperiors, baseSorting.getAfterCanBreatheUnderwaterSuperiors());
+                    id,
+                    allBaseAfterCanBreatheUnderwaterSuperiors,
+                    baseSorting.getAfterCanBreatheUnderwaterSuperiors());
             addSorting(
-                    id, allBaseAfterCanBreatheUnderwaterInferiors, baseSorting.getAfterCanBreatheUnderwaterInferiors());
+                    id,
+                    allBaseAfterCanBreatheUnderwaterInferiors,
+                    baseSorting.getAfterCanBreatheUnderwaterInferiors());
 
             addSorting(id, allBaseBeforeCanHarvestBlockSuperiors, baseSorting.getBeforeCanHarvestBlockSuperiors());
             addSorting(id, allBaseBeforeCanHarvestBlockInferiors, baseSorting.getBeforeCanHarvestBlockInferiors());
@@ -239,9 +251,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeCanTriggerWalkingSuperiors, baseSorting.getBeforeCanTriggerWalkingSuperiors());
             addSorting(id, allBaseBeforeCanTriggerWalkingInferiors, baseSorting.getBeforeCanTriggerWalkingInferiors());
             addSorting(
-                    id, allBaseOverrideCanTriggerWalkingSuperiors, baseSorting.getOverrideCanTriggerWalkingSuperiors());
+                    id,
+                    allBaseOverrideCanTriggerWalkingSuperiors,
+                    baseSorting.getOverrideCanTriggerWalkingSuperiors());
             addSorting(
-                    id, allBaseOverrideCanTriggerWalkingInferiors, baseSorting.getOverrideCanTriggerWalkingInferiors());
+                    id,
+                    allBaseOverrideCanTriggerWalkingInferiors,
+                    baseSorting.getOverrideCanTriggerWalkingInferiors());
             addSorting(id, allBaseAfterCanTriggerWalkingSuperiors, baseSorting.getAfterCanTriggerWalkingSuperiors());
             addSorting(id, allBaseAfterCanTriggerWalkingInferiors, baseSorting.getAfterCanTriggerWalkingInferiors());
 
@@ -292,9 +308,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseAfterDisplayGUIChestInferiors, baseSorting.getAfterDisplayGUIChestInferiors());
 
             addSorting(
-                    id, allBaseBeforeDisplayGUIDispenserSuperiors, baseSorting.getBeforeDisplayGUIDispenserSuperiors());
+                    id,
+                    allBaseBeforeDisplayGUIDispenserSuperiors,
+                    baseSorting.getBeforeDisplayGUIDispenserSuperiors());
             addSorting(
-                    id, allBaseBeforeDisplayGUIDispenserInferiors, baseSorting.getBeforeDisplayGUIDispenserInferiors());
+                    id,
+                    allBaseBeforeDisplayGUIDispenserInferiors,
+                    baseSorting.getBeforeDisplayGUIDispenserInferiors());
             addSorting(
                     id,
                     allBaseOverrideDisplayGUIDispenserSuperiors,
@@ -304,14 +324,22 @@ public final class ClientPlayerAPI {
                     allBaseOverrideDisplayGUIDispenserInferiors,
                     baseSorting.getOverrideDisplayGUIDispenserInferiors());
             addSorting(
-                    id, allBaseAfterDisplayGUIDispenserSuperiors, baseSorting.getAfterDisplayGUIDispenserSuperiors());
+                    id,
+                    allBaseAfterDisplayGUIDispenserSuperiors,
+                    baseSorting.getAfterDisplayGUIDispenserSuperiors());
             addSorting(
-                    id, allBaseAfterDisplayGUIDispenserInferiors, baseSorting.getAfterDisplayGUIDispenserInferiors());
+                    id,
+                    allBaseAfterDisplayGUIDispenserInferiors,
+                    baseSorting.getAfterDisplayGUIDispenserInferiors());
 
             addSorting(
-                    id, allBaseBeforeDisplayGUIEditSignSuperiors, baseSorting.getBeforeDisplayGUIEditSignSuperiors());
+                    id,
+                    allBaseBeforeDisplayGUIEditSignSuperiors,
+                    baseSorting.getBeforeDisplayGUIEditSignSuperiors());
             addSorting(
-                    id, allBaseBeforeDisplayGUIEditSignInferiors, baseSorting.getBeforeDisplayGUIEditSignInferiors());
+                    id,
+                    allBaseBeforeDisplayGUIEditSignInferiors,
+                    baseSorting.getBeforeDisplayGUIEditSignInferiors());
             addSorting(
                     id,
                     allBaseOverrideDisplayGUIEditSignSuperiors,
@@ -351,16 +379,24 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeDisplayGUIFurnaceSuperiors, baseSorting.getBeforeDisplayGUIFurnaceSuperiors());
             addSorting(id, allBaseBeforeDisplayGUIFurnaceInferiors, baseSorting.getBeforeDisplayGUIFurnaceInferiors());
             addSorting(
-                    id, allBaseOverrideDisplayGUIFurnaceSuperiors, baseSorting.getOverrideDisplayGUIFurnaceSuperiors());
+                    id,
+                    allBaseOverrideDisplayGUIFurnaceSuperiors,
+                    baseSorting.getOverrideDisplayGUIFurnaceSuperiors());
             addSorting(
-                    id, allBaseOverrideDisplayGUIFurnaceInferiors, baseSorting.getOverrideDisplayGUIFurnaceInferiors());
+                    id,
+                    allBaseOverrideDisplayGUIFurnaceInferiors,
+                    baseSorting.getOverrideDisplayGUIFurnaceInferiors());
             addSorting(id, allBaseAfterDisplayGUIFurnaceSuperiors, baseSorting.getAfterDisplayGUIFurnaceSuperiors());
             addSorting(id, allBaseAfterDisplayGUIFurnaceInferiors, baseSorting.getAfterDisplayGUIFurnaceInferiors());
 
             addSorting(
-                    id, allBaseBeforeDisplayGUIWorkbenchSuperiors, baseSorting.getBeforeDisplayGUIWorkbenchSuperiors());
+                    id,
+                    allBaseBeforeDisplayGUIWorkbenchSuperiors,
+                    baseSorting.getBeforeDisplayGUIWorkbenchSuperiors());
             addSorting(
-                    id, allBaseBeforeDisplayGUIWorkbenchInferiors, baseSorting.getBeforeDisplayGUIWorkbenchInferiors());
+                    id,
+                    allBaseBeforeDisplayGUIWorkbenchInferiors,
+                    baseSorting.getBeforeDisplayGUIWorkbenchInferiors());
             addSorting(
                     id,
                     allBaseOverrideDisplayGUIWorkbenchSuperiors,
@@ -370,9 +406,13 @@ public final class ClientPlayerAPI {
                     allBaseOverrideDisplayGUIWorkbenchInferiors,
                     baseSorting.getOverrideDisplayGUIWorkbenchInferiors());
             addSorting(
-                    id, allBaseAfterDisplayGUIWorkbenchSuperiors, baseSorting.getAfterDisplayGUIWorkbenchSuperiors());
+                    id,
+                    allBaseAfterDisplayGUIWorkbenchSuperiors,
+                    baseSorting.getAfterDisplayGUIWorkbenchSuperiors());
             addSorting(
-                    id, allBaseAfterDisplayGUIWorkbenchInferiors, baseSorting.getAfterDisplayGUIWorkbenchInferiors());
+                    id,
+                    allBaseAfterDisplayGUIWorkbenchInferiors,
+                    baseSorting.getAfterDisplayGUIWorkbenchInferiors());
 
             addSorting(id, allBaseBeforeDropOneItemSuperiors, baseSorting.getBeforeDropOneItemSuperiors());
             addSorting(id, allBaseBeforeDropOneItemInferiors, baseSorting.getBeforeDropOneItemInferiors());
@@ -569,9 +609,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeGetFOVMultiplierSuperiors, baseSorting.getBeforeGetFOVMultiplierSuperiors());
             addSorting(id, allBaseBeforeGetFOVMultiplierInferiors, baseSorting.getBeforeGetFOVMultiplierInferiors());
             addSorting(
-                    id, allBaseOverrideGetFOVMultiplierSuperiors, baseSorting.getOverrideGetFOVMultiplierSuperiors());
+                    id,
+                    allBaseOverrideGetFOVMultiplierSuperiors,
+                    baseSorting.getOverrideGetFOVMultiplierSuperiors());
             addSorting(
-                    id, allBaseOverrideGetFOVMultiplierInferiors, baseSorting.getOverrideGetFOVMultiplierInferiors());
+                    id,
+                    allBaseOverrideGetFOVMultiplierInferiors,
+                    baseSorting.getOverrideGetFOVMultiplierInferiors());
             addSorting(id, allBaseAfterGetFOVMultiplierSuperiors, baseSorting.getAfterGetFOVMultiplierSuperiors());
             addSorting(id, allBaseAfterGetFOVMultiplierInferiors, baseSorting.getAfterGetFOVMultiplierInferiors());
 
@@ -597,9 +641,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseAfterGetSleepTimerInferiors, baseSorting.getAfterGetSleepTimerInferiors());
 
             addSorting(
-                    id, allBaseBeforeHandleLavaMovementSuperiors, baseSorting.getBeforeHandleLavaMovementSuperiors());
+                    id,
+                    allBaseBeforeHandleLavaMovementSuperiors,
+                    baseSorting.getBeforeHandleLavaMovementSuperiors());
             addSorting(
-                    id, allBaseBeforeHandleLavaMovementInferiors, baseSorting.getBeforeHandleLavaMovementInferiors());
+                    id,
+                    allBaseBeforeHandleLavaMovementInferiors,
+                    baseSorting.getBeforeHandleLavaMovementInferiors());
             addSorting(
                     id,
                     allBaseOverrideHandleLavaMovementSuperiors,
@@ -612,9 +660,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseAfterHandleLavaMovementInferiors, baseSorting.getAfterHandleLavaMovementInferiors());
 
             addSorting(
-                    id, allBaseBeforeHandleWaterMovementSuperiors, baseSorting.getBeforeHandleWaterMovementSuperiors());
+                    id,
+                    allBaseBeforeHandleWaterMovementSuperiors,
+                    baseSorting.getBeforeHandleWaterMovementSuperiors());
             addSorting(
-                    id, allBaseBeforeHandleWaterMovementInferiors, baseSorting.getBeforeHandleWaterMovementInferiors());
+                    id,
+                    allBaseBeforeHandleWaterMovementInferiors,
+                    baseSorting.getBeforeHandleWaterMovementInferiors());
             addSorting(
                     id,
                     allBaseOverrideHandleWaterMovementSuperiors,
@@ -624,9 +676,13 @@ public final class ClientPlayerAPI {
                     allBaseOverrideHandleWaterMovementInferiors,
                     baseSorting.getOverrideHandleWaterMovementInferiors());
             addSorting(
-                    id, allBaseAfterHandleWaterMovementSuperiors, baseSorting.getAfterHandleWaterMovementSuperiors());
+                    id,
+                    allBaseAfterHandleWaterMovementSuperiors,
+                    baseSorting.getAfterHandleWaterMovementSuperiors());
             addSorting(
-                    id, allBaseAfterHandleWaterMovementInferiors, baseSorting.getAfterHandleWaterMovementInferiors());
+                    id,
+                    allBaseAfterHandleWaterMovementInferiors,
+                    baseSorting.getAfterHandleWaterMovementInferiors());
 
             addSorting(id, allBaseBeforeHealSuperiors, baseSorting.getBeforeHealSuperiors());
             addSorting(id, allBaseBeforeHealInferiors, baseSorting.getBeforeHealInferiors());
@@ -668,9 +724,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseAfterIsInWaterInferiors, baseSorting.getAfterIsInWaterInferiors());
 
             addSorting(
-                    id, allBaseBeforeIsInsideOfMaterialSuperiors, baseSorting.getBeforeIsInsideOfMaterialSuperiors());
+                    id,
+                    allBaseBeforeIsInsideOfMaterialSuperiors,
+                    baseSorting.getBeforeIsInsideOfMaterialSuperiors());
             addSorting(
-                    id, allBaseBeforeIsInsideOfMaterialInferiors, baseSorting.getBeforeIsInsideOfMaterialInferiors());
+                    id,
+                    allBaseBeforeIsInsideOfMaterialInferiors,
+                    baseSorting.getBeforeIsInsideOfMaterialInferiors());
             addSorting(
                     id,
                     allBaseOverrideIsInsideOfMaterialSuperiors,
@@ -692,9 +752,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeIsPlayerSleepingSuperiors, baseSorting.getBeforeIsPlayerSleepingSuperiors());
             addSorting(id, allBaseBeforeIsPlayerSleepingInferiors, baseSorting.getBeforeIsPlayerSleepingInferiors());
             addSorting(
-                    id, allBaseOverrideIsPlayerSleepingSuperiors, baseSorting.getOverrideIsPlayerSleepingSuperiors());
+                    id,
+                    allBaseOverrideIsPlayerSleepingSuperiors,
+                    baseSorting.getOverrideIsPlayerSleepingSuperiors());
             addSorting(
-                    id, allBaseOverrideIsPlayerSleepingInferiors, baseSorting.getOverrideIsPlayerSleepingInferiors());
+                    id,
+                    allBaseOverrideIsPlayerSleepingInferiors,
+                    baseSorting.getOverrideIsPlayerSleepingInferiors());
             addSorting(id, allBaseAfterIsPlayerSleepingSuperiors, baseSorting.getAfterIsPlayerSleepingSuperiors());
             addSorting(id, allBaseAfterIsPlayerSleepingInferiors, baseSorting.getAfterIsPlayerSleepingInferiors());
 
@@ -787,9 +851,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseAfterOnKillEntityInferiors, baseSorting.getAfterOnKillEntityInferiors());
 
             addSorting(
-                    id, allBaseBeforeOnStruckByLightningSuperiors, baseSorting.getBeforeOnStruckByLightningSuperiors());
+                    id,
+                    allBaseBeforeOnStruckByLightningSuperiors,
+                    baseSorting.getBeforeOnStruckByLightningSuperiors());
             addSorting(
-                    id, allBaseBeforeOnStruckByLightningInferiors, baseSorting.getBeforeOnStruckByLightningInferiors());
+                    id,
+                    allBaseBeforeOnStruckByLightningInferiors,
+                    baseSorting.getBeforeOnStruckByLightningInferiors());
             addSorting(
                     id,
                     allBaseOverrideOnStruckByLightningSuperiors,
@@ -799,9 +867,13 @@ public final class ClientPlayerAPI {
                     allBaseOverrideOnStruckByLightningInferiors,
                     baseSorting.getOverrideOnStruckByLightningInferiors());
             addSorting(
-                    id, allBaseAfterOnStruckByLightningSuperiors, baseSorting.getAfterOnStruckByLightningSuperiors());
+                    id,
+                    allBaseAfterOnStruckByLightningSuperiors,
+                    baseSorting.getAfterOnStruckByLightningSuperiors());
             addSorting(
-                    id, allBaseAfterOnStruckByLightningInferiors, baseSorting.getAfterOnStruckByLightningInferiors());
+                    id,
+                    allBaseAfterOnStruckByLightningInferiors,
+                    baseSorting.getAfterOnStruckByLightningInferiors());
 
             addSorting(id, allBaseBeforeOnUpdateSuperiors, baseSorting.getBeforeOnUpdateSuperiors());
             addSorting(id, allBaseBeforeOnUpdateInferiors, baseSorting.getBeforeOnUpdateInferiors());
@@ -834,9 +906,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeReadEntityFromNBTSuperiors, baseSorting.getBeforeReadEntityFromNBTSuperiors());
             addSorting(id, allBaseBeforeReadEntityFromNBTInferiors, baseSorting.getBeforeReadEntityFromNBTInferiors());
             addSorting(
-                    id, allBaseOverrideReadEntityFromNBTSuperiors, baseSorting.getOverrideReadEntityFromNBTSuperiors());
+                    id,
+                    allBaseOverrideReadEntityFromNBTSuperiors,
+                    baseSorting.getOverrideReadEntityFromNBTSuperiors());
             addSorting(
-                    id, allBaseOverrideReadEntityFromNBTInferiors, baseSorting.getOverrideReadEntityFromNBTInferiors());
+                    id,
+                    allBaseOverrideReadEntityFromNBTInferiors,
+                    baseSorting.getOverrideReadEntityFromNBTInferiors());
             addSorting(id, allBaseAfterReadEntityFromNBTSuperiors, baseSorting.getAfterReadEntityFromNBTSuperiors());
             addSorting(id, allBaseAfterReadEntityFromNBTInferiors, baseSorting.getAfterReadEntityFromNBTInferiors());
 
@@ -857,9 +933,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeSetPlayerSPHealthSuperiors, baseSorting.getBeforeSetPlayerSPHealthSuperiors());
             addSorting(id, allBaseBeforeSetPlayerSPHealthInferiors, baseSorting.getBeforeSetPlayerSPHealthInferiors());
             addSorting(
-                    id, allBaseOverrideSetPlayerSPHealthSuperiors, baseSorting.getOverrideSetPlayerSPHealthSuperiors());
+                    id,
+                    allBaseOverrideSetPlayerSPHealthSuperiors,
+                    baseSorting.getOverrideSetPlayerSPHealthSuperiors());
             addSorting(
-                    id, allBaseOverrideSetPlayerSPHealthInferiors, baseSorting.getOverrideSetPlayerSPHealthInferiors());
+                    id,
+                    allBaseOverrideSetPlayerSPHealthInferiors,
+                    baseSorting.getOverrideSetPlayerSPHealthInferiors());
             addSorting(id, allBaseAfterSetPlayerSPHealthSuperiors, baseSorting.getAfterSetPlayerSPHealthSuperiors());
             addSorting(id, allBaseAfterSetPlayerSPHealthInferiors, baseSorting.getAfterSetPlayerSPHealthInferiors());
 
@@ -958,9 +1038,13 @@ public final class ClientPlayerAPI {
             addSorting(id, allBaseBeforeWriteEntityToNBTSuperiors, baseSorting.getBeforeWriteEntityToNBTSuperiors());
             addSorting(id, allBaseBeforeWriteEntityToNBTInferiors, baseSorting.getBeforeWriteEntityToNBTInferiors());
             addSorting(
-                    id, allBaseOverrideWriteEntityToNBTSuperiors, baseSorting.getOverrideWriteEntityToNBTSuperiors());
+                    id,
+                    allBaseOverrideWriteEntityToNBTSuperiors,
+                    baseSorting.getOverrideWriteEntityToNBTSuperiors());
             addSorting(
-                    id, allBaseOverrideWriteEntityToNBTInferiors, baseSorting.getOverrideWriteEntityToNBTInferiors());
+                    id,
+                    allBaseOverrideWriteEntityToNBTInferiors,
+                    baseSorting.getOverrideWriteEntityToNBTInferiors());
             addSorting(id, allBaseAfterWriteEntityToNBTSuperiors, baseSorting.getAfterWriteEntityToNBTSuperiors());
             addSorting(id, allBaseAfterWriteEntityToNBTInferiors, baseSorting.getAfterWriteEntityToNBTInferiors());
         }
@@ -1014,7 +1098,12 @@ public final class ClientPlayerAPI {
                 double.class);
 
         addMethod(
-                id, baseClass, beforeAddStatHookTypes, "beforeAddStat", net.minecraft.stats.StatBase.class, int.class);
+                id,
+                baseClass,
+                beforeAddStatHookTypes,
+                "beforeAddStat",
+                net.minecraft.stats.StatBase.class,
+                int.class);
         addMethod(id, baseClass, overrideAddStatHookTypes, "addStat", net.minecraft.stats.StatBase.class, int.class);
         addMethod(id, baseClass, afterAddStatHookTypes, "afterAddStat", net.minecraft.stats.StatBase.class, int.class);
 
@@ -1071,7 +1160,11 @@ public final class ClientPlayerAPI {
                 net.minecraft.block.Block.class);
         addMethod(id, baseClass, overrideCanHarvestBlockHookTypes, "canHarvestBlock", net.minecraft.block.Block.class);
         addMethod(
-                id, baseClass, afterCanHarvestBlockHookTypes, "afterCanHarvestBlock", net.minecraft.block.Block.class);
+                id,
+                baseClass,
+                afterCanHarvestBlockHookTypes,
+                "afterCanHarvestBlock",
+                net.minecraft.block.Block.class);
 
         addMethod(
                 id,
@@ -1566,7 +1659,13 @@ public final class ClientPlayerAPI {
                 double.class);
 
         addMethod(
-                id, baseClass, beforeMoveEntityHookTypes, "beforeMoveEntity", double.class, double.class, double.class);
+                id,
+                baseClass,
+                beforeMoveEntityHookTypes,
+                "beforeMoveEntity",
+                double.class,
+                double.class,
+                double.class);
         addMethod(id, baseClass, overrideMoveEntityHookTypes, "moveEntity", double.class, double.class, double.class);
         addMethod(id, baseClass, afterMoveEntityHookTypes, "afterMoveEntity", double.class, double.class, double.class);
 
@@ -2632,8 +2731,7 @@ public final class ClientPlayerAPI {
         overrideWriteEntityToNBTHookTypes.remove(id);
         afterWriteEntityToNBTHookTypes.remove(id);
 
-        for (IClientPlayerAPI instance : getAllInstancesList())
-            instance.getClientPlayerAPI().updateClientPlayerBases();
+        for (IClientPlayerAPI instance : getAllInstancesList()) instance.getClientPlayerAPI().updateClientPlayerBases();
 
         Iterator<String> iterator = keysToVirtualIds.keySet().iterator();
         while (iterator.hasNext()) {
@@ -2693,13 +2791,13 @@ public final class ClientPlayerAPI {
         if (values != null && values.length > 0) map.put(id, values);
     }
 
-    private static void addDynamicSorting(
-            String id, Map<String, Map<String, String[]>> map, Map<String, String[]> values) {
+    private static void addDynamicSorting(String id, Map<String, Map<String, String[]>> map,
+            Map<String, String[]> values) {
         if (values != null && values.size() > 0) map.put(id, values);
     }
 
-    private static boolean addMethod(
-            String id, Class<?> baseClass, List<String> list, String methodName, Class<?>... _parameterTypes) {
+    private static boolean addMethod(String id, Class<?> baseClass, List<String> list, String methodName,
+            Class<?>... _parameterTypes) {
         try {
             Method method = baseClass.getMethod(methodName, _parameterTypes);
             boolean isOverridden = method.getDeclaringClass() != ClientPlayerBase.class;
@@ -2707,7 +2805,8 @@ public final class ClientPlayerAPI {
             return isOverridden;
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Can not reflect method '" + methodName + "' of class '" + baseClass.getName() + "'", e);
+                    "Can not reflect method '" + methodName + "' of class '" + baseClass.getName() + "'",
+                    e);
         }
     }
 
@@ -2782,11 +2881,8 @@ public final class ClientPlayerAPI {
         if (afters != null) afterDynamicHookMethods.put(baseClass, afters);
     }
 
-    private static void addDynamicKeys(
-            String id,
-            Class<?> baseClass,
-            Map<Class<?>, Map<String, Method>> dynamicHookMethods,
-            Map<String, List<String>> dynamicHookTypes) {
+    private static void addDynamicKeys(String id, Class<?> baseClass,
+            Map<Class<?>, Map<String, Method>> dynamicHookMethods, Map<String, List<String>> dynamicHookTypes) {
         Map<String, Method> methods = dynamicHookMethods.get(baseClass);
         if (methods == null || methods.size() == 0) return;
 
@@ -2827,7 +2923,10 @@ public final class ClientPlayerAPI {
             String key = keyIterator.next();
             sortDynamicBases(beforeDynamicHookTypes, allBaseBeforeDynamicSuperiors, allBaseBeforeDynamicInferiors, key);
             sortDynamicBases(
-                    overrideDynamicHookTypes, allBaseOverrideDynamicSuperiors, allBaseOverrideDynamicInferiors, key);
+                    overrideDynamicHookTypes,
+                    allBaseOverrideDynamicSuperiors,
+                    allBaseOverrideDynamicInferiors,
+                    key);
             sortDynamicBases(afterDynamicHookTypes, allBaseAfterDynamicSuperiors, allBaseAfterDynamicInferiors, key);
         }
 
@@ -2864,7 +2963,10 @@ public final class ClientPlayerAPI {
                 "afterAddMovementStat");
 
         sortBases(
-                beforeAddStatHookTypes, allBaseBeforeAddStatSuperiors, allBaseBeforeAddStatInferiors, "beforeAddStat");
+                beforeAddStatHookTypes,
+                allBaseBeforeAddStatSuperiors,
+                allBaseBeforeAddStatInferiors,
+                "beforeAddStat");
         sortBases(
                 overrideAddStatHookTypes,
                 allBaseOverrideAddStatSuperiors,
@@ -3573,7 +3675,10 @@ public final class ClientPlayerAPI {
                 "afterMoveFlying");
 
         sortBases(
-                beforeOnDeathHookTypes, allBaseBeforeOnDeathSuperiors, allBaseBeforeOnDeathInferiors, "beforeOnDeath");
+                beforeOnDeathHookTypes,
+                allBaseBeforeOnDeathSuperiors,
+                allBaseBeforeOnDeathInferiors,
+                "beforeOnDeath");
         sortBases(
                 overrideOnDeathHookTypes,
                 allBaseOverrideOnDeathSuperiors,
@@ -3640,7 +3745,10 @@ public final class ClientPlayerAPI {
                 allBaseOverrideOnUpdateInferiors,
                 "overrideOnUpdate");
         sortBases(
-                afterOnUpdateHookTypes, allBaseAfterOnUpdateSuperiors, allBaseAfterOnUpdateInferiors, "afterOnUpdate");
+                afterOnUpdateHookTypes,
+                allBaseAfterOnUpdateSuperiors,
+                allBaseAfterOnUpdateInferiors,
+                "afterOnUpdate");
 
         sortBases(
                 beforePlayStepSoundHookTypes,
@@ -3685,7 +3793,10 @@ public final class ClientPlayerAPI {
                 allBaseOverrideRayTraceInferiors,
                 "overrideRayTrace");
         sortBases(
-                afterRayTraceHookTypes, allBaseAfterRayTraceSuperiors, allBaseAfterRayTraceInferiors, "afterRayTrace");
+                afterRayTraceHookTypes,
+                allBaseAfterRayTraceSuperiors,
+                allBaseAfterRayTraceInferiors,
+                "afterRayTrace");
 
         sortBases(
                 beforeReadEntityFromNBTHookTypes,
@@ -3720,7 +3831,10 @@ public final class ClientPlayerAPI {
                 "afterRespawnPlayer");
 
         sortBases(
-                beforeSetDeadHookTypes, allBaseBeforeSetDeadSuperiors, allBaseBeforeSetDeadInferiors, "beforeSetDead");
+                beforeSetDeadHookTypes,
+                allBaseBeforeSetDeadSuperiors,
+                allBaseBeforeSetDeadInferiors,
+                "beforeSetDead");
         sortBases(
                 overrideSetDeadHookTypes,
                 allBaseOverrideSetDeadSuperiors,
@@ -3895,23 +4009,13 @@ public final class ClientPlayerAPI {
         List<IClientPlayerAPI> result = new ArrayList<IClientPlayerAPI>();
         Object player;
         try {
-            Object minecraft = net.minecraft.client.Minecraft.class
-                    .getMethod("func_71410_x")
-                    .invoke(null);
-            player = minecraft != null
-                    ? net.minecraft.client.Minecraft.class
-                            .getField("field_71439_g")
-                            .get(minecraft)
+            Object minecraft = net.minecraft.client.Minecraft.class.getMethod("func_71410_x").invoke(null);
+            player = minecraft != null ? net.minecraft.client.Minecraft.class.getField("field_71439_g").get(minecraft)
                     : null;
         } catch (Exception obfuscatedException) {
             try {
-                Object minecraft = net.minecraft.client.Minecraft.class
-                        .getMethod("getMinecraft")
-                        .invoke(null);
-                player = minecraft != null
-                        ? net.minecraft.client.Minecraft.class
-                                .getField("thePlayer")
-                                .get(minecraft)
+                Object minecraft = net.minecraft.client.Minecraft.class.getMethod("getMinecraft").invoke(null);
+                player = minecraft != null ? net.minecraft.client.Minecraft.class.getField("thePlayer").get(minecraft)
                         : null;
             } catch (Exception deobfuscatedException) {
                 throw new RuntimeException("Unable to aquire list of current server players.", obfuscatedException);
@@ -3926,12 +4030,9 @@ public final class ClientPlayerAPI {
         return allInstances.toArray(new net.minecraft.client.entity.EntityPlayerSP[allInstances.size()]);
     }
 
-    public static void beforeLocalConstructing(
-            IClientPlayerAPI clientPlayer,
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {
+    public static void beforeLocalConstructing(IClientPlayerAPI clientPlayer,
+            net.minecraft.client.Minecraft paramMinecraft, net.minecraft.world.World paramWorld,
+            net.minecraft.util.Session paramSession, int paramInt) {
         ClientPlayerAPI clientPlayerAPI = clientPlayer.getClientPlayerAPI();
         if (clientPlayerAPI != null) clientPlayerAPI.load();
 
@@ -3939,12 +4040,9 @@ public final class ClientPlayerAPI {
             clientPlayerAPI.beforeLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
     }
 
-    public static void afterLocalConstructing(
-            IClientPlayerAPI clientPlayer,
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {
+    public static void afterLocalConstructing(IClientPlayerAPI clientPlayer,
+            net.minecraft.client.Minecraft paramMinecraft, net.minecraft.world.World paramWorld,
+            net.minecraft.util.Session paramSession, int paramInt) {
         ClientPlayerAPI clientPlayerAPI = clientPlayer.getClientPlayerAPI();
         if (clientPlayerAPI != null)
             clientPlayerAPI.afterLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
@@ -3970,33 +4068,27 @@ public final class ClientPlayerAPI {
         return null;
     }
 
-    private static void sortBases(
-            List<String> list,
-            Map<String, String[]> allBaseSuperiors,
-            Map<String, String[]> allBaseInferiors,
-            String methodName) {
+    private static void sortBases(List<String> list, Map<String, String[]> allBaseSuperiors,
+            Map<String, String[]> allBaseInferiors, String methodName) {
         new ClientPlayerBaseSorter(list, allBaseSuperiors, allBaseInferiors, methodName).Sort();
     }
 
-    private static final Map<String, String[]> EmptySortMap =
-            Collections.unmodifiableMap(new HashMap<String, String[]>());
+    private static final Map<String, String[]> EmptySortMap = Collections
+            .unmodifiableMap(new HashMap<String, String[]>());
 
-    private static void sortDynamicBases(
-            Map<String, List<String>> lists,
-            Map<String, Map<String, String[]>> allBaseSuperiors,
-            Map<String, Map<String, String[]>> allBaseInferiors,
+    private static void sortDynamicBases(Map<String, List<String>> lists,
+            Map<String, Map<String, String[]>> allBaseSuperiors, Map<String, Map<String, String[]>> allBaseInferiors,
             String key) {
         List<String> types = lists.get(key);
-        if (types != null && types.size() > 1)
-            sortBases(
-                    types,
-                    getDynamicSorters(key, types, allBaseSuperiors),
-                    getDynamicSorters(key, types, allBaseInferiors),
-                    key);
+        if (types != null && types.size() > 1) sortBases(
+                types,
+                getDynamicSorters(key, types, allBaseSuperiors),
+                getDynamicSorters(key, types, allBaseInferiors),
+                key);
     }
 
-    private static Map<String, String[]> getDynamicSorters(
-            String key, List<String> toSort, Map<String, Map<String, String[]>> allBaseValues) {
+    private static Map<String, String[]> getDynamicSorters(String key, List<String> toSort,
+            Map<String, Map<String, String[]>> allBaseValues) {
         Map<String, String[]> superiors = null;
 
         Iterator<String> ids = toSort.iterator();
@@ -4047,7 +4139,8 @@ public final class ClientPlayerAPI {
             else base = (ClientPlayerBase) contructor.newInstance(this, id);
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Exception while creating a ClientPlayerBase of type '" + contructor.getDeclaringClass() + "'", e);
+                    "Exception while creating a ClientPlayerBase of type '" + contructor.getDeclaringClass() + "'",
+                    e);
         }
         return base;
     }
@@ -4056,15 +4149,13 @@ public final class ClientPlayerAPI {
         beforeAddExhaustionHooks = create(beforeAddExhaustionHookTypes);
         overrideAddExhaustionHooks = create(overrideAddExhaustionHookTypes);
         afterAddExhaustionHooks = create(afterAddExhaustionHookTypes);
-        isAddExhaustionModded = beforeAddExhaustionHooks != null
-                || overrideAddExhaustionHooks != null
+        isAddExhaustionModded = beforeAddExhaustionHooks != null || overrideAddExhaustionHooks != null
                 || afterAddExhaustionHooks != null;
 
         beforeAddMovementStatHooks = create(beforeAddMovementStatHookTypes);
         overrideAddMovementStatHooks = create(overrideAddMovementStatHookTypes);
         afterAddMovementStatHooks = create(afterAddMovementStatHookTypes);
-        isAddMovementStatModded = beforeAddMovementStatHooks != null
-                || overrideAddMovementStatHooks != null
+        isAddMovementStatModded = beforeAddMovementStatHooks != null || overrideAddMovementStatHooks != null
                 || afterAddMovementStatHooks != null;
 
         beforeAddStatHooks = create(beforeAddStatHookTypes);
@@ -4075,8 +4166,7 @@ public final class ClientPlayerAPI {
         beforeAttackEntityFromHooks = create(beforeAttackEntityFromHookTypes);
         overrideAttackEntityFromHooks = create(overrideAttackEntityFromHookTypes);
         afterAttackEntityFromHooks = create(afterAttackEntityFromHookTypes);
-        isAttackEntityFromModded = beforeAttackEntityFromHooks != null
-                || overrideAttackEntityFromHooks != null
+        isAttackEntityFromModded = beforeAttackEntityFromHooks != null || overrideAttackEntityFromHooks != null
                 || afterAttackEntityFromHooks != null;
 
         beforeAttackTargetEntityWithCurrentItemHooks = create(beforeAttackTargetEntityWithCurrentItemHookTypes);
@@ -4096,35 +4186,32 @@ public final class ClientPlayerAPI {
         beforeCanHarvestBlockHooks = create(beforeCanHarvestBlockHookTypes);
         overrideCanHarvestBlockHooks = create(overrideCanHarvestBlockHookTypes);
         afterCanHarvestBlockHooks = create(afterCanHarvestBlockHookTypes);
-        isCanHarvestBlockModded = beforeCanHarvestBlockHooks != null
-                || overrideCanHarvestBlockHooks != null
+        isCanHarvestBlockModded = beforeCanHarvestBlockHooks != null || overrideCanHarvestBlockHooks != null
                 || afterCanHarvestBlockHooks != null;
 
         beforeCanPlayerEditHooks = create(beforeCanPlayerEditHookTypes);
         overrideCanPlayerEditHooks = create(overrideCanPlayerEditHookTypes);
         afterCanPlayerEditHooks = create(afterCanPlayerEditHookTypes);
-        isCanPlayerEditModded = beforeCanPlayerEditHooks != null
-                || overrideCanPlayerEditHooks != null
+        isCanPlayerEditModded = beforeCanPlayerEditHooks != null || overrideCanPlayerEditHooks != null
                 || afterCanPlayerEditHooks != null;
 
         beforeCanTriggerWalkingHooks = create(beforeCanTriggerWalkingHookTypes);
         overrideCanTriggerWalkingHooks = create(overrideCanTriggerWalkingHookTypes);
         afterCanTriggerWalkingHooks = create(afterCanTriggerWalkingHookTypes);
-        isCanTriggerWalkingModded = beforeCanTriggerWalkingHooks != null
-                || overrideCanTriggerWalkingHooks != null
+        isCanTriggerWalkingModded = beforeCanTriggerWalkingHooks != null || overrideCanTriggerWalkingHooks != null
                 || afterCanTriggerWalkingHooks != null;
 
         beforeCloseScreenHooks = create(beforeCloseScreenHookTypes);
         overrideCloseScreenHooks = create(overrideCloseScreenHookTypes);
         afterCloseScreenHooks = create(afterCloseScreenHookTypes);
-        isCloseScreenModded =
-                beforeCloseScreenHooks != null || overrideCloseScreenHooks != null || afterCloseScreenHooks != null;
+        isCloseScreenModded = beforeCloseScreenHooks != null || overrideCloseScreenHooks != null
+                || afterCloseScreenHooks != null;
 
         beforeDamageEntityHooks = create(beforeDamageEntityHookTypes);
         overrideDamageEntityHooks = create(overrideDamageEntityHookTypes);
         afterDamageEntityHooks = create(afterDamageEntityHookTypes);
-        isDamageEntityModded =
-                beforeDamageEntityHooks != null || overrideDamageEntityHooks != null || afterDamageEntityHooks != null;
+        isDamageEntityModded = beforeDamageEntityHooks != null || overrideDamageEntityHooks != null
+                || afterDamageEntityHooks != null;
 
         beforeDisplayGUIBrewingStandHooks = create(beforeDisplayGUIBrewingStandHookTypes);
         overrideDisplayGUIBrewingStandHooks = create(overrideDisplayGUIBrewingStandHookTypes);
@@ -4136,22 +4223,19 @@ public final class ClientPlayerAPI {
         beforeDisplayGUIChestHooks = create(beforeDisplayGUIChestHookTypes);
         overrideDisplayGUIChestHooks = create(overrideDisplayGUIChestHookTypes);
         afterDisplayGUIChestHooks = create(afterDisplayGUIChestHookTypes);
-        isDisplayGUIChestModded = beforeDisplayGUIChestHooks != null
-                || overrideDisplayGUIChestHooks != null
+        isDisplayGUIChestModded = beforeDisplayGUIChestHooks != null || overrideDisplayGUIChestHooks != null
                 || afterDisplayGUIChestHooks != null;
 
         beforeDisplayGUIDispenserHooks = create(beforeDisplayGUIDispenserHookTypes);
         overrideDisplayGUIDispenserHooks = create(overrideDisplayGUIDispenserHookTypes);
         afterDisplayGUIDispenserHooks = create(afterDisplayGUIDispenserHookTypes);
-        isDisplayGUIDispenserModded = beforeDisplayGUIDispenserHooks != null
-                || overrideDisplayGUIDispenserHooks != null
+        isDisplayGUIDispenserModded = beforeDisplayGUIDispenserHooks != null || overrideDisplayGUIDispenserHooks != null
                 || afterDisplayGUIDispenserHooks != null;
 
         beforeDisplayGUIEditSignHooks = create(beforeDisplayGUIEditSignHookTypes);
         overrideDisplayGUIEditSignHooks = create(overrideDisplayGUIEditSignHookTypes);
         afterDisplayGUIEditSignHooks = create(afterDisplayGUIEditSignHookTypes);
-        isDisplayGUIEditSignModded = beforeDisplayGUIEditSignHooks != null
-                || overrideDisplayGUIEditSignHooks != null
+        isDisplayGUIEditSignModded = beforeDisplayGUIEditSignHooks != null || overrideDisplayGUIEditSignHooks != null
                 || afterDisplayGUIEditSignHooks != null;
 
         beforeDisplayGUIEnchantmentHooks = create(beforeDisplayGUIEnchantmentHookTypes);
@@ -4164,28 +4248,25 @@ public final class ClientPlayerAPI {
         beforeDisplayGUIFurnaceHooks = create(beforeDisplayGUIFurnaceHookTypes);
         overrideDisplayGUIFurnaceHooks = create(overrideDisplayGUIFurnaceHookTypes);
         afterDisplayGUIFurnaceHooks = create(afterDisplayGUIFurnaceHookTypes);
-        isDisplayGUIFurnaceModded = beforeDisplayGUIFurnaceHooks != null
-                || overrideDisplayGUIFurnaceHooks != null
+        isDisplayGUIFurnaceModded = beforeDisplayGUIFurnaceHooks != null || overrideDisplayGUIFurnaceHooks != null
                 || afterDisplayGUIFurnaceHooks != null;
 
         beforeDisplayGUIWorkbenchHooks = create(beforeDisplayGUIWorkbenchHookTypes);
         overrideDisplayGUIWorkbenchHooks = create(overrideDisplayGUIWorkbenchHookTypes);
         afterDisplayGUIWorkbenchHooks = create(afterDisplayGUIWorkbenchHookTypes);
-        isDisplayGUIWorkbenchModded = beforeDisplayGUIWorkbenchHooks != null
-                || overrideDisplayGUIWorkbenchHooks != null
+        isDisplayGUIWorkbenchModded = beforeDisplayGUIWorkbenchHooks != null || overrideDisplayGUIWorkbenchHooks != null
                 || afterDisplayGUIWorkbenchHooks != null;
 
         beforeDropOneItemHooks = create(beforeDropOneItemHookTypes);
         overrideDropOneItemHooks = create(overrideDropOneItemHookTypes);
         afterDropOneItemHooks = create(afterDropOneItemHookTypes);
-        isDropOneItemModded =
-                beforeDropOneItemHooks != null || overrideDropOneItemHooks != null || afterDropOneItemHooks != null;
+        isDropOneItemModded = beforeDropOneItemHooks != null || overrideDropOneItemHooks != null
+                || afterDropOneItemHooks != null;
 
         beforeDropPlayerItemHooks = create(beforeDropPlayerItemHookTypes);
         overrideDropPlayerItemHooks = create(overrideDropPlayerItemHookTypes);
         afterDropPlayerItemHooks = create(afterDropPlayerItemHookTypes);
-        isDropPlayerItemModded = beforeDropPlayerItemHooks != null
-                || overrideDropPlayerItemHooks != null
+        isDropPlayerItemModded = beforeDropPlayerItemHooks != null || overrideDropPlayerItemHooks != null
                 || afterDropPlayerItemHooks != null;
 
         beforeDropPlayerItemWithRandomChoiceHooks = create(beforeDropPlayerItemWithRandomChoiceHookTypes);
@@ -4203,8 +4284,7 @@ public final class ClientPlayerAPI {
         beforeGetAIMoveSpeedHooks = create(beforeGetAIMoveSpeedHookTypes);
         overrideGetAIMoveSpeedHooks = create(overrideGetAIMoveSpeedHookTypes);
         afterGetAIMoveSpeedHooks = create(afterGetAIMoveSpeedHookTypes);
-        isGetAIMoveSpeedModded = beforeGetAIMoveSpeedHooks != null
-                || overrideGetAIMoveSpeedHooks != null
+        isGetAIMoveSpeedModded = beforeGetAIMoveSpeedHooks != null || overrideGetAIMoveSpeedHooks != null
                 || afterGetAIMoveSpeedHooks != null;
 
         beforeGetBedOrientationInDegreesHooks = create(beforeGetBedOrientationInDegreesHookTypes);
@@ -4217,8 +4297,7 @@ public final class ClientPlayerAPI {
         beforeGetBrightnessHooks = create(beforeGetBrightnessHookTypes);
         overrideGetBrightnessHooks = create(overrideGetBrightnessHookTypes);
         afterGetBrightnessHooks = create(afterGetBrightnessHookTypes);
-        isGetBrightnessModded = beforeGetBrightnessHooks != null
-                || overrideGetBrightnessHooks != null
+        isGetBrightnessModded = beforeGetBrightnessHooks != null || overrideGetBrightnessHooks != null
                 || afterGetBrightnessHooks != null;
 
         beforeGetBrightnessForRenderHooks = create(beforeGetBrightnessForRenderHookTypes);
@@ -4245,8 +4324,7 @@ public final class ClientPlayerAPI {
         beforeGetDistanceSqHooks = create(beforeGetDistanceSqHookTypes);
         overrideGetDistanceSqHooks = create(overrideGetDistanceSqHookTypes);
         afterGetDistanceSqHooks = create(afterGetDistanceSqHookTypes);
-        isGetDistanceSqModded = beforeGetDistanceSqHooks != null
-                || overrideGetDistanceSqHooks != null
+        isGetDistanceSqModded = beforeGetDistanceSqHooks != null || overrideGetDistanceSqHooks != null
                 || afterGetDistanceSqHooks != null;
 
         beforeGetDistanceSqToEntityHooks = create(beforeGetDistanceSqToEntityHookTypes);
@@ -4259,41 +4337,37 @@ public final class ClientPlayerAPI {
         beforeGetFOVMultiplierHooks = create(beforeGetFOVMultiplierHookTypes);
         overrideGetFOVMultiplierHooks = create(overrideGetFOVMultiplierHookTypes);
         afterGetFOVMultiplierHooks = create(afterGetFOVMultiplierHookTypes);
-        isGetFOVMultiplierModded = beforeGetFOVMultiplierHooks != null
-                || overrideGetFOVMultiplierHooks != null
+        isGetFOVMultiplierModded = beforeGetFOVMultiplierHooks != null || overrideGetFOVMultiplierHooks != null
                 || afterGetFOVMultiplierHooks != null;
 
         beforeGetHurtSoundHooks = create(beforeGetHurtSoundHookTypes);
         overrideGetHurtSoundHooks = create(overrideGetHurtSoundHookTypes);
         afterGetHurtSoundHooks = create(afterGetHurtSoundHookTypes);
-        isGetHurtSoundModded =
-                beforeGetHurtSoundHooks != null || overrideGetHurtSoundHooks != null || afterGetHurtSoundHooks != null;
+        isGetHurtSoundModded = beforeGetHurtSoundHooks != null || overrideGetHurtSoundHooks != null
+                || afterGetHurtSoundHooks != null;
 
         beforeGetItemIconHooks = create(beforeGetItemIconHookTypes);
         overrideGetItemIconHooks = create(overrideGetItemIconHookTypes);
         afterGetItemIconHooks = create(afterGetItemIconHookTypes);
-        isGetItemIconModded =
-                beforeGetItemIconHooks != null || overrideGetItemIconHooks != null || afterGetItemIconHooks != null;
+        isGetItemIconModded = beforeGetItemIconHooks != null || overrideGetItemIconHooks != null
+                || afterGetItemIconHooks != null;
 
         beforeGetSleepTimerHooks = create(beforeGetSleepTimerHookTypes);
         overrideGetSleepTimerHooks = create(overrideGetSleepTimerHookTypes);
         afterGetSleepTimerHooks = create(afterGetSleepTimerHookTypes);
-        isGetSleepTimerModded = beforeGetSleepTimerHooks != null
-                || overrideGetSleepTimerHooks != null
+        isGetSleepTimerModded = beforeGetSleepTimerHooks != null || overrideGetSleepTimerHooks != null
                 || afterGetSleepTimerHooks != null;
 
         beforeHandleLavaMovementHooks = create(beforeHandleLavaMovementHookTypes);
         overrideHandleLavaMovementHooks = create(overrideHandleLavaMovementHookTypes);
         afterHandleLavaMovementHooks = create(afterHandleLavaMovementHookTypes);
-        isHandleLavaMovementModded = beforeHandleLavaMovementHooks != null
-                || overrideHandleLavaMovementHooks != null
+        isHandleLavaMovementModded = beforeHandleLavaMovementHooks != null || overrideHandleLavaMovementHooks != null
                 || afterHandleLavaMovementHooks != null;
 
         beforeHandleWaterMovementHooks = create(beforeHandleWaterMovementHookTypes);
         overrideHandleWaterMovementHooks = create(overrideHandleWaterMovementHookTypes);
         afterHandleWaterMovementHooks = create(afterHandleWaterMovementHookTypes);
-        isHandleWaterMovementModded = beforeHandleWaterMovementHooks != null
-                || overrideHandleWaterMovementHooks != null
+        isHandleWaterMovementModded = beforeHandleWaterMovementHooks != null || overrideHandleWaterMovementHooks != null
                 || afterHandleWaterMovementHooks != null;
 
         beforeHealHooks = create(beforeHealHookTypes);
@@ -4311,40 +4385,38 @@ public final class ClientPlayerAPI {
         beforeIsInWaterHooks = create(beforeIsInWaterHookTypes);
         overrideIsInWaterHooks = create(overrideIsInWaterHookTypes);
         afterIsInWaterHooks = create(afterIsInWaterHookTypes);
-        isIsInWaterModded =
-                beforeIsInWaterHooks != null || overrideIsInWaterHooks != null || afterIsInWaterHooks != null;
+        isIsInWaterModded = beforeIsInWaterHooks != null || overrideIsInWaterHooks != null
+                || afterIsInWaterHooks != null;
 
         beforeIsInsideOfMaterialHooks = create(beforeIsInsideOfMaterialHookTypes);
         overrideIsInsideOfMaterialHooks = create(overrideIsInsideOfMaterialHookTypes);
         afterIsInsideOfMaterialHooks = create(afterIsInsideOfMaterialHookTypes);
-        isIsInsideOfMaterialModded = beforeIsInsideOfMaterialHooks != null
-                || overrideIsInsideOfMaterialHooks != null
+        isIsInsideOfMaterialModded = beforeIsInsideOfMaterialHooks != null || overrideIsInsideOfMaterialHooks != null
                 || afterIsInsideOfMaterialHooks != null;
 
         beforeIsOnLadderHooks = create(beforeIsOnLadderHookTypes);
         overrideIsOnLadderHooks = create(overrideIsOnLadderHookTypes);
         afterIsOnLadderHooks = create(afterIsOnLadderHookTypes);
-        isIsOnLadderModded =
-                beforeIsOnLadderHooks != null || overrideIsOnLadderHooks != null || afterIsOnLadderHooks != null;
+        isIsOnLadderModded = beforeIsOnLadderHooks != null || overrideIsOnLadderHooks != null
+                || afterIsOnLadderHooks != null;
 
         beforeIsPlayerSleepingHooks = create(beforeIsPlayerSleepingHookTypes);
         overrideIsPlayerSleepingHooks = create(overrideIsPlayerSleepingHookTypes);
         afterIsPlayerSleepingHooks = create(afterIsPlayerSleepingHookTypes);
-        isIsPlayerSleepingModded = beforeIsPlayerSleepingHooks != null
-                || overrideIsPlayerSleepingHooks != null
+        isIsPlayerSleepingModded = beforeIsPlayerSleepingHooks != null || overrideIsPlayerSleepingHooks != null
                 || afterIsPlayerSleepingHooks != null;
 
         beforeIsSneakingHooks = create(beforeIsSneakingHookTypes);
         overrideIsSneakingHooks = create(overrideIsSneakingHookTypes);
         afterIsSneakingHooks = create(afterIsSneakingHookTypes);
-        isIsSneakingModded =
-                beforeIsSneakingHooks != null || overrideIsSneakingHooks != null || afterIsSneakingHooks != null;
+        isIsSneakingModded = beforeIsSneakingHooks != null || overrideIsSneakingHooks != null
+                || afterIsSneakingHooks != null;
 
         beforeIsSprintingHooks = create(beforeIsSprintingHookTypes);
         overrideIsSprintingHooks = create(overrideIsSprintingHookTypes);
         afterIsSprintingHooks = create(afterIsSprintingHookTypes);
-        isIsSprintingModded =
-                beforeIsSprintingHooks != null || overrideIsSprintingHooks != null || afterIsSprintingHooks != null;
+        isIsSprintingModded = beforeIsSprintingHooks != null || overrideIsSprintingHooks != null
+                || afterIsSprintingHooks != null;
 
         beforeJumpHooks = create(beforeJumpHookTypes);
         overrideJumpHooks = create(overrideJumpHookTypes);
@@ -4354,14 +4426,14 @@ public final class ClientPlayerAPI {
         beforeKnockBackHooks = create(beforeKnockBackHookTypes);
         overrideKnockBackHooks = create(overrideKnockBackHookTypes);
         afterKnockBackHooks = create(afterKnockBackHookTypes);
-        isKnockBackModded =
-                beforeKnockBackHooks != null || overrideKnockBackHooks != null || afterKnockBackHooks != null;
+        isKnockBackModded = beforeKnockBackHooks != null || overrideKnockBackHooks != null
+                || afterKnockBackHooks != null;
 
         beforeMoveEntityHooks = create(beforeMoveEntityHookTypes);
         overrideMoveEntityHooks = create(overrideMoveEntityHookTypes);
         afterMoveEntityHooks = create(afterMoveEntityHookTypes);
-        isMoveEntityModded =
-                beforeMoveEntityHooks != null || overrideMoveEntityHooks != null || afterMoveEntityHooks != null;
+        isMoveEntityModded = beforeMoveEntityHooks != null || overrideMoveEntityHooks != null
+                || afterMoveEntityHooks != null;
 
         beforeMoveEntityWithHeadingHooks = create(beforeMoveEntityWithHeadingHookTypes);
         overrideMoveEntityWithHeadingHooks = create(overrideMoveEntityWithHeadingHookTypes);
@@ -4373,8 +4445,8 @@ public final class ClientPlayerAPI {
         beforeMoveFlyingHooks = create(beforeMoveFlyingHookTypes);
         overrideMoveFlyingHooks = create(overrideMoveFlyingHookTypes);
         afterMoveFlyingHooks = create(afterMoveFlyingHookTypes);
-        isMoveFlyingModded =
-                beforeMoveFlyingHooks != null || overrideMoveFlyingHooks != null || afterMoveFlyingHooks != null;
+        isMoveFlyingModded = beforeMoveFlyingHooks != null || overrideMoveFlyingHooks != null
+                || afterMoveFlyingHooks != null;
 
         beforeOnDeathHooks = create(beforeOnDeathHookTypes);
         overrideOnDeathHooks = create(overrideOnDeathHookTypes);
@@ -4384,21 +4456,19 @@ public final class ClientPlayerAPI {
         beforeOnLivingUpdateHooks = create(beforeOnLivingUpdateHookTypes);
         overrideOnLivingUpdateHooks = create(overrideOnLivingUpdateHookTypes);
         afterOnLivingUpdateHooks = create(afterOnLivingUpdateHookTypes);
-        isOnLivingUpdateModded = beforeOnLivingUpdateHooks != null
-                || overrideOnLivingUpdateHooks != null
+        isOnLivingUpdateModded = beforeOnLivingUpdateHooks != null || overrideOnLivingUpdateHooks != null
                 || afterOnLivingUpdateHooks != null;
 
         beforeOnKillEntityHooks = create(beforeOnKillEntityHookTypes);
         overrideOnKillEntityHooks = create(overrideOnKillEntityHookTypes);
         afterOnKillEntityHooks = create(afterOnKillEntityHookTypes);
-        isOnKillEntityModded =
-                beforeOnKillEntityHooks != null || overrideOnKillEntityHooks != null || afterOnKillEntityHooks != null;
+        isOnKillEntityModded = beforeOnKillEntityHooks != null || overrideOnKillEntityHooks != null
+                || afterOnKillEntityHooks != null;
 
         beforeOnStruckByLightningHooks = create(beforeOnStruckByLightningHookTypes);
         overrideOnStruckByLightningHooks = create(overrideOnStruckByLightningHookTypes);
         afterOnStruckByLightningHooks = create(afterOnStruckByLightningHookTypes);
-        isOnStruckByLightningModded = beforeOnStruckByLightningHooks != null
-                || overrideOnStruckByLightningHooks != null
+        isOnStruckByLightningModded = beforeOnStruckByLightningHooks != null || overrideOnStruckByLightningHooks != null
                 || afterOnStruckByLightningHooks != null;
 
         beforeOnUpdateHooks = create(beforeOnUpdateHookTypes);
@@ -4409,15 +4479,13 @@ public final class ClientPlayerAPI {
         beforePlayStepSoundHooks = create(beforePlayStepSoundHookTypes);
         overridePlayStepSoundHooks = create(overridePlayStepSoundHookTypes);
         afterPlayStepSoundHooks = create(afterPlayStepSoundHookTypes);
-        isPlayStepSoundModded = beforePlayStepSoundHooks != null
-                || overridePlayStepSoundHooks != null
+        isPlayStepSoundModded = beforePlayStepSoundHooks != null || overridePlayStepSoundHooks != null
                 || afterPlayStepSoundHooks != null;
 
         beforePushOutOfBlocksHooks = create(beforePushOutOfBlocksHookTypes);
         overridePushOutOfBlocksHooks = create(overridePushOutOfBlocksHookTypes);
         afterPushOutOfBlocksHooks = create(afterPushOutOfBlocksHookTypes);
-        isPushOutOfBlocksModded = beforePushOutOfBlocksHooks != null
-                || overridePushOutOfBlocksHooks != null
+        isPushOutOfBlocksModded = beforePushOutOfBlocksHooks != null || overridePushOutOfBlocksHooks != null
                 || afterPushOutOfBlocksHooks != null;
 
         beforeRayTraceHooks = create(beforeRayTraceHookTypes);
@@ -4428,15 +4496,13 @@ public final class ClientPlayerAPI {
         beforeReadEntityFromNBTHooks = create(beforeReadEntityFromNBTHookTypes);
         overrideReadEntityFromNBTHooks = create(overrideReadEntityFromNBTHookTypes);
         afterReadEntityFromNBTHooks = create(afterReadEntityFromNBTHookTypes);
-        isReadEntityFromNBTModded = beforeReadEntityFromNBTHooks != null
-                || overrideReadEntityFromNBTHooks != null
+        isReadEntityFromNBTModded = beforeReadEntityFromNBTHooks != null || overrideReadEntityFromNBTHooks != null
                 || afterReadEntityFromNBTHooks != null;
 
         beforeRespawnPlayerHooks = create(beforeRespawnPlayerHookTypes);
         overrideRespawnPlayerHooks = create(overrideRespawnPlayerHookTypes);
         afterRespawnPlayerHooks = create(afterRespawnPlayerHookTypes);
-        isRespawnPlayerModded = beforeRespawnPlayerHooks != null
-                || overrideRespawnPlayerHooks != null
+        isRespawnPlayerModded = beforeRespawnPlayerHooks != null || overrideRespawnPlayerHooks != null
                 || afterRespawnPlayerHooks != null;
 
         beforeSetDeadHooks = create(beforeSetDeadHookTypes);
@@ -4447,8 +4513,7 @@ public final class ClientPlayerAPI {
         beforeSetPlayerSPHealthHooks = create(beforeSetPlayerSPHealthHookTypes);
         overrideSetPlayerSPHealthHooks = create(overrideSetPlayerSPHealthHookTypes);
         afterSetPlayerSPHealthHooks = create(afterSetPlayerSPHealthHookTypes);
-        isSetPlayerSPHealthModded = beforeSetPlayerSPHealthHooks != null
-                || overrideSetPlayerSPHealthHooks != null
+        isSetPlayerSPHealthModded = beforeSetPlayerSPHealthHooks != null || overrideSetPlayerSPHealthHooks != null
                 || afterSetPlayerSPHealthHooks != null;
 
         beforeSetPositionAndRotationHooks = create(beforeSetPositionAndRotationHookTypes);
@@ -4461,26 +4526,26 @@ public final class ClientPlayerAPI {
         beforeSetSneakingHooks = create(beforeSetSneakingHookTypes);
         overrideSetSneakingHooks = create(overrideSetSneakingHookTypes);
         afterSetSneakingHooks = create(afterSetSneakingHookTypes);
-        isSetSneakingModded =
-                beforeSetSneakingHooks != null || overrideSetSneakingHooks != null || afterSetSneakingHooks != null;
+        isSetSneakingModded = beforeSetSneakingHooks != null || overrideSetSneakingHooks != null
+                || afterSetSneakingHooks != null;
 
         beforeSetSprintingHooks = create(beforeSetSprintingHookTypes);
         overrideSetSprintingHooks = create(overrideSetSprintingHookTypes);
         afterSetSprintingHooks = create(afterSetSprintingHookTypes);
-        isSetSprintingModded =
-                beforeSetSprintingHooks != null || overrideSetSprintingHooks != null || afterSetSprintingHooks != null;
+        isSetSprintingModded = beforeSetSprintingHooks != null || overrideSetSprintingHooks != null
+                || afterSetSprintingHooks != null;
 
         beforeSleepInBedAtHooks = create(beforeSleepInBedAtHookTypes);
         overrideSleepInBedAtHooks = create(overrideSleepInBedAtHookTypes);
         afterSleepInBedAtHooks = create(afterSleepInBedAtHookTypes);
-        isSleepInBedAtModded =
-                beforeSleepInBedAtHooks != null || overrideSleepInBedAtHooks != null || afterSleepInBedAtHooks != null;
+        isSleepInBedAtModded = beforeSleepInBedAtHooks != null || overrideSleepInBedAtHooks != null
+                || afterSleepInBedAtHooks != null;
 
         beforeSwingItemHooks = create(beforeSwingItemHookTypes);
         overrideSwingItemHooks = create(overrideSwingItemHookTypes);
         afterSwingItemHooks = create(afterSwingItemHookTypes);
-        isSwingItemModded =
-                beforeSwingItemHooks != null || overrideSwingItemHooks != null || afterSwingItemHooks != null;
+        isSwingItemModded = beforeSwingItemHooks != null || overrideSwingItemHooks != null
+                || afterSwingItemHooks != null;
 
         beforeUpdateEntityActionStateHooks = create(beforeUpdateEntityActionStateHookTypes);
         overrideUpdateEntityActionStateHooks = create(overrideUpdateEntityActionStateHookTypes);
@@ -4492,20 +4557,19 @@ public final class ClientPlayerAPI {
         beforeUpdateRiddenHooks = create(beforeUpdateRiddenHookTypes);
         overrideUpdateRiddenHooks = create(overrideUpdateRiddenHookTypes);
         afterUpdateRiddenHooks = create(afterUpdateRiddenHookTypes);
-        isUpdateRiddenModded =
-                beforeUpdateRiddenHooks != null || overrideUpdateRiddenHooks != null || afterUpdateRiddenHooks != null;
+        isUpdateRiddenModded = beforeUpdateRiddenHooks != null || overrideUpdateRiddenHooks != null
+                || afterUpdateRiddenHooks != null;
 
         beforeWakeUpPlayerHooks = create(beforeWakeUpPlayerHookTypes);
         overrideWakeUpPlayerHooks = create(overrideWakeUpPlayerHookTypes);
         afterWakeUpPlayerHooks = create(afterWakeUpPlayerHookTypes);
-        isWakeUpPlayerModded =
-                beforeWakeUpPlayerHooks != null || overrideWakeUpPlayerHooks != null || afterWakeUpPlayerHooks != null;
+        isWakeUpPlayerModded = beforeWakeUpPlayerHooks != null || overrideWakeUpPlayerHooks != null
+                || afterWakeUpPlayerHooks != null;
 
         beforeWriteEntityToNBTHooks = create(beforeWriteEntityToNBTHookTypes);
         overrideWriteEntityToNBTHooks = create(overrideWriteEntityToNBTHookTypes);
         afterWriteEntityToNBTHooks = create(afterWriteEntityToNBTHookTypes);
-        isWriteEntityToNBTModded = beforeWriteEntityToNBTHooks != null
-                || overrideWriteEntityToNBTHooks != null
+        isWriteEntityToNBTModded = beforeWriteEntityToNBTHooks != null || overrideWriteEntityToNBTHooks != null
                 || afterWriteEntityToNBTHooks != null;
     }
 
@@ -4532,27 +4596,17 @@ public final class ClientPlayerAPI {
         return result;
     }
 
-    private void beforeLocalConstructing(
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {
-        if (beforeLocalConstructingHooks != null)
-            for (int i = beforeLocalConstructingHooks.length - 1; i >= 0; i--)
-                beforeLocalConstructingHooks[i].beforeLocalConstructing(
-                        paramMinecraft, paramWorld, paramSession, paramInt);
+    private void beforeLocalConstructing(net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld, net.minecraft.util.Session paramSession, int paramInt) {
+        if (beforeLocalConstructingHooks != null) for (int i = beforeLocalConstructingHooks.length - 1; i >= 0; i--)
+            beforeLocalConstructingHooks[i].beforeLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
         beforeLocalConstructingHooks = null;
     }
 
-    private void afterLocalConstructing(
-            net.minecraft.client.Minecraft paramMinecraft,
-            net.minecraft.world.World paramWorld,
-            net.minecraft.util.Session paramSession,
-            int paramInt) {
-        if (afterLocalConstructingHooks != null)
-            for (int i = 0; i < afterLocalConstructingHooks.length; i++)
-                afterLocalConstructingHooks[i].afterLocalConstructing(
-                        paramMinecraft, paramWorld, paramSession, paramInt);
+    private void afterLocalConstructing(net.minecraft.client.Minecraft paramMinecraft,
+            net.minecraft.world.World paramWorld, net.minecraft.util.Session paramSession, int paramInt) {
+        if (afterLocalConstructingHooks != null) for (int i = 0; i < afterLocalConstructingHooks.length; i++)
+            afterLocalConstructingHooks[i].afterLocalConstructing(paramMinecraft, paramWorld, paramSession, paramInt);
         afterLocalConstructingHooks = null;
     }
 
@@ -4576,13 +4630,12 @@ public final class ClientPlayerAPI {
         List<String> overrideIds = overrideDynamicHookTypes.get(key);
 
         String id = null;
-        if (overrideIds != null)
-            if (overwriter != null) {
-                id = baseObjectsToId.get(overwriter);
-                int index = overrideIds.indexOf(id);
-                if (index > 0) id = overrideIds.get(index - 1);
-                else id = null;
-            } else if (overrideIds.size() > 0) id = overrideIds.get(overrideIds.size() - 1);
+        if (overrideIds != null) if (overwriter != null) {
+            id = baseObjectsToId.get(overwriter);
+            int index = overrideIds.indexOf(id);
+            if (index > 0) id = overrideIds.get(index - 1);
+            else id = null;
+        } else if (overrideIds.size() > 0) id = overrideIds.get(overrideIds.size() - 1);
 
         Map<Class<?>, Map<String, Method>> methodMap;
 
@@ -4601,18 +4654,13 @@ public final class ClientPlayerAPI {
         return execute(getClientPlayerBase(id), method, parameters);
     }
 
-    private void executeAll(
-            String key,
-            Object[] parameters,
-            Map<String, List<String>> dynamicHookTypes,
-            Map<Class<?>, Map<String, Method>> dynamicHookMethods,
-            boolean reverse) {
+    private void executeAll(String key, Object[] parameters, Map<String, List<String>> dynamicHookTypes,
+            Map<Class<?>, Map<String, Method>> dynamicHookMethods, boolean reverse) {
         List<String> beforeIds = dynamicHookTypes.get(key);
         if (beforeIds == null) return;
 
-        for (int i = reverse ? beforeIds.size() - 1 : 0;
-                reverse ? i >= 0 : i < beforeIds.size();
-                i = i + (reverse ? -1 : 1)) {
+        for (int i = reverse ? beforeIds.size() - 1 : 0; reverse ? i >= 0
+                : i < beforeIds.size(); i = i + (reverse ? -1 : 1)) {
             String id = beforeIds.get(i);
             ClientPlayerBase base = getClientPlayerBase(id);
             Class<?> type = base.getClass();
@@ -4642,26 +4690,23 @@ public final class ClientPlayerAPI {
     }
 
     private void addExhaustion(float paramFloat) {
-        if (beforeAddExhaustionHooks != null)
-            for (int i = beforeAddExhaustionHooks.length - 1; i >= 0; i--)
-                beforeAddExhaustionHooks[i].beforeAddExhaustion(paramFloat);
+        if (beforeAddExhaustionHooks != null) for (int i = beforeAddExhaustionHooks.length - 1; i >= 0; i--)
+            beforeAddExhaustionHooks[i].beforeAddExhaustion(paramFloat);
 
         if (overrideAddExhaustionHooks != null)
             overrideAddExhaustionHooks[overrideAddExhaustionHooks.length - 1].addExhaustion(paramFloat);
         else player.localAddExhaustion(paramFloat);
 
-        if (afterAddExhaustionHooks != null)
-            for (int i = 0; i < afterAddExhaustionHooks.length; i++)
-                afterAddExhaustionHooks[i].afterAddExhaustion(paramFloat);
+        if (afterAddExhaustionHooks != null) for (int i = 0; i < afterAddExhaustionHooks.length; i++)
+            afterAddExhaustionHooks[i].afterAddExhaustion(paramFloat);
     }
 
     protected ClientPlayerBase GetOverwrittenAddExhaustion(ClientPlayerBase overWriter) {
         if (overrideAddExhaustionHooks == null) return overWriter;
 
         for (int i = 0; i < overrideAddExhaustionHooks.length; i++)
-            if (overrideAddExhaustionHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideAddExhaustionHooks[i - 1];
+            if (overrideAddExhaustionHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideAddExhaustionHooks[i - 1];
 
         return overWriter;
     }
@@ -4678,15 +4723,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeAddExhaustionSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeAddExhaustionInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAddExhaustionSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAddExhaustionInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideAddExhaustionSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAddExhaustionInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterAddExhaustionSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterAddExhaustionInferiors = new Hashtable<String, String[]>(0);
 
-    public static void addMovementStat(
-            IClientPlayerAPI target, double paramDouble1, double paramDouble2, double paramDouble3) {
+    public static void addMovementStat(IClientPlayerAPI target, double paramDouble1, double paramDouble2,
+            double paramDouble3) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isAddMovementStatModded)
             clientPlayerAPI.addMovementStat(paramDouble1, paramDouble2, paramDouble3);
@@ -4694,27 +4739,23 @@ public final class ClientPlayerAPI {
     }
 
     private void addMovementStat(double paramDouble1, double paramDouble2, double paramDouble3) {
-        if (beforeAddMovementStatHooks != null)
-            for (int i = beforeAddMovementStatHooks.length - 1; i >= 0; i--)
-                beforeAddMovementStatHooks[i].beforeAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
+        if (beforeAddMovementStatHooks != null) for (int i = beforeAddMovementStatHooks.length - 1; i >= 0; i--)
+            beforeAddMovementStatHooks[i].beforeAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
 
-        if (overrideAddMovementStatHooks != null)
-            overrideAddMovementStatHooks[overrideAddMovementStatHooks.length - 1].addMovementStat(
-                    paramDouble1, paramDouble2, paramDouble3);
+        if (overrideAddMovementStatHooks != null) overrideAddMovementStatHooks[overrideAddMovementStatHooks.length - 1]
+                .addMovementStat(paramDouble1, paramDouble2, paramDouble3);
         else player.localAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
 
-        if (afterAddMovementStatHooks != null)
-            for (int i = 0; i < afterAddMovementStatHooks.length; i++)
-                afterAddMovementStatHooks[i].afterAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
+        if (afterAddMovementStatHooks != null) for (int i = 0; i < afterAddMovementStatHooks.length; i++)
+            afterAddMovementStatHooks[i].afterAddMovementStat(paramDouble1, paramDouble2, paramDouble3);
     }
 
     protected ClientPlayerBase GetOverwrittenAddMovementStat(ClientPlayerBase overWriter) {
         if (overrideAddMovementStatHooks == null) return overWriter;
 
         for (int i = 0; i < overrideAddMovementStatHooks.length; i++)
-            if (overrideAddMovementStatHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideAddMovementStatHooks[i - 1];
+            if (overrideAddMovementStatHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideAddMovementStatHooks[i - 1];
 
         return overWriter;
     }
@@ -4729,18 +4770,18 @@ public final class ClientPlayerAPI {
 
     public boolean isAddMovementStatModded;
 
-    private static final Map<String, String[]> allBaseBeforeAddMovementStatSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeAddMovementStatInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAddMovementStatSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAddMovementStatInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAddMovementStatSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAddMovementStatInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeAddMovementStatSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeAddMovementStatInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAddMovementStatSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAddMovementStatInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAddMovementStatSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAddMovementStatInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void addStat(IClientPlayerAPI target, net.minecraft.stats.StatBase paramStatBase, int paramInt) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -4750,26 +4791,23 @@ public final class ClientPlayerAPI {
     }
 
     private void addStat(net.minecraft.stats.StatBase paramStatBase, int paramInt) {
-        if (beforeAddStatHooks != null)
-            for (int i = beforeAddStatHooks.length - 1; i >= 0; i--)
-                beforeAddStatHooks[i].beforeAddStat(paramStatBase, paramInt);
+        if (beforeAddStatHooks != null) for (int i = beforeAddStatHooks.length - 1; i >= 0; i--)
+            beforeAddStatHooks[i].beforeAddStat(paramStatBase, paramInt);
 
         if (overrideAddStatHooks != null)
             overrideAddStatHooks[overrideAddStatHooks.length - 1].addStat(paramStatBase, paramInt);
         else player.localAddStat(paramStatBase, paramInt);
 
-        if (afterAddStatHooks != null)
-            for (int i = 0; i < afterAddStatHooks.length; i++)
-                afterAddStatHooks[i].afterAddStat(paramStatBase, paramInt);
+        if (afterAddStatHooks != null) for (int i = 0; i < afterAddStatHooks.length; i++)
+            afterAddStatHooks[i].afterAddStat(paramStatBase, paramInt);
     }
 
     protected ClientPlayerBase GetOverwrittenAddStat(ClientPlayerBase overWriter) {
         if (overrideAddStatHooks == null) return overWriter;
 
         for (int i = 0; i < overrideAddStatHooks.length; i++)
-            if (overrideAddStatHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideAddStatHooks[i - 1];
+            if (overrideAddStatHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideAddStatHooks[i - 1];
 
         return overWriter;
     }
@@ -4791,8 +4829,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterAddStatSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterAddStatInferiors = new Hashtable<String, String[]>(0);
 
-    public static boolean attackEntityFrom(
-            IClientPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+    public static boolean attackEntityFrom(IClientPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource,
+            float paramFloat) {
         boolean _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isAttackEntityFromModded)
@@ -4802,19 +4840,17 @@ public final class ClientPlayerAPI {
     }
 
     private boolean attackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
-        if (beforeAttackEntityFromHooks != null)
-            for (int i = beforeAttackEntityFromHooks.length - 1; i >= 0; i--)
-                beforeAttackEntityFromHooks[i].beforeAttackEntityFrom(paramDamageSource, paramFloat);
+        if (beforeAttackEntityFromHooks != null) for (int i = beforeAttackEntityFromHooks.length - 1; i >= 0; i--)
+            beforeAttackEntityFromHooks[i].beforeAttackEntityFrom(paramDamageSource, paramFloat);
 
         boolean _result;
         if (overrideAttackEntityFromHooks != null)
-            _result = overrideAttackEntityFromHooks[overrideAttackEntityFromHooks.length - 1].attackEntityFrom(
-                    paramDamageSource, paramFloat);
+            _result = overrideAttackEntityFromHooks[overrideAttackEntityFromHooks.length - 1]
+                    .attackEntityFrom(paramDamageSource, paramFloat);
         else _result = player.localAttackEntityFrom(paramDamageSource, paramFloat);
 
-        if (afterAttackEntityFromHooks != null)
-            for (int i = 0; i < afterAttackEntityFromHooks.length; i++)
-                afterAttackEntityFromHooks[i].afterAttackEntityFrom(paramDamageSource, paramFloat);
+        if (afterAttackEntityFromHooks != null) for (int i = 0; i < afterAttackEntityFromHooks.length; i++)
+            afterAttackEntityFromHooks[i].afterAttackEntityFrom(paramDamageSource, paramFloat);
 
         return _result;
     }
@@ -4823,9 +4859,8 @@ public final class ClientPlayerAPI {
         if (overrideAttackEntityFromHooks == null) return overWriter;
 
         for (int i = 0; i < overrideAttackEntityFromHooks.length; i++)
-            if (overrideAttackEntityFromHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideAttackEntityFromHooks[i - 1];
+            if (overrideAttackEntityFromHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideAttackEntityFromHooks[i - 1];
 
         return overWriter;
     }
@@ -4840,21 +4875,21 @@ public final class ClientPlayerAPI {
 
     public boolean isAttackEntityFromModded;
 
-    private static final Map<String, String[]> allBaseBeforeAttackEntityFromSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeAttackEntityFromInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackEntityFromSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackEntityFromInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAttackEntityFromSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAttackEntityFromInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeAttackEntityFromSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeAttackEntityFromInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAttackEntityFromSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAttackEntityFromInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAttackEntityFromSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAttackEntityFromInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void attackTargetEntityWithCurrentItem(
-            IClientPlayerAPI target, net.minecraft.entity.Entity paramEntity) {
+    public static void attackTargetEntityWithCurrentItem(IClientPlayerAPI target,
+            net.minecraft.entity.Entity paramEntity) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isAttackTargetEntityWithCurrentItemModded)
             clientPlayerAPI.attackTargetEntityWithCurrentItem(paramEntity);
@@ -4880,9 +4915,8 @@ public final class ClientPlayerAPI {
         if (overrideAttackTargetEntityWithCurrentItemHooks == null) return overWriter;
 
         for (int i = 0; i < overrideAttackTargetEntityWithCurrentItemHooks.length; i++)
-            if (overrideAttackTargetEntityWithCurrentItemHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideAttackTargetEntityWithCurrentItemHooks[i - 1];
+            if (overrideAttackTargetEntityWithCurrentItemHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideAttackTargetEntityWithCurrentItemHooks[i - 1];
 
         return overWriter;
     }
@@ -4897,18 +4931,18 @@ public final class ClientPlayerAPI {
 
     public boolean isAttackTargetEntityWithCurrentItemModded;
 
-    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeAttackTargetEntityWithCurrentItemInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideAttackTargetEntityWithCurrentItemInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterAttackTargetEntityWithCurrentItemInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean canBreatheUnderwater(IClientPlayerAPI target) {
         boolean _result;
@@ -4926,14 +4960,12 @@ public final class ClientPlayerAPI {
 
         boolean _result;
         if (overrideCanBreatheUnderwaterHooks != null)
-            _result =
-                    overrideCanBreatheUnderwaterHooks[overrideCanBreatheUnderwaterHooks.length - 1]
-                            .canBreatheUnderwater();
+            _result = overrideCanBreatheUnderwaterHooks[overrideCanBreatheUnderwaterHooks.length - 1]
+                    .canBreatheUnderwater();
         else _result = player.localCanBreatheUnderwater();
 
-        if (afterCanBreatheUnderwaterHooks != null)
-            for (int i = 0; i < afterCanBreatheUnderwaterHooks.length; i++)
-                afterCanBreatheUnderwaterHooks[i].afterCanBreatheUnderwater();
+        if (afterCanBreatheUnderwaterHooks != null) for (int i = 0; i < afterCanBreatheUnderwaterHooks.length; i++)
+            afterCanBreatheUnderwaterHooks[i].afterCanBreatheUnderwater();
 
         return _result;
     }
@@ -4942,9 +4974,8 @@ public final class ClientPlayerAPI {
         if (overrideCanBreatheUnderwaterHooks == null) return overWriter;
 
         for (int i = 0; i < overrideCanBreatheUnderwaterHooks.length; i++)
-            if (overrideCanBreatheUnderwaterHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideCanBreatheUnderwaterHooks[i - 1];
+            if (overrideCanBreatheUnderwaterHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideCanBreatheUnderwaterHooks[i - 1];
 
         return overWriter;
     }
@@ -4959,18 +4990,18 @@ public final class ClientPlayerAPI {
 
     public boolean isCanBreatheUnderwaterModded;
 
-    private static final Map<String, String[]> allBaseBeforeCanBreatheUnderwaterSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeCanBreatheUnderwaterInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanBreatheUnderwaterSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanBreatheUnderwaterInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanBreatheUnderwaterSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanBreatheUnderwaterInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeCanBreatheUnderwaterSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeCanBreatheUnderwaterInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanBreatheUnderwaterSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanBreatheUnderwaterInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanBreatheUnderwaterSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanBreatheUnderwaterInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean canHarvestBlock(IClientPlayerAPI target, net.minecraft.block.Block paramBlock) {
         boolean _result;
@@ -4982,18 +5013,16 @@ public final class ClientPlayerAPI {
     }
 
     private boolean canHarvestBlock(net.minecraft.block.Block paramBlock) {
-        if (beforeCanHarvestBlockHooks != null)
-            for (int i = beforeCanHarvestBlockHooks.length - 1; i >= 0; i--)
-                beforeCanHarvestBlockHooks[i].beforeCanHarvestBlock(paramBlock);
+        if (beforeCanHarvestBlockHooks != null) for (int i = beforeCanHarvestBlockHooks.length - 1; i >= 0; i--)
+            beforeCanHarvestBlockHooks[i].beforeCanHarvestBlock(paramBlock);
 
         boolean _result;
         if (overrideCanHarvestBlockHooks != null)
             _result = overrideCanHarvestBlockHooks[overrideCanHarvestBlockHooks.length - 1].canHarvestBlock(paramBlock);
         else _result = player.localCanHarvestBlock(paramBlock);
 
-        if (afterCanHarvestBlockHooks != null)
-            for (int i = 0; i < afterCanHarvestBlockHooks.length; i++)
-                afterCanHarvestBlockHooks[i].afterCanHarvestBlock(paramBlock);
+        if (afterCanHarvestBlockHooks != null) for (int i = 0; i < afterCanHarvestBlockHooks.length; i++)
+            afterCanHarvestBlockHooks[i].afterCanHarvestBlock(paramBlock);
 
         return _result;
     }
@@ -5002,9 +5031,8 @@ public final class ClientPlayerAPI {
         if (overrideCanHarvestBlockHooks == null) return overWriter;
 
         for (int i = 0; i < overrideCanHarvestBlockHooks.length; i++)
-            if (overrideCanHarvestBlockHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideCanHarvestBlockHooks[i - 1];
+            if (overrideCanHarvestBlockHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideCanHarvestBlockHooks[i - 1];
 
         return overWriter;
     }
@@ -5019,26 +5047,21 @@ public final class ClientPlayerAPI {
 
     public boolean isCanHarvestBlockModded;
 
-    private static final Map<String, String[]> allBaseBeforeCanHarvestBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeCanHarvestBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanHarvestBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanHarvestBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanHarvestBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanHarvestBlockInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeCanHarvestBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeCanHarvestBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanHarvestBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanHarvestBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanHarvestBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanHarvestBlockInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static boolean canPlayerEdit(
-            IClientPlayerAPI target,
-            int paramInt1,
-            int paramInt2,
-            int paramInt3,
-            int paramInt4,
-            net.minecraft.item.ItemStack paramItemStack) {
+    public static boolean canPlayerEdit(IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3,
+            int paramInt4, net.minecraft.item.ItemStack paramItemStack) {
         boolean _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isCanPlayerEditModded)
@@ -5047,23 +5070,19 @@ public final class ClientPlayerAPI {
         return _result;
     }
 
-    private boolean canPlayerEdit(
-            int paramInt1, int paramInt2, int paramInt3, int paramInt4, net.minecraft.item.ItemStack paramItemStack) {
-        if (beforeCanPlayerEditHooks != null)
-            for (int i = beforeCanPlayerEditHooks.length - 1; i >= 0; i--)
-                beforeCanPlayerEditHooks[i].beforeCanPlayerEdit(
-                        paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
+    private boolean canPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+            net.minecraft.item.ItemStack paramItemStack) {
+        if (beforeCanPlayerEditHooks != null) for (int i = beforeCanPlayerEditHooks.length - 1; i >= 0; i--)
+            beforeCanPlayerEditHooks[i].beforeCanPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
 
         boolean _result;
         if (overrideCanPlayerEditHooks != null)
-            _result = overrideCanPlayerEditHooks[overrideCanPlayerEditHooks.length - 1].canPlayerEdit(
-                    paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
+            _result = overrideCanPlayerEditHooks[overrideCanPlayerEditHooks.length - 1]
+                    .canPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
         else _result = player.localCanPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
 
-        if (afterCanPlayerEditHooks != null)
-            for (int i = 0; i < afterCanPlayerEditHooks.length; i++)
-                afterCanPlayerEditHooks[i].afterCanPlayerEdit(
-                        paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
+        if (afterCanPlayerEditHooks != null) for (int i = 0; i < afterCanPlayerEditHooks.length; i++)
+            afterCanPlayerEditHooks[i].afterCanPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
 
         return _result;
     }
@@ -5072,9 +5091,8 @@ public final class ClientPlayerAPI {
         if (overrideCanPlayerEditHooks == null) return overWriter;
 
         for (int i = 0; i < overrideCanPlayerEditHooks.length; i++)
-            if (overrideCanPlayerEditHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideCanPlayerEditHooks[i - 1];
+            if (overrideCanPlayerEditHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideCanPlayerEditHooks[i - 1];
 
         return overWriter;
     }
@@ -5091,10 +5109,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeCanPlayerEditSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeCanPlayerEditInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanPlayerEditSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanPlayerEditInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideCanPlayerEditSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanPlayerEditInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterCanPlayerEditSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterCanPlayerEditInferiors = new Hashtable<String, String[]>(0);
 
@@ -5108,18 +5126,16 @@ public final class ClientPlayerAPI {
     }
 
     private boolean canTriggerWalking() {
-        if (beforeCanTriggerWalkingHooks != null)
-            for (int i = beforeCanTriggerWalkingHooks.length - 1; i >= 0; i--)
-                beforeCanTriggerWalkingHooks[i].beforeCanTriggerWalking();
+        if (beforeCanTriggerWalkingHooks != null) for (int i = beforeCanTriggerWalkingHooks.length - 1; i >= 0; i--)
+            beforeCanTriggerWalkingHooks[i].beforeCanTriggerWalking();
 
         boolean _result;
         if (overrideCanTriggerWalkingHooks != null)
             _result = overrideCanTriggerWalkingHooks[overrideCanTriggerWalkingHooks.length - 1].canTriggerWalking();
         else _result = player.localCanTriggerWalking();
 
-        if (afterCanTriggerWalkingHooks != null)
-            for (int i = 0; i < afterCanTriggerWalkingHooks.length; i++)
-                afterCanTriggerWalkingHooks[i].afterCanTriggerWalking();
+        if (afterCanTriggerWalkingHooks != null) for (int i = 0; i < afterCanTriggerWalkingHooks.length; i++)
+            afterCanTriggerWalkingHooks[i].afterCanTriggerWalking();
 
         return _result;
     }
@@ -5128,9 +5144,8 @@ public final class ClientPlayerAPI {
         if (overrideCanTriggerWalkingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideCanTriggerWalkingHooks.length; i++)
-            if (overrideCanTriggerWalkingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideCanTriggerWalkingHooks[i - 1];
+            if (overrideCanTriggerWalkingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideCanTriggerWalkingHooks[i - 1];
 
         return overWriter;
     }
@@ -5145,18 +5160,18 @@ public final class ClientPlayerAPI {
 
     public boolean isCanTriggerWalkingModded;
 
-    private static final Map<String, String[]> allBaseBeforeCanTriggerWalkingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeCanTriggerWalkingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanTriggerWalkingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideCanTriggerWalkingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanTriggerWalkingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterCanTriggerWalkingInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeCanTriggerWalkingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeCanTriggerWalkingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanTriggerWalkingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideCanTriggerWalkingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanTriggerWalkingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterCanTriggerWalkingInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void closeScreen(IClientPlayerAPI target) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -5180,9 +5195,8 @@ public final class ClientPlayerAPI {
         if (overrideCloseScreenHooks == null) return overWriter;
 
         for (int i = 0; i < overrideCloseScreenHooks.length; i++)
-            if (overrideCloseScreenHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideCloseScreenHooks[i - 1];
+            if (overrideCloseScreenHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideCloseScreenHooks[i - 1];
 
         return overWriter;
     }
@@ -5204,8 +5218,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterCloseScreenSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterCloseScreenInferiors = new Hashtable<String, String[]>(0);
 
-    public static void damageEntity(
-            IClientPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+    public static void damageEntity(IClientPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource,
+            float paramFloat) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDamageEntityModded)
             clientPlayerAPI.damageEntity(paramDamageSource, paramFloat);
@@ -5213,26 +5227,23 @@ public final class ClientPlayerAPI {
     }
 
     private void damageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
-        if (beforeDamageEntityHooks != null)
-            for (int i = beforeDamageEntityHooks.length - 1; i >= 0; i--)
-                beforeDamageEntityHooks[i].beforeDamageEntity(paramDamageSource, paramFloat);
+        if (beforeDamageEntityHooks != null) for (int i = beforeDamageEntityHooks.length - 1; i >= 0; i--)
+            beforeDamageEntityHooks[i].beforeDamageEntity(paramDamageSource, paramFloat);
 
         if (overrideDamageEntityHooks != null)
             overrideDamageEntityHooks[overrideDamageEntityHooks.length - 1].damageEntity(paramDamageSource, paramFloat);
         else player.localDamageEntity(paramDamageSource, paramFloat);
 
-        if (afterDamageEntityHooks != null)
-            for (int i = 0; i < afterDamageEntityHooks.length; i++)
-                afterDamageEntityHooks[i].afterDamageEntity(paramDamageSource, paramFloat);
+        if (afterDamageEntityHooks != null) for (int i = 0; i < afterDamageEntityHooks.length; i++)
+            afterDamageEntityHooks[i].afterDamageEntity(paramDamageSource, paramFloat);
     }
 
     protected ClientPlayerBase GetOverwrittenDamageEntity(ClientPlayerBase overWriter) {
         if (overrideDamageEntityHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDamageEntityHooks.length; i++)
-            if (overrideDamageEntityHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDamageEntityHooks[i - 1];
+            if (overrideDamageEntityHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDamageEntityHooks[i - 1];
 
         return overWriter;
     }
@@ -5249,15 +5260,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeDamageEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeDamageEntityInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDamageEntitySuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDamageEntityInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideDamageEntitySuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDamageEntityInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterDamageEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterDamageEntityInferiors = new Hashtable<String, String[]>(0);
 
-    public static void displayGUIBrewingStand(
-            IClientPlayerAPI target, net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand) {
+    public static void displayGUIBrewingStand(IClientPlayerAPI target,
+            net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDisplayGUIBrewingStandModded)
             clientPlayerAPI.displayGUIBrewingStand(paramTileEntityBrewingStand);
@@ -5270,22 +5281,20 @@ public final class ClientPlayerAPI {
                 beforeDisplayGUIBrewingStandHooks[i].beforeDisplayGUIBrewingStand(paramTileEntityBrewingStand);
 
         if (overrideDisplayGUIBrewingStandHooks != null)
-            overrideDisplayGUIBrewingStandHooks[overrideDisplayGUIBrewingStandHooks.length - 1].displayGUIBrewingStand(
-                    paramTileEntityBrewingStand);
+            overrideDisplayGUIBrewingStandHooks[overrideDisplayGUIBrewingStandHooks.length - 1]
+                    .displayGUIBrewingStand(paramTileEntityBrewingStand);
         else player.localDisplayGUIBrewingStand(paramTileEntityBrewingStand);
 
-        if (afterDisplayGUIBrewingStandHooks != null)
-            for (int i = 0; i < afterDisplayGUIBrewingStandHooks.length; i++)
-                afterDisplayGUIBrewingStandHooks[i].afterDisplayGUIBrewingStand(paramTileEntityBrewingStand);
+        if (afterDisplayGUIBrewingStandHooks != null) for (int i = 0; i < afterDisplayGUIBrewingStandHooks.length; i++)
+            afterDisplayGUIBrewingStandHooks[i].afterDisplayGUIBrewingStand(paramTileEntityBrewingStand);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIBrewingStand(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIBrewingStandHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIBrewingStandHooks.length; i++)
-            if (overrideDisplayGUIBrewingStandHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIBrewingStandHooks[i - 1];
+            if (overrideDisplayGUIBrewingStandHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIBrewingStandHooks[i - 1];
 
         return overWriter;
     }
@@ -5300,18 +5309,18 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIBrewingStandModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIBrewingStandSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIBrewingStandInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIBrewingStandSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIBrewingStandInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIBrewingStandSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIBrewingStandInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIBrewingStandSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIBrewingStandInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIBrewingStandSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIBrewingStandInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIBrewingStandSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIBrewingStandInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void displayGUIChest(IClientPlayerAPI target, net.minecraft.inventory.IInventory paramIInventory) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -5321,26 +5330,23 @@ public final class ClientPlayerAPI {
     }
 
     private void displayGUIChest(net.minecraft.inventory.IInventory paramIInventory) {
-        if (beforeDisplayGUIChestHooks != null)
-            for (int i = beforeDisplayGUIChestHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIChestHooks[i].beforeDisplayGUIChest(paramIInventory);
+        if (beforeDisplayGUIChestHooks != null) for (int i = beforeDisplayGUIChestHooks.length - 1; i >= 0; i--)
+            beforeDisplayGUIChestHooks[i].beforeDisplayGUIChest(paramIInventory);
 
         if (overrideDisplayGUIChestHooks != null)
             overrideDisplayGUIChestHooks[overrideDisplayGUIChestHooks.length - 1].displayGUIChest(paramIInventory);
         else player.localDisplayGUIChest(paramIInventory);
 
-        if (afterDisplayGUIChestHooks != null)
-            for (int i = 0; i < afterDisplayGUIChestHooks.length; i++)
-                afterDisplayGUIChestHooks[i].afterDisplayGUIChest(paramIInventory);
+        if (afterDisplayGUIChestHooks != null) for (int i = 0; i < afterDisplayGUIChestHooks.length; i++)
+            afterDisplayGUIChestHooks[i].afterDisplayGUIChest(paramIInventory);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIChest(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIChestHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIChestHooks.length; i++)
-            if (overrideDisplayGUIChestHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIChestHooks[i - 1];
+            if (overrideDisplayGUIChestHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIChestHooks[i - 1];
 
         return overWriter;
     }
@@ -5355,21 +5361,21 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIChestModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIChestSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIChestInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIChestSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIChestInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIChestSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIChestInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIChestSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIChestInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIChestSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIChestInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIChestSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIChestInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void displayGUIDispenser(
-            IClientPlayerAPI target, net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
+    public static void displayGUIDispenser(IClientPlayerAPI target,
+            net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDisplayGUIDispenserModded)
             clientPlayerAPI.displayGUIDispenser(paramTileEntityDispenser);
@@ -5377,27 +5383,24 @@ public final class ClientPlayerAPI {
     }
 
     private void displayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
-        if (beforeDisplayGUIDispenserHooks != null)
-            for (int i = beforeDisplayGUIDispenserHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIDispenserHooks[i].beforeDisplayGUIDispenser(paramTileEntityDispenser);
+        if (beforeDisplayGUIDispenserHooks != null) for (int i = beforeDisplayGUIDispenserHooks.length - 1; i >= 0; i--)
+            beforeDisplayGUIDispenserHooks[i].beforeDisplayGUIDispenser(paramTileEntityDispenser);
 
         if (overrideDisplayGUIDispenserHooks != null)
-            overrideDisplayGUIDispenserHooks[overrideDisplayGUIDispenserHooks.length - 1].displayGUIDispenser(
-                    paramTileEntityDispenser);
+            overrideDisplayGUIDispenserHooks[overrideDisplayGUIDispenserHooks.length - 1]
+                    .displayGUIDispenser(paramTileEntityDispenser);
         else player.localDisplayGUIDispenser(paramTileEntityDispenser);
 
-        if (afterDisplayGUIDispenserHooks != null)
-            for (int i = 0; i < afterDisplayGUIDispenserHooks.length; i++)
-                afterDisplayGUIDispenserHooks[i].afterDisplayGUIDispenser(paramTileEntityDispenser);
+        if (afterDisplayGUIDispenserHooks != null) for (int i = 0; i < afterDisplayGUIDispenserHooks.length; i++)
+            afterDisplayGUIDispenserHooks[i].afterDisplayGUIDispenser(paramTileEntityDispenser);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIDispenser(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIDispenserHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIDispenserHooks.length; i++)
-            if (overrideDisplayGUIDispenserHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIDispenserHooks[i - 1];
+            if (overrideDisplayGUIDispenserHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIDispenserHooks[i - 1];
 
         return overWriter;
     }
@@ -5412,21 +5415,21 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIDispenserModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIDispenserSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIDispenserInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIDispenserSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIDispenserInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIDispenserSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIDispenserInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIDispenserSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIDispenserInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIDispenserSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIDispenserInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIDispenserSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIDispenserInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void displayGUIEditSign(
-            IClientPlayerAPI target, net.minecraft.tileentity.TileEntity paramTileEntity) {
+    public static void displayGUIEditSign(IClientPlayerAPI target,
+            net.minecraft.tileentity.TileEntity paramTileEntity) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDisplayGUIEditSignModded)
             clientPlayerAPI.displayGUIEditSign(paramTileEntity);
@@ -5434,27 +5437,24 @@ public final class ClientPlayerAPI {
     }
 
     private void displayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity) {
-        if (beforeDisplayGUIEditSignHooks != null)
-            for (int i = beforeDisplayGUIEditSignHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIEditSignHooks[i].beforeDisplayGUIEditSign(paramTileEntity);
+        if (beforeDisplayGUIEditSignHooks != null) for (int i = beforeDisplayGUIEditSignHooks.length - 1; i >= 0; i--)
+            beforeDisplayGUIEditSignHooks[i].beforeDisplayGUIEditSign(paramTileEntity);
 
         if (overrideDisplayGUIEditSignHooks != null)
-            overrideDisplayGUIEditSignHooks[overrideDisplayGUIEditSignHooks.length - 1].displayGUIEditSign(
-                    paramTileEntity);
+            overrideDisplayGUIEditSignHooks[overrideDisplayGUIEditSignHooks.length - 1]
+                    .displayGUIEditSign(paramTileEntity);
         else player.localDisplayGUIEditSign(paramTileEntity);
 
-        if (afterDisplayGUIEditSignHooks != null)
-            for (int i = 0; i < afterDisplayGUIEditSignHooks.length; i++)
-                afterDisplayGUIEditSignHooks[i].afterDisplayGUIEditSign(paramTileEntity);
+        if (afterDisplayGUIEditSignHooks != null) for (int i = 0; i < afterDisplayGUIEditSignHooks.length; i++)
+            afterDisplayGUIEditSignHooks[i].afterDisplayGUIEditSign(paramTileEntity);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEditSign(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIEditSignHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIEditSignHooks.length; i++)
-            if (overrideDisplayGUIEditSignHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIEditSignHooks[i - 1];
+            if (overrideDisplayGUIEditSignHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIEditSignHooks[i - 1];
 
         return overWriter;
     }
@@ -5469,21 +5469,21 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIEditSignModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIEditSignSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIEditSignInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIEditSignSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIEditSignInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIEditSignSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIEditSignInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIEditSignSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIEditSignInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIEditSignSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIEditSignInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIEditSignSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIEditSignInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void displayGUIEnchantment(
-            IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3, String paramString) {
+    public static void displayGUIEnchantment(IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3,
+            String paramString) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDisplayGUIEnchantmentModded)
             clientPlayerAPI.displayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
@@ -5492,28 +5492,24 @@ public final class ClientPlayerAPI {
 
     private void displayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString) {
         if (beforeDisplayGUIEnchantmentHooks != null)
-            for (int i = beforeDisplayGUIEnchantmentHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIEnchantmentHooks[i].beforeDisplayGUIEnchantment(
-                        paramInt1, paramInt2, paramInt3, paramString);
+            for (int i = beforeDisplayGUIEnchantmentHooks.length - 1; i >= 0; i--) beforeDisplayGUIEnchantmentHooks[i]
+                    .beforeDisplayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
 
         if (overrideDisplayGUIEnchantmentHooks != null)
-            overrideDisplayGUIEnchantmentHooks[overrideDisplayGUIEnchantmentHooks.length - 1].displayGUIEnchantment(
-                    paramInt1, paramInt2, paramInt3, paramString);
+            overrideDisplayGUIEnchantmentHooks[overrideDisplayGUIEnchantmentHooks.length - 1]
+                    .displayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
         else player.localDisplayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
 
-        if (afterDisplayGUIEnchantmentHooks != null)
-            for (int i = 0; i < afterDisplayGUIEnchantmentHooks.length; i++)
-                afterDisplayGUIEnchantmentHooks[i].afterDisplayGUIEnchantment(
-                        paramInt1, paramInt2, paramInt3, paramString);
+        if (afterDisplayGUIEnchantmentHooks != null) for (int i = 0; i < afterDisplayGUIEnchantmentHooks.length; i++)
+            afterDisplayGUIEnchantmentHooks[i].afterDisplayGUIEnchantment(paramInt1, paramInt2, paramInt3, paramString);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIEnchantment(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIEnchantmentHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIEnchantmentHooks.length; i++)
-            if (overrideDisplayGUIEnchantmentHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIEnchantmentHooks[i - 1];
+            if (overrideDisplayGUIEnchantmentHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIEnchantmentHooks[i - 1];
 
         return overWriter;
     }
@@ -5528,21 +5524,21 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIEnchantmentModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIEnchantmentSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIEnchantmentInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIEnchantmentSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIEnchantmentInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIEnchantmentSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIEnchantmentInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIEnchantmentSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIEnchantmentInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIEnchantmentSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIEnchantmentInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIEnchantmentSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIEnchantmentInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void displayGUIFurnace(
-            IClientPlayerAPI target, net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
+    public static void displayGUIFurnace(IClientPlayerAPI target,
+            net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDisplayGUIFurnaceModded)
             clientPlayerAPI.displayGUIFurnace(paramTileEntityFurnace);
@@ -5550,27 +5546,24 @@ public final class ClientPlayerAPI {
     }
 
     private void displayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
-        if (beforeDisplayGUIFurnaceHooks != null)
-            for (int i = beforeDisplayGUIFurnaceHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIFurnaceHooks[i].beforeDisplayGUIFurnace(paramTileEntityFurnace);
+        if (beforeDisplayGUIFurnaceHooks != null) for (int i = beforeDisplayGUIFurnaceHooks.length - 1; i >= 0; i--)
+            beforeDisplayGUIFurnaceHooks[i].beforeDisplayGUIFurnace(paramTileEntityFurnace);
 
         if (overrideDisplayGUIFurnaceHooks != null)
-            overrideDisplayGUIFurnaceHooks[overrideDisplayGUIFurnaceHooks.length - 1].displayGUIFurnace(
-                    paramTileEntityFurnace);
+            overrideDisplayGUIFurnaceHooks[overrideDisplayGUIFurnaceHooks.length - 1]
+                    .displayGUIFurnace(paramTileEntityFurnace);
         else player.localDisplayGUIFurnace(paramTileEntityFurnace);
 
-        if (afterDisplayGUIFurnaceHooks != null)
-            for (int i = 0; i < afterDisplayGUIFurnaceHooks.length; i++)
-                afterDisplayGUIFurnaceHooks[i].afterDisplayGUIFurnace(paramTileEntityFurnace);
+        if (afterDisplayGUIFurnaceHooks != null) for (int i = 0; i < afterDisplayGUIFurnaceHooks.length; i++)
+            afterDisplayGUIFurnaceHooks[i].afterDisplayGUIFurnace(paramTileEntityFurnace);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIFurnace(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIFurnaceHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIFurnaceHooks.length; i++)
-            if (overrideDisplayGUIFurnaceHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIFurnaceHooks[i - 1];
+            if (overrideDisplayGUIFurnaceHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIFurnaceHooks[i - 1];
 
         return overWriter;
     }
@@ -5585,18 +5578,18 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIFurnaceModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIFurnaceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIFurnaceInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIFurnaceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIFurnaceInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIFurnaceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIFurnaceInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIFurnaceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIFurnaceInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIFurnaceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIFurnaceInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIFurnaceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIFurnaceInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void displayGUIWorkbench(IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -5606,27 +5599,24 @@ public final class ClientPlayerAPI {
     }
 
     private void displayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3) {
-        if (beforeDisplayGUIWorkbenchHooks != null)
-            for (int i = beforeDisplayGUIWorkbenchHooks.length - 1; i >= 0; i--)
-                beforeDisplayGUIWorkbenchHooks[i].beforeDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
+        if (beforeDisplayGUIWorkbenchHooks != null) for (int i = beforeDisplayGUIWorkbenchHooks.length - 1; i >= 0; i--)
+            beforeDisplayGUIWorkbenchHooks[i].beforeDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
 
         if (overrideDisplayGUIWorkbenchHooks != null)
-            overrideDisplayGUIWorkbenchHooks[overrideDisplayGUIWorkbenchHooks.length - 1].displayGUIWorkbench(
-                    paramInt1, paramInt2, paramInt3);
+            overrideDisplayGUIWorkbenchHooks[overrideDisplayGUIWorkbenchHooks.length - 1]
+                    .displayGUIWorkbench(paramInt1, paramInt2, paramInt3);
         else player.localDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
 
-        if (afterDisplayGUIWorkbenchHooks != null)
-            for (int i = 0; i < afterDisplayGUIWorkbenchHooks.length; i++)
-                afterDisplayGUIWorkbenchHooks[i].afterDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
+        if (afterDisplayGUIWorkbenchHooks != null) for (int i = 0; i < afterDisplayGUIWorkbenchHooks.length; i++)
+            afterDisplayGUIWorkbenchHooks[i].afterDisplayGUIWorkbench(paramInt1, paramInt2, paramInt3);
     }
 
     protected ClientPlayerBase GetOverwrittenDisplayGUIWorkbench(ClientPlayerBase overWriter) {
         if (overrideDisplayGUIWorkbenchHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDisplayGUIWorkbenchHooks.length; i++)
-            if (overrideDisplayGUIWorkbenchHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDisplayGUIWorkbenchHooks[i - 1];
+            if (overrideDisplayGUIWorkbenchHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDisplayGUIWorkbenchHooks[i - 1];
 
         return overWriter;
     }
@@ -5641,18 +5631,18 @@ public final class ClientPlayerAPI {
 
     public boolean isDisplayGUIWorkbenchModded;
 
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIWorkbenchSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDisplayGUIWorkbenchInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIWorkbenchSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDisplayGUIWorkbenchInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIWorkbenchSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDisplayGUIWorkbenchInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIWorkbenchSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDisplayGUIWorkbenchInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIWorkbenchSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDisplayGUIWorkbenchInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIWorkbenchSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDisplayGUIWorkbenchInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static net.minecraft.entity.item.EntityItem dropOneItem(IClientPlayerAPI target, boolean paramBoolean) {
         net.minecraft.entity.item.EntityItem _result;
@@ -5664,18 +5654,16 @@ public final class ClientPlayerAPI {
     }
 
     private net.minecraft.entity.item.EntityItem dropOneItem(boolean paramBoolean) {
-        if (beforeDropOneItemHooks != null)
-            for (int i = beforeDropOneItemHooks.length - 1; i >= 0; i--)
-                beforeDropOneItemHooks[i].beforeDropOneItem(paramBoolean);
+        if (beforeDropOneItemHooks != null) for (int i = beforeDropOneItemHooks.length - 1; i >= 0; i--)
+            beforeDropOneItemHooks[i].beforeDropOneItem(paramBoolean);
 
         net.minecraft.entity.item.EntityItem _result;
         if (overrideDropOneItemHooks != null)
             _result = overrideDropOneItemHooks[overrideDropOneItemHooks.length - 1].dropOneItem(paramBoolean);
         else _result = player.localDropOneItem(paramBoolean);
 
-        if (afterDropOneItemHooks != null)
-            for (int i = 0; i < afterDropOneItemHooks.length; i++)
-                afterDropOneItemHooks[i].afterDropOneItem(paramBoolean);
+        if (afterDropOneItemHooks != null) for (int i = 0; i < afterDropOneItemHooks.length; i++)
+            afterDropOneItemHooks[i].afterDropOneItem(paramBoolean);
 
         return _result;
     }
@@ -5684,9 +5672,8 @@ public final class ClientPlayerAPI {
         if (overrideDropOneItemHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDropOneItemHooks.length; i++)
-            if (overrideDropOneItemHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDropOneItemHooks[i - 1];
+            if (overrideDropOneItemHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDropOneItemHooks[i - 1];
 
         return overWriter;
     }
@@ -5708,8 +5695,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDropOneItemSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterDropOneItemInferiors = new Hashtable<String, String[]>(0);
 
-    public static net.minecraft.entity.item.EntityItem dropPlayerItem(
-            IClientPlayerAPI target, net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
+    public static net.minecraft.entity.item.EntityItem dropPlayerItem(IClientPlayerAPI target,
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
         net.minecraft.entity.item.EntityItem _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDropPlayerItemModded)
@@ -5718,21 +5705,19 @@ public final class ClientPlayerAPI {
         return _result;
     }
 
-    private net.minecraft.entity.item.EntityItem dropPlayerItem(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
-        if (beforeDropPlayerItemHooks != null)
-            for (int i = beforeDropPlayerItemHooks.length - 1; i >= 0; i--)
-                beforeDropPlayerItemHooks[i].beforeDropPlayerItem(paramItemStack, paramBoolean);
+    private net.minecraft.entity.item.EntityItem dropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
+            boolean paramBoolean) {
+        if (beforeDropPlayerItemHooks != null) for (int i = beforeDropPlayerItemHooks.length - 1; i >= 0; i--)
+            beforeDropPlayerItemHooks[i].beforeDropPlayerItem(paramItemStack, paramBoolean);
 
         net.minecraft.entity.item.EntityItem _result;
         if (overrideDropPlayerItemHooks != null)
-            _result = overrideDropPlayerItemHooks[overrideDropPlayerItemHooks.length - 1].dropPlayerItem(
-                    paramItemStack, paramBoolean);
+            _result = overrideDropPlayerItemHooks[overrideDropPlayerItemHooks.length - 1]
+                    .dropPlayerItem(paramItemStack, paramBoolean);
         else _result = player.localDropPlayerItem(paramItemStack, paramBoolean);
 
-        if (afterDropPlayerItemHooks != null)
-            for (int i = 0; i < afterDropPlayerItemHooks.length; i++)
-                afterDropPlayerItemHooks[i].afterDropPlayerItem(paramItemStack, paramBoolean);
+        if (afterDropPlayerItemHooks != null) for (int i = 0; i < afterDropPlayerItemHooks.length; i++)
+            afterDropPlayerItemHooks[i].afterDropPlayerItem(paramItemStack, paramBoolean);
 
         return _result;
     }
@@ -5741,9 +5726,8 @@ public final class ClientPlayerAPI {
         if (overrideDropPlayerItemHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDropPlayerItemHooks.length; i++)
-            if (overrideDropPlayerItemHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDropPlayerItemHooks[i - 1];
+            if (overrideDropPlayerItemHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDropPlayerItemHooks[i - 1];
 
         return overWriter;
     }
@@ -5758,22 +5742,19 @@ public final class ClientPlayerAPI {
 
     public boolean isDropPlayerItemModded;
 
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterDropPlayerItemSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterDropPlayerItemInferiors = new Hashtable<String, String[]>(0);
 
-    public static net.minecraft.entity.item.EntityItem dropPlayerItemWithRandomChoice(
-            IClientPlayerAPI target,
-            net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean1,
-            boolean paramBoolean2) {
+    public static net.minecraft.entity.item.EntityItem dropPlayerItemWithRandomChoice(IClientPlayerAPI target,
+            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {
         net.minecraft.entity.item.EntityItem _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isDropPlayerItemWithRandomChoiceModded)
@@ -5786,20 +5767,19 @@ public final class ClientPlayerAPI {
             net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2) {
         if (beforeDropPlayerItemWithRandomChoiceHooks != null)
             for (int i = beforeDropPlayerItemWithRandomChoiceHooks.length - 1; i >= 0; i--)
-                beforeDropPlayerItemWithRandomChoiceHooks[i].beforeDropPlayerItemWithRandomChoice(
-                        paramItemStack, paramBoolean1, paramBoolean2);
+                beforeDropPlayerItemWithRandomChoiceHooks[i]
+                        .beforeDropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
 
         net.minecraft.entity.item.EntityItem _result;
         if (overrideDropPlayerItemWithRandomChoiceHooks != null)
-            _result =
-                    overrideDropPlayerItemWithRandomChoiceHooks[overrideDropPlayerItemWithRandomChoiceHooks.length - 1]
-                            .dropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
+            _result = overrideDropPlayerItemWithRandomChoiceHooks[overrideDropPlayerItemWithRandomChoiceHooks.length
+                    - 1].dropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
         else _result = player.localDropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
 
         if (afterDropPlayerItemWithRandomChoiceHooks != null)
             for (int i = 0; i < afterDropPlayerItemWithRandomChoiceHooks.length; i++)
-                afterDropPlayerItemWithRandomChoiceHooks[i].afterDropPlayerItemWithRandomChoice(
-                        paramItemStack, paramBoolean1, paramBoolean2);
+                afterDropPlayerItemWithRandomChoiceHooks[i]
+                        .afterDropPlayerItemWithRandomChoice(paramItemStack, paramBoolean1, paramBoolean2);
 
         return _result;
     }
@@ -5808,9 +5788,8 @@ public final class ClientPlayerAPI {
         if (overrideDropPlayerItemWithRandomChoiceHooks == null) return overWriter;
 
         for (int i = 0; i < overrideDropPlayerItemWithRandomChoiceHooks.length; i++)
-            if (overrideDropPlayerItemWithRandomChoiceHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideDropPlayerItemWithRandomChoiceHooks[i - 1];
+            if (overrideDropPlayerItemWithRandomChoiceHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideDropPlayerItemWithRandomChoiceHooks[i - 1];
 
         return overWriter;
     }
@@ -5825,18 +5804,18 @@ public final class ClientPlayerAPI {
 
     public boolean isDropPlayerItemWithRandomChoiceModded;
 
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeDropPlayerItemWithRandomChoiceInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideDropPlayerItemWithRandomChoiceInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterDropPlayerItemWithRandomChoiceInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void fall(IClientPlayerAPI target, float paramFloat) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -5859,9 +5838,8 @@ public final class ClientPlayerAPI {
         if (overrideFallHooks == null) return overWriter;
 
         for (int i = 0; i < overrideFallHooks.length; i++)
-            if (overrideFallHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideFallHooks[i - 1];
+            if (overrideFallHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideFallHooks[i - 1];
 
         return overWriter;
     }
@@ -5893,9 +5871,8 @@ public final class ClientPlayerAPI {
     }
 
     private float getAIMoveSpeed() {
-        if (beforeGetAIMoveSpeedHooks != null)
-            for (int i = beforeGetAIMoveSpeedHooks.length - 1; i >= 0; i--)
-                beforeGetAIMoveSpeedHooks[i].beforeGetAIMoveSpeed();
+        if (beforeGetAIMoveSpeedHooks != null) for (int i = beforeGetAIMoveSpeedHooks.length - 1; i >= 0; i--)
+            beforeGetAIMoveSpeedHooks[i].beforeGetAIMoveSpeed();
 
         float _result;
         if (overrideGetAIMoveSpeedHooks != null)
@@ -5912,9 +5889,8 @@ public final class ClientPlayerAPI {
         if (overrideGetAIMoveSpeedHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetAIMoveSpeedHooks.length; i++)
-            if (overrideGetAIMoveSpeedHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetAIMoveSpeedHooks[i - 1];
+            if (overrideGetAIMoveSpeedHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetAIMoveSpeedHooks[i - 1];
 
         return overWriter;
     }
@@ -5929,14 +5905,14 @@ public final class ClientPlayerAPI {
 
     public boolean isGetAIMoveSpeedModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetAIMoveSpeedSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetAIMoveSpeedInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetAIMoveSpeedSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetAIMoveSpeedInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetAIMoveSpeedSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetAIMoveSpeedInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetAIMoveSpeedSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetAIMoveSpeedInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterGetAIMoveSpeedSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetAIMoveSpeedInferiors = new Hashtable<String, String[]>(0);
 
@@ -5956,9 +5932,8 @@ public final class ClientPlayerAPI {
 
         float _result;
         if (overrideGetBedOrientationInDegreesHooks != null)
-            _result =
-                    overrideGetBedOrientationInDegreesHooks[overrideGetBedOrientationInDegreesHooks.length - 1]
-                            .getBedOrientationInDegrees();
+            _result = overrideGetBedOrientationInDegreesHooks[overrideGetBedOrientationInDegreesHooks.length - 1]
+                    .getBedOrientationInDegrees();
         else _result = player.localGetBedOrientationInDegrees();
 
         if (afterGetBedOrientationInDegreesHooks != null)
@@ -5972,9 +5947,8 @@ public final class ClientPlayerAPI {
         if (overrideGetBedOrientationInDegreesHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetBedOrientationInDegreesHooks.length; i++)
-            if (overrideGetBedOrientationInDegreesHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetBedOrientationInDegreesHooks[i - 1];
+            if (overrideGetBedOrientationInDegreesHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetBedOrientationInDegreesHooks[i - 1];
 
         return overWriter;
     }
@@ -5989,18 +5963,18 @@ public final class ClientPlayerAPI {
 
     public boolean isGetBedOrientationInDegreesModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetBedOrientationInDegreesSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetBedOrientationInDegreesInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBedOrientationInDegreesSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBedOrientationInDegreesInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetBedOrientationInDegreesSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetBedOrientationInDegreesInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetBedOrientationInDegreesSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetBedOrientationInDegreesInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetBedOrientationInDegreesSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetBedOrientationInDegreesInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetBedOrientationInDegreesSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetBedOrientationInDegreesInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static float getBrightness(IClientPlayerAPI target, float paramFloat) {
         float _result;
@@ -6012,18 +5986,16 @@ public final class ClientPlayerAPI {
     }
 
     private float getBrightness(float paramFloat) {
-        if (beforeGetBrightnessHooks != null)
-            for (int i = beforeGetBrightnessHooks.length - 1; i >= 0; i--)
-                beforeGetBrightnessHooks[i].beforeGetBrightness(paramFloat);
+        if (beforeGetBrightnessHooks != null) for (int i = beforeGetBrightnessHooks.length - 1; i >= 0; i--)
+            beforeGetBrightnessHooks[i].beforeGetBrightness(paramFloat);
 
         float _result;
         if (overrideGetBrightnessHooks != null)
             _result = overrideGetBrightnessHooks[overrideGetBrightnessHooks.length - 1].getBrightness(paramFloat);
         else _result = player.localGetBrightness(paramFloat);
 
-        if (afterGetBrightnessHooks != null)
-            for (int i = 0; i < afterGetBrightnessHooks.length; i++)
-                afterGetBrightnessHooks[i].afterGetBrightness(paramFloat);
+        if (afterGetBrightnessHooks != null) for (int i = 0; i < afterGetBrightnessHooks.length; i++)
+            afterGetBrightnessHooks[i].afterGetBrightness(paramFloat);
 
         return _result;
     }
@@ -6032,9 +6004,8 @@ public final class ClientPlayerAPI {
         if (overrideGetBrightnessHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetBrightnessHooks.length; i++)
-            if (overrideGetBrightnessHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetBrightnessHooks[i - 1];
+            if (overrideGetBrightnessHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetBrightnessHooks[i - 1];
 
         return overWriter;
     }
@@ -6051,10 +6022,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeGetBrightnessSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeGetBrightnessInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBrightnessSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBrightnessInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideGetBrightnessSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetBrightnessInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterGetBrightnessSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetBrightnessInferiors = new Hashtable<String, String[]>(0);
 
@@ -6074,14 +6045,12 @@ public final class ClientPlayerAPI {
 
         int _result;
         if (overrideGetBrightnessForRenderHooks != null)
-            _result =
-                    overrideGetBrightnessForRenderHooks[overrideGetBrightnessForRenderHooks.length - 1]
-                            .getBrightnessForRender(paramFloat);
+            _result = overrideGetBrightnessForRenderHooks[overrideGetBrightnessForRenderHooks.length - 1]
+                    .getBrightnessForRender(paramFloat);
         else _result = player.localGetBrightnessForRender(paramFloat);
 
-        if (afterGetBrightnessForRenderHooks != null)
-            for (int i = 0; i < afterGetBrightnessForRenderHooks.length; i++)
-                afterGetBrightnessForRenderHooks[i].afterGetBrightnessForRender(paramFloat);
+        if (afterGetBrightnessForRenderHooks != null) for (int i = 0; i < afterGetBrightnessForRenderHooks.length; i++)
+            afterGetBrightnessForRenderHooks[i].afterGetBrightnessForRender(paramFloat);
 
         return _result;
     }
@@ -6090,9 +6059,8 @@ public final class ClientPlayerAPI {
         if (overrideGetBrightnessForRenderHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetBrightnessForRenderHooks.length; i++)
-            if (overrideGetBrightnessForRenderHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetBrightnessForRenderHooks[i - 1];
+            if (overrideGetBrightnessForRenderHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetBrightnessForRenderHooks[i - 1];
 
         return overWriter;
     }
@@ -6107,21 +6075,21 @@ public final class ClientPlayerAPI {
 
     public boolean isGetBrightnessForRenderModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetBrightnessForRenderSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetBrightnessForRenderInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBrightnessForRenderSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetBrightnessForRenderInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetBrightnessForRenderSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetBrightnessForRenderInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetBrightnessForRenderSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetBrightnessForRenderInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetBrightnessForRenderSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetBrightnessForRenderInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetBrightnessForRenderSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetBrightnessForRenderInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static float getCurrentPlayerStrVsBlock(
-            IClientPlayerAPI target, net.minecraft.block.Block paramBlock, boolean paramBoolean) {
+    public static float getCurrentPlayerStrVsBlock(IClientPlayerAPI target, net.minecraft.block.Block paramBlock,
+            boolean paramBoolean) {
         float _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isGetCurrentPlayerStrVsBlockModded)
@@ -6137,9 +6105,8 @@ public final class ClientPlayerAPI {
 
         float _result;
         if (overrideGetCurrentPlayerStrVsBlockHooks != null)
-            _result =
-                    overrideGetCurrentPlayerStrVsBlockHooks[overrideGetCurrentPlayerStrVsBlockHooks.length - 1]
-                            .getCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
+            _result = overrideGetCurrentPlayerStrVsBlockHooks[overrideGetCurrentPlayerStrVsBlockHooks.length - 1]
+                    .getCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
         else _result = player.localGetCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
 
         if (afterGetCurrentPlayerStrVsBlockHooks != null)
@@ -6153,9 +6120,8 @@ public final class ClientPlayerAPI {
         if (overrideGetCurrentPlayerStrVsBlockHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetCurrentPlayerStrVsBlockHooks.length; i++)
-            if (overrideGetCurrentPlayerStrVsBlockHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetCurrentPlayerStrVsBlockHooks[i - 1];
+            if (overrideGetCurrentPlayerStrVsBlockHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetCurrentPlayerStrVsBlockHooks[i - 1];
 
         return overWriter;
     }
@@ -6170,21 +6136,21 @@ public final class ClientPlayerAPI {
 
     public boolean isGetCurrentPlayerStrVsBlockModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static float getCurrentPlayerStrVsBlockForge(
-            IClientPlayerAPI target, net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {
+    public static float getCurrentPlayerStrVsBlockForge(IClientPlayerAPI target, net.minecraft.block.Block paramBlock,
+            boolean paramBoolean, int paramInt) {
         float _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isGetCurrentPlayerStrVsBlockForgeModded)
@@ -6193,25 +6159,23 @@ public final class ClientPlayerAPI {
         return _result;
     }
 
-    private float getCurrentPlayerStrVsBlockForge(
-            net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt) {
+    private float getCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
+            int paramInt) {
         if (beforeGetCurrentPlayerStrVsBlockForgeHooks != null)
             for (int i = beforeGetCurrentPlayerStrVsBlockForgeHooks.length - 1; i >= 0; i--)
-                beforeGetCurrentPlayerStrVsBlockForgeHooks[i].beforeGetCurrentPlayerStrVsBlockForge(
-                        paramBlock, paramBoolean, paramInt);
+                beforeGetCurrentPlayerStrVsBlockForgeHooks[i]
+                        .beforeGetCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
 
         float _result;
         if (overrideGetCurrentPlayerStrVsBlockForgeHooks != null)
-            _result =
-                    overrideGetCurrentPlayerStrVsBlockForgeHooks[
-                            overrideGetCurrentPlayerStrVsBlockForgeHooks.length - 1]
-                            .getCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
+            _result = overrideGetCurrentPlayerStrVsBlockForgeHooks[overrideGetCurrentPlayerStrVsBlockForgeHooks.length
+                    - 1].getCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
         else _result = player.localGetCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
 
         if (afterGetCurrentPlayerStrVsBlockForgeHooks != null)
             for (int i = 0; i < afterGetCurrentPlayerStrVsBlockForgeHooks.length; i++)
-                afterGetCurrentPlayerStrVsBlockForgeHooks[i].afterGetCurrentPlayerStrVsBlockForge(
-                        paramBlock, paramBoolean, paramInt);
+                afterGetCurrentPlayerStrVsBlockForgeHooks[i]
+                        .afterGetCurrentPlayerStrVsBlockForge(paramBlock, paramBoolean, paramInt);
 
         return _result;
     }
@@ -6220,9 +6184,8 @@ public final class ClientPlayerAPI {
         if (overrideGetCurrentPlayerStrVsBlockForgeHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetCurrentPlayerStrVsBlockForgeHooks.length; i++)
-            if (overrideGetCurrentPlayerStrVsBlockForgeHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetCurrentPlayerStrVsBlockForgeHooks[i - 1];
+            if (overrideGetCurrentPlayerStrVsBlockForgeHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetCurrentPlayerStrVsBlockForgeHooks[i - 1];
 
         return overWriter;
     }
@@ -6237,21 +6200,21 @@ public final class ClientPlayerAPI {
 
     public boolean isGetCurrentPlayerStrVsBlockForgeModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockForgeInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static double getDistanceSq(
-            IClientPlayerAPI target, double paramDouble1, double paramDouble2, double paramDouble3) {
+    public static double getDistanceSq(IClientPlayerAPI target, double paramDouble1, double paramDouble2,
+            double paramDouble3) {
         double _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isGetDistanceSqModded)
@@ -6261,19 +6224,17 @@ public final class ClientPlayerAPI {
     }
 
     private double getDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3) {
-        if (beforeGetDistanceSqHooks != null)
-            for (int i = beforeGetDistanceSqHooks.length - 1; i >= 0; i--)
-                beforeGetDistanceSqHooks[i].beforeGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
+        if (beforeGetDistanceSqHooks != null) for (int i = beforeGetDistanceSqHooks.length - 1; i >= 0; i--)
+            beforeGetDistanceSqHooks[i].beforeGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
 
         double _result;
         if (overrideGetDistanceSqHooks != null)
-            _result = overrideGetDistanceSqHooks[overrideGetDistanceSqHooks.length - 1].getDistanceSq(
-                    paramDouble1, paramDouble2, paramDouble3);
+            _result = overrideGetDistanceSqHooks[overrideGetDistanceSqHooks.length - 1]
+                    .getDistanceSq(paramDouble1, paramDouble2, paramDouble3);
         else _result = player.localGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
 
-        if (afterGetDistanceSqHooks != null)
-            for (int i = 0; i < afterGetDistanceSqHooks.length; i++)
-                afterGetDistanceSqHooks[i].afterGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
+        if (afterGetDistanceSqHooks != null) for (int i = 0; i < afterGetDistanceSqHooks.length; i++)
+            afterGetDistanceSqHooks[i].afterGetDistanceSq(paramDouble1, paramDouble2, paramDouble3);
 
         return _result;
     }
@@ -6282,9 +6243,8 @@ public final class ClientPlayerAPI {
         if (overrideGetDistanceSqHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetDistanceSqHooks.length; i++)
-            if (overrideGetDistanceSqHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetDistanceSqHooks[i - 1];
+            if (overrideGetDistanceSqHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetDistanceSqHooks[i - 1];
 
         return overWriter;
     }
@@ -6301,10 +6261,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeGetDistanceSqSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeGetDistanceSqInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetDistanceSqSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetDistanceSqInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideGetDistanceSqSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetDistanceSqInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterGetDistanceSqSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetDistanceSqInferiors = new Hashtable<String, String[]>(0);
 
@@ -6324,14 +6284,12 @@ public final class ClientPlayerAPI {
 
         double _result;
         if (overrideGetDistanceSqToEntityHooks != null)
-            _result =
-                    overrideGetDistanceSqToEntityHooks[overrideGetDistanceSqToEntityHooks.length - 1]
-                            .getDistanceSqToEntity(paramEntity);
+            _result = overrideGetDistanceSqToEntityHooks[overrideGetDistanceSqToEntityHooks.length - 1]
+                    .getDistanceSqToEntity(paramEntity);
         else _result = player.localGetDistanceSqToEntity(paramEntity);
 
-        if (afterGetDistanceSqToEntityHooks != null)
-            for (int i = 0; i < afterGetDistanceSqToEntityHooks.length; i++)
-                afterGetDistanceSqToEntityHooks[i].afterGetDistanceSqToEntity(paramEntity);
+        if (afterGetDistanceSqToEntityHooks != null) for (int i = 0; i < afterGetDistanceSqToEntityHooks.length; i++)
+            afterGetDistanceSqToEntityHooks[i].afterGetDistanceSqToEntity(paramEntity);
 
         return _result;
     }
@@ -6340,9 +6298,8 @@ public final class ClientPlayerAPI {
         if (overrideGetDistanceSqToEntityHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetDistanceSqToEntityHooks.length; i++)
-            if (overrideGetDistanceSqToEntityHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetDistanceSqToEntityHooks[i - 1];
+            if (overrideGetDistanceSqToEntityHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetDistanceSqToEntityHooks[i - 1];
 
         return overWriter;
     }
@@ -6357,18 +6314,18 @@ public final class ClientPlayerAPI {
 
     public boolean isGetDistanceSqToEntityModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetDistanceSqToEntitySuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetDistanceSqToEntityInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetDistanceSqToEntitySuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetDistanceSqToEntityInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetDistanceSqToEntitySuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetDistanceSqToEntityInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetDistanceSqToEntitySuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetDistanceSqToEntityInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetDistanceSqToEntitySuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetDistanceSqToEntityInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetDistanceSqToEntitySuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetDistanceSqToEntityInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static float getFOVMultiplier(IClientPlayerAPI target) {
         float _result;
@@ -6380,18 +6337,16 @@ public final class ClientPlayerAPI {
     }
 
     private float getFOVMultiplier() {
-        if (beforeGetFOVMultiplierHooks != null)
-            for (int i = beforeGetFOVMultiplierHooks.length - 1; i >= 0; i--)
-                beforeGetFOVMultiplierHooks[i].beforeGetFOVMultiplier();
+        if (beforeGetFOVMultiplierHooks != null) for (int i = beforeGetFOVMultiplierHooks.length - 1; i >= 0; i--)
+            beforeGetFOVMultiplierHooks[i].beforeGetFOVMultiplier();
 
         float _result;
         if (overrideGetFOVMultiplierHooks != null)
             _result = overrideGetFOVMultiplierHooks[overrideGetFOVMultiplierHooks.length - 1].getFOVMultiplier();
         else _result = player.localGetFOVMultiplier();
 
-        if (afterGetFOVMultiplierHooks != null)
-            for (int i = 0; i < afterGetFOVMultiplierHooks.length; i++)
-                afterGetFOVMultiplierHooks[i].afterGetFOVMultiplier();
+        if (afterGetFOVMultiplierHooks != null) for (int i = 0; i < afterGetFOVMultiplierHooks.length; i++)
+            afterGetFOVMultiplierHooks[i].afterGetFOVMultiplier();
 
         return _result;
     }
@@ -6400,9 +6355,8 @@ public final class ClientPlayerAPI {
         if (overrideGetFOVMultiplierHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetFOVMultiplierHooks.length; i++)
-            if (overrideGetFOVMultiplierHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetFOVMultiplierHooks[i - 1];
+            if (overrideGetFOVMultiplierHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetFOVMultiplierHooks[i - 1];
 
         return overWriter;
     }
@@ -6417,18 +6371,18 @@ public final class ClientPlayerAPI {
 
     public boolean isGetFOVMultiplierModded;
 
-    private static final Map<String, String[]> allBaseBeforeGetFOVMultiplierSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeGetFOVMultiplierInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetFOVMultiplierSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetFOVMultiplierInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetFOVMultiplierSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterGetFOVMultiplierInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeGetFOVMultiplierSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeGetFOVMultiplierInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetFOVMultiplierSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetFOVMultiplierInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetFOVMultiplierSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterGetFOVMultiplierInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static java.lang.String getHurtSound(IClientPlayerAPI target) {
         java.lang.String _result;
@@ -6439,9 +6393,8 @@ public final class ClientPlayerAPI {
     }
 
     private java.lang.String getHurtSound() {
-        if (beforeGetHurtSoundHooks != null)
-            for (int i = beforeGetHurtSoundHooks.length - 1; i >= 0; i--)
-                beforeGetHurtSoundHooks[i].beforeGetHurtSound();
+        if (beforeGetHurtSoundHooks != null) for (int i = beforeGetHurtSoundHooks.length - 1; i >= 0; i--)
+            beforeGetHurtSoundHooks[i].beforeGetHurtSound();
 
         java.lang.String _result;
         if (overrideGetHurtSoundHooks != null)
@@ -6458,9 +6411,8 @@ public final class ClientPlayerAPI {
         if (overrideGetHurtSoundHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetHurtSoundHooks.length; i++)
-            if (overrideGetHurtSoundHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetHurtSoundHooks[i - 1];
+            if (overrideGetHurtSoundHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetHurtSoundHooks[i - 1];
 
         return overWriter;
     }
@@ -6477,15 +6429,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeGetHurtSoundSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeGetHurtSoundInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetHurtSoundSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetHurtSoundInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideGetHurtSoundSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetHurtSoundInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterGetHurtSoundSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetHurtSoundInferiors = new Hashtable<String, String[]>(0);
 
-    public static net.minecraft.util.IIcon getItemIcon(
-            IClientPlayerAPI target, net.minecraft.item.ItemStack paramItemStack, int paramInt) {
+    public static net.minecraft.util.IIcon getItemIcon(IClientPlayerAPI target,
+            net.minecraft.item.ItemStack paramItemStack, int paramInt) {
         net.minecraft.util.IIcon _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isGetItemIconModded)
@@ -6495,19 +6447,16 @@ public final class ClientPlayerAPI {
     }
 
     private net.minecraft.util.IIcon getItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt) {
-        if (beforeGetItemIconHooks != null)
-            for (int i = beforeGetItemIconHooks.length - 1; i >= 0; i--)
-                beforeGetItemIconHooks[i].beforeGetItemIcon(paramItemStack, paramInt);
+        if (beforeGetItemIconHooks != null) for (int i = beforeGetItemIconHooks.length - 1; i >= 0; i--)
+            beforeGetItemIconHooks[i].beforeGetItemIcon(paramItemStack, paramInt);
 
         net.minecraft.util.IIcon _result;
-        if (overrideGetItemIconHooks != null)
-            _result =
-                    overrideGetItemIconHooks[overrideGetItemIconHooks.length - 1].getItemIcon(paramItemStack, paramInt);
+        if (overrideGetItemIconHooks != null) _result = overrideGetItemIconHooks[overrideGetItemIconHooks.length - 1]
+                .getItemIcon(paramItemStack, paramInt);
         else _result = player.localGetItemIcon(paramItemStack, paramInt);
 
-        if (afterGetItemIconHooks != null)
-            for (int i = 0; i < afterGetItemIconHooks.length; i++)
-                afterGetItemIconHooks[i].afterGetItemIcon(paramItemStack, paramInt);
+        if (afterGetItemIconHooks != null) for (int i = 0; i < afterGetItemIconHooks.length; i++)
+            afterGetItemIconHooks[i].afterGetItemIcon(paramItemStack, paramInt);
 
         return _result;
     }
@@ -6516,9 +6465,8 @@ public final class ClientPlayerAPI {
         if (overrideGetItemIconHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetItemIconHooks.length; i++)
-            if (overrideGetItemIconHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetItemIconHooks[i - 1];
+            if (overrideGetItemIconHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetItemIconHooks[i - 1];
 
         return overWriter;
     }
@@ -6549,9 +6497,8 @@ public final class ClientPlayerAPI {
     }
 
     private int getSleepTimer() {
-        if (beforeGetSleepTimerHooks != null)
-            for (int i = beforeGetSleepTimerHooks.length - 1; i >= 0; i--)
-                beforeGetSleepTimerHooks[i].beforeGetSleepTimer();
+        if (beforeGetSleepTimerHooks != null) for (int i = beforeGetSleepTimerHooks.length - 1; i >= 0; i--)
+            beforeGetSleepTimerHooks[i].beforeGetSleepTimer();
 
         int _result;
         if (overrideGetSleepTimerHooks != null)
@@ -6568,9 +6515,8 @@ public final class ClientPlayerAPI {
         if (overrideGetSleepTimerHooks == null) return overWriter;
 
         for (int i = 0; i < overrideGetSleepTimerHooks.length; i++)
-            if (overrideGetSleepTimerHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideGetSleepTimerHooks[i - 1];
+            if (overrideGetSleepTimerHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideGetSleepTimerHooks[i - 1];
 
         return overWriter;
     }
@@ -6587,10 +6533,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeGetSleepTimerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeGetSleepTimerInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetSleepTimerSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideGetSleepTimerInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideGetSleepTimerSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideGetSleepTimerInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterGetSleepTimerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetSleepTimerInferiors = new Hashtable<String, String[]>(0);
 
@@ -6604,18 +6550,16 @@ public final class ClientPlayerAPI {
     }
 
     private boolean handleLavaMovement() {
-        if (beforeHandleLavaMovementHooks != null)
-            for (int i = beforeHandleLavaMovementHooks.length - 1; i >= 0; i--)
-                beforeHandleLavaMovementHooks[i].beforeHandleLavaMovement();
+        if (beforeHandleLavaMovementHooks != null) for (int i = beforeHandleLavaMovementHooks.length - 1; i >= 0; i--)
+            beforeHandleLavaMovementHooks[i].beforeHandleLavaMovement();
 
         boolean _result;
         if (overrideHandleLavaMovementHooks != null)
             _result = overrideHandleLavaMovementHooks[overrideHandleLavaMovementHooks.length - 1].handleLavaMovement();
         else _result = player.localHandleLavaMovement();
 
-        if (afterHandleLavaMovementHooks != null)
-            for (int i = 0; i < afterHandleLavaMovementHooks.length; i++)
-                afterHandleLavaMovementHooks[i].afterHandleLavaMovement();
+        if (afterHandleLavaMovementHooks != null) for (int i = 0; i < afterHandleLavaMovementHooks.length; i++)
+            afterHandleLavaMovementHooks[i].afterHandleLavaMovement();
 
         return _result;
     }
@@ -6624,9 +6568,8 @@ public final class ClientPlayerAPI {
         if (overrideHandleLavaMovementHooks == null) return overWriter;
 
         for (int i = 0; i < overrideHandleLavaMovementHooks.length; i++)
-            if (overrideHandleLavaMovementHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideHandleLavaMovementHooks[i - 1];
+            if (overrideHandleLavaMovementHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideHandleLavaMovementHooks[i - 1];
 
         return overWriter;
     }
@@ -6641,18 +6584,18 @@ public final class ClientPlayerAPI {
 
     public boolean isHandleLavaMovementModded;
 
-    private static final Map<String, String[]> allBaseBeforeHandleLavaMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeHandleLavaMovementInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideHandleLavaMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideHandleLavaMovementInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterHandleLavaMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterHandleLavaMovementInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeHandleLavaMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeHandleLavaMovementInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideHandleLavaMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideHandleLavaMovementInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterHandleLavaMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterHandleLavaMovementInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean handleWaterMovement(IClientPlayerAPI target) {
         boolean _result;
@@ -6664,19 +6607,17 @@ public final class ClientPlayerAPI {
     }
 
     private boolean handleWaterMovement() {
-        if (beforeHandleWaterMovementHooks != null)
-            for (int i = beforeHandleWaterMovementHooks.length - 1; i >= 0; i--)
-                beforeHandleWaterMovementHooks[i].beforeHandleWaterMovement();
+        if (beforeHandleWaterMovementHooks != null) for (int i = beforeHandleWaterMovementHooks.length - 1; i >= 0; i--)
+            beforeHandleWaterMovementHooks[i].beforeHandleWaterMovement();
 
         boolean _result;
         if (overrideHandleWaterMovementHooks != null)
-            _result =
-                    overrideHandleWaterMovementHooks[overrideHandleWaterMovementHooks.length - 1].handleWaterMovement();
+            _result = overrideHandleWaterMovementHooks[overrideHandleWaterMovementHooks.length - 1]
+                    .handleWaterMovement();
         else _result = player.localHandleWaterMovement();
 
-        if (afterHandleWaterMovementHooks != null)
-            for (int i = 0; i < afterHandleWaterMovementHooks.length; i++)
-                afterHandleWaterMovementHooks[i].afterHandleWaterMovement();
+        if (afterHandleWaterMovementHooks != null) for (int i = 0; i < afterHandleWaterMovementHooks.length; i++)
+            afterHandleWaterMovementHooks[i].afterHandleWaterMovement();
 
         return _result;
     }
@@ -6685,9 +6626,8 @@ public final class ClientPlayerAPI {
         if (overrideHandleWaterMovementHooks == null) return overWriter;
 
         for (int i = 0; i < overrideHandleWaterMovementHooks.length; i++)
-            if (overrideHandleWaterMovementHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideHandleWaterMovementHooks[i - 1];
+            if (overrideHandleWaterMovementHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideHandleWaterMovementHooks[i - 1];
 
         return overWriter;
     }
@@ -6702,18 +6642,18 @@ public final class ClientPlayerAPI {
 
     public boolean isHandleWaterMovementModded;
 
-    private static final Map<String, String[]> allBaseBeforeHandleWaterMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeHandleWaterMovementInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideHandleWaterMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideHandleWaterMovementInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterHandleWaterMovementSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterHandleWaterMovementInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeHandleWaterMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeHandleWaterMovementInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideHandleWaterMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideHandleWaterMovementInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterHandleWaterMovementSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterHandleWaterMovementInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void heal(IClientPlayerAPI target, float paramFloat) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -6736,9 +6676,8 @@ public final class ClientPlayerAPI {
         if (overrideHealHooks == null) return overWriter;
 
         for (int i = 0; i < overrideHealHooks.length; i++)
-            if (overrideHealHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideHealHooks[i - 1];
+            if (overrideHealHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideHealHooks[i - 1];
 
         return overWriter;
     }
@@ -6776,9 +6715,8 @@ public final class ClientPlayerAPI {
 
         boolean _result;
         if (overrideIsEntityInsideOpaqueBlockHooks != null)
-            _result =
-                    overrideIsEntityInsideOpaqueBlockHooks[overrideIsEntityInsideOpaqueBlockHooks.length - 1]
-                            .isEntityInsideOpaqueBlock();
+            _result = overrideIsEntityInsideOpaqueBlockHooks[overrideIsEntityInsideOpaqueBlockHooks.length - 1]
+                    .isEntityInsideOpaqueBlock();
         else _result = player.localIsEntityInsideOpaqueBlock();
 
         if (afterIsEntityInsideOpaqueBlockHooks != null)
@@ -6792,9 +6730,8 @@ public final class ClientPlayerAPI {
         if (overrideIsEntityInsideOpaqueBlockHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsEntityInsideOpaqueBlockHooks.length; i++)
-            if (overrideIsEntityInsideOpaqueBlockHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsEntityInsideOpaqueBlockHooks[i - 1];
+            if (overrideIsEntityInsideOpaqueBlockHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsEntityInsideOpaqueBlockHooks[i - 1];
 
         return overWriter;
     }
@@ -6809,18 +6746,18 @@ public final class ClientPlayerAPI {
 
     public boolean isIsEntityInsideOpaqueBlockModded;
 
-    private static final Map<String, String[]> allBaseBeforeIsEntityInsideOpaqueBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeIsEntityInsideOpaqueBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsEntityInsideOpaqueBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsEntityInsideOpaqueBlockInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsEntityInsideOpaqueBlockSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsEntityInsideOpaqueBlockInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeIsEntityInsideOpaqueBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeIsEntityInsideOpaqueBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsEntityInsideOpaqueBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsEntityInsideOpaqueBlockInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsEntityInsideOpaqueBlockSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsEntityInsideOpaqueBlockInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean isInWater(IClientPlayerAPI target) {
         boolean _result;
@@ -6849,9 +6786,8 @@ public final class ClientPlayerAPI {
         if (overrideIsInWaterHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsInWaterHooks.length; i++)
-            if (overrideIsInWaterHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsInWaterHooks[i - 1];
+            if (overrideIsInWaterHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsInWaterHooks[i - 1];
 
         return overWriter;
     }
@@ -6873,8 +6809,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterIsInWaterSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterIsInWaterInferiors = new Hashtable<String, String[]>(0);
 
-    public static boolean isInsideOfMaterial(
-            IClientPlayerAPI target, net.minecraft.block.material.Material paramMaterial) {
+    public static boolean isInsideOfMaterial(IClientPlayerAPI target,
+            net.minecraft.block.material.Material paramMaterial) {
         boolean _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isIsInsideOfMaterialModded)
@@ -6884,19 +6820,17 @@ public final class ClientPlayerAPI {
     }
 
     private boolean isInsideOfMaterial(net.minecraft.block.material.Material paramMaterial) {
-        if (beforeIsInsideOfMaterialHooks != null)
-            for (int i = beforeIsInsideOfMaterialHooks.length - 1; i >= 0; i--)
-                beforeIsInsideOfMaterialHooks[i].beforeIsInsideOfMaterial(paramMaterial);
+        if (beforeIsInsideOfMaterialHooks != null) for (int i = beforeIsInsideOfMaterialHooks.length - 1; i >= 0; i--)
+            beforeIsInsideOfMaterialHooks[i].beforeIsInsideOfMaterial(paramMaterial);
 
         boolean _result;
         if (overrideIsInsideOfMaterialHooks != null)
-            _result = overrideIsInsideOfMaterialHooks[overrideIsInsideOfMaterialHooks.length - 1].isInsideOfMaterial(
-                    paramMaterial);
+            _result = overrideIsInsideOfMaterialHooks[overrideIsInsideOfMaterialHooks.length - 1]
+                    .isInsideOfMaterial(paramMaterial);
         else _result = player.localIsInsideOfMaterial(paramMaterial);
 
-        if (afterIsInsideOfMaterialHooks != null)
-            for (int i = 0; i < afterIsInsideOfMaterialHooks.length; i++)
-                afterIsInsideOfMaterialHooks[i].afterIsInsideOfMaterial(paramMaterial);
+        if (afterIsInsideOfMaterialHooks != null) for (int i = 0; i < afterIsInsideOfMaterialHooks.length; i++)
+            afterIsInsideOfMaterialHooks[i].afterIsInsideOfMaterial(paramMaterial);
 
         return _result;
     }
@@ -6905,9 +6839,8 @@ public final class ClientPlayerAPI {
         if (overrideIsInsideOfMaterialHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsInsideOfMaterialHooks.length; i++)
-            if (overrideIsInsideOfMaterialHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsInsideOfMaterialHooks[i - 1];
+            if (overrideIsInsideOfMaterialHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsInsideOfMaterialHooks[i - 1];
 
         return overWriter;
     }
@@ -6922,18 +6855,18 @@ public final class ClientPlayerAPI {
 
     public boolean isIsInsideOfMaterialModded;
 
-    private static final Map<String, String[]> allBaseBeforeIsInsideOfMaterialSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeIsInsideOfMaterialInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsInsideOfMaterialSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsInsideOfMaterialInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsInsideOfMaterialSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsInsideOfMaterialInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeIsInsideOfMaterialSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeIsInsideOfMaterialInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsInsideOfMaterialSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsInsideOfMaterialInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsInsideOfMaterialSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsInsideOfMaterialInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean isOnLadder(IClientPlayerAPI target) {
         boolean _result;
@@ -6962,9 +6895,8 @@ public final class ClientPlayerAPI {
         if (overrideIsOnLadderHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsOnLadderHooks.length; i++)
-            if (overrideIsOnLadderHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsOnLadderHooks[i - 1];
+            if (overrideIsOnLadderHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsOnLadderHooks[i - 1];
 
         return overWriter;
     }
@@ -6996,18 +6928,16 @@ public final class ClientPlayerAPI {
     }
 
     private boolean isPlayerSleeping() {
-        if (beforeIsPlayerSleepingHooks != null)
-            for (int i = beforeIsPlayerSleepingHooks.length - 1; i >= 0; i--)
-                beforeIsPlayerSleepingHooks[i].beforeIsPlayerSleeping();
+        if (beforeIsPlayerSleepingHooks != null) for (int i = beforeIsPlayerSleepingHooks.length - 1; i >= 0; i--)
+            beforeIsPlayerSleepingHooks[i].beforeIsPlayerSleeping();
 
         boolean _result;
         if (overrideIsPlayerSleepingHooks != null)
             _result = overrideIsPlayerSleepingHooks[overrideIsPlayerSleepingHooks.length - 1].isPlayerSleeping();
         else _result = player.localIsPlayerSleeping();
 
-        if (afterIsPlayerSleepingHooks != null)
-            for (int i = 0; i < afterIsPlayerSleepingHooks.length; i++)
-                afterIsPlayerSleepingHooks[i].afterIsPlayerSleeping();
+        if (afterIsPlayerSleepingHooks != null) for (int i = 0; i < afterIsPlayerSleepingHooks.length; i++)
+            afterIsPlayerSleepingHooks[i].afterIsPlayerSleeping();
 
         return _result;
     }
@@ -7016,9 +6946,8 @@ public final class ClientPlayerAPI {
         if (overrideIsPlayerSleepingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsPlayerSleepingHooks.length; i++)
-            if (overrideIsPlayerSleepingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsPlayerSleepingHooks[i - 1];
+            if (overrideIsPlayerSleepingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsPlayerSleepingHooks[i - 1];
 
         return overWriter;
     }
@@ -7033,18 +6962,18 @@ public final class ClientPlayerAPI {
 
     public boolean isIsPlayerSleepingModded;
 
-    private static final Map<String, String[]> allBaseBeforeIsPlayerSleepingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeIsPlayerSleepingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsPlayerSleepingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideIsPlayerSleepingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsPlayerSleepingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterIsPlayerSleepingInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeIsPlayerSleepingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeIsPlayerSleepingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsPlayerSleepingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideIsPlayerSleepingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsPlayerSleepingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterIsPlayerSleepingInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static boolean isSneaking(IClientPlayerAPI target) {
         boolean _result;
@@ -7073,9 +7002,8 @@ public final class ClientPlayerAPI {
         if (overrideIsSneakingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsSneakingHooks.length; i++)
-            if (overrideIsSneakingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsSneakingHooks[i - 1];
+            if (overrideIsSneakingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsSneakingHooks[i - 1];
 
         return overWriter;
     }
@@ -7124,9 +7052,8 @@ public final class ClientPlayerAPI {
         if (overrideIsSprintingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideIsSprintingHooks.length; i++)
-            if (overrideIsSprintingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideIsSprintingHooks[i - 1];
+            if (overrideIsSprintingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideIsSprintingHooks[i - 1];
 
         return overWriter;
     }
@@ -7168,9 +7095,8 @@ public final class ClientPlayerAPI {
         if (overrideJumpHooks == null) return overWriter;
 
         for (int i = 0; i < overrideJumpHooks.length; i++)
-            if (overrideJumpHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideJumpHooks[i - 1];
+            if (overrideJumpHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideJumpHooks[i - 1];
 
         return overWriter;
     }
@@ -7192,41 +7118,33 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterJumpSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterJumpInferiors = new Hashtable<String, String[]>(0);
 
-    public static void knockBack(
-            IClientPlayerAPI target,
-            net.minecraft.entity.Entity paramEntity,
-            float paramFloat,
-            double paramDouble1,
-            double paramDouble2) {
+    public static void knockBack(IClientPlayerAPI target, net.minecraft.entity.Entity paramEntity, float paramFloat,
+            double paramDouble1, double paramDouble2) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isKnockBackModded)
             clientPlayerAPI.knockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
         else target.localKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
     }
 
-    private void knockBack(
-            net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {
-        if (beforeKnockBackHooks != null)
-            for (int i = beforeKnockBackHooks.length - 1; i >= 0; i--)
-                beforeKnockBackHooks[i].beforeKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
+    private void knockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2) {
+        if (beforeKnockBackHooks != null) for (int i = beforeKnockBackHooks.length - 1; i >= 0; i--)
+            beforeKnockBackHooks[i].beforeKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
 
-        if (overrideKnockBackHooks != null)
-            overrideKnockBackHooks[overrideKnockBackHooks.length - 1].knockBack(
-                    paramEntity, paramFloat, paramDouble1, paramDouble2);
+        if (overrideKnockBackHooks != null) overrideKnockBackHooks[overrideKnockBackHooks.length - 1]
+                .knockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
         else player.localKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
 
-        if (afterKnockBackHooks != null)
-            for (int i = 0; i < afterKnockBackHooks.length; i++)
-                afterKnockBackHooks[i].afterKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
+        if (afterKnockBackHooks != null) for (int i = 0; i < afterKnockBackHooks.length; i++)
+            afterKnockBackHooks[i].afterKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
     }
 
     protected ClientPlayerBase GetOverwrittenKnockBack(ClientPlayerBase overWriter) {
         if (overrideKnockBackHooks == null) return overWriter;
 
         for (int i = 0; i < overrideKnockBackHooks.length; i++)
-            if (overrideKnockBackHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideKnockBackHooks[i - 1];
+            if (overrideKnockBackHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideKnockBackHooks[i - 1];
 
         return overWriter;
     }
@@ -7248,8 +7166,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterKnockBackSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterKnockBackInferiors = new Hashtable<String, String[]>(0);
 
-    public static void moveEntity(
-            IClientPlayerAPI target, double paramDouble1, double paramDouble2, double paramDouble3) {
+    public static void moveEntity(IClientPlayerAPI target, double paramDouble1, double paramDouble2,
+            double paramDouble3) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isMoveEntityModded)
             clientPlayerAPI.moveEntity(paramDouble1, paramDouble2, paramDouble3);
@@ -7257,27 +7175,23 @@ public final class ClientPlayerAPI {
     }
 
     private void moveEntity(double paramDouble1, double paramDouble2, double paramDouble3) {
-        if (beforeMoveEntityHooks != null)
-            for (int i = beforeMoveEntityHooks.length - 1; i >= 0; i--)
-                beforeMoveEntityHooks[i].beforeMoveEntity(paramDouble1, paramDouble2, paramDouble3);
+        if (beforeMoveEntityHooks != null) for (int i = beforeMoveEntityHooks.length - 1; i >= 0; i--)
+            beforeMoveEntityHooks[i].beforeMoveEntity(paramDouble1, paramDouble2, paramDouble3);
 
-        if (overrideMoveEntityHooks != null)
-            overrideMoveEntityHooks[overrideMoveEntityHooks.length - 1].moveEntity(
-                    paramDouble1, paramDouble2, paramDouble3);
+        if (overrideMoveEntityHooks != null) overrideMoveEntityHooks[overrideMoveEntityHooks.length - 1]
+                .moveEntity(paramDouble1, paramDouble2, paramDouble3);
         else player.localMoveEntity(paramDouble1, paramDouble2, paramDouble3);
 
-        if (afterMoveEntityHooks != null)
-            for (int i = 0; i < afterMoveEntityHooks.length; i++)
-                afterMoveEntityHooks[i].afterMoveEntity(paramDouble1, paramDouble2, paramDouble3);
+        if (afterMoveEntityHooks != null) for (int i = 0; i < afterMoveEntityHooks.length; i++)
+            afterMoveEntityHooks[i].afterMoveEntity(paramDouble1, paramDouble2, paramDouble3);
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntity(ClientPlayerBase overWriter) {
         if (overrideMoveEntityHooks == null) return overWriter;
 
         for (int i = 0; i < overrideMoveEntityHooks.length; i++)
-            if (overrideMoveEntityHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideMoveEntityHooks[i - 1];
+            if (overrideMoveEntityHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideMoveEntityHooks[i - 1];
 
         return overWriter;
     }
@@ -7312,22 +7226,20 @@ public final class ClientPlayerAPI {
                 beforeMoveEntityWithHeadingHooks[i].beforeMoveEntityWithHeading(paramFloat1, paramFloat2);
 
         if (overrideMoveEntityWithHeadingHooks != null)
-            overrideMoveEntityWithHeadingHooks[overrideMoveEntityWithHeadingHooks.length - 1].moveEntityWithHeading(
-                    paramFloat1, paramFloat2);
+            overrideMoveEntityWithHeadingHooks[overrideMoveEntityWithHeadingHooks.length - 1]
+                    .moveEntityWithHeading(paramFloat1, paramFloat2);
         else player.localMoveEntityWithHeading(paramFloat1, paramFloat2);
 
-        if (afterMoveEntityWithHeadingHooks != null)
-            for (int i = 0; i < afterMoveEntityWithHeadingHooks.length; i++)
-                afterMoveEntityWithHeadingHooks[i].afterMoveEntityWithHeading(paramFloat1, paramFloat2);
+        if (afterMoveEntityWithHeadingHooks != null) for (int i = 0; i < afterMoveEntityWithHeadingHooks.length; i++)
+            afterMoveEntityWithHeadingHooks[i].afterMoveEntityWithHeading(paramFloat1, paramFloat2);
     }
 
     protected ClientPlayerBase GetOverwrittenMoveEntityWithHeading(ClientPlayerBase overWriter) {
         if (overrideMoveEntityWithHeadingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideMoveEntityWithHeadingHooks.length; i++)
-            if (overrideMoveEntityWithHeadingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideMoveEntityWithHeadingHooks[i - 1];
+            if (overrideMoveEntityWithHeadingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideMoveEntityWithHeadingHooks[i - 1];
 
         return overWriter;
     }
@@ -7342,18 +7254,18 @@ public final class ClientPlayerAPI {
 
     public boolean isMoveEntityWithHeadingModded;
 
-    private static final Map<String, String[]> allBaseBeforeMoveEntityWithHeadingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeMoveEntityWithHeadingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideMoveEntityWithHeadingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideMoveEntityWithHeadingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterMoveEntityWithHeadingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterMoveEntityWithHeadingInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeMoveEntityWithHeadingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeMoveEntityWithHeadingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideMoveEntityWithHeadingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideMoveEntityWithHeadingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterMoveEntityWithHeadingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterMoveEntityWithHeadingInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void moveFlying(IClientPlayerAPI target, float paramFloat1, float paramFloat2, float paramFloat3) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -7363,27 +7275,23 @@ public final class ClientPlayerAPI {
     }
 
     private void moveFlying(float paramFloat1, float paramFloat2, float paramFloat3) {
-        if (beforeMoveFlyingHooks != null)
-            for (int i = beforeMoveFlyingHooks.length - 1; i >= 0; i--)
-                beforeMoveFlyingHooks[i].beforeMoveFlying(paramFloat1, paramFloat2, paramFloat3);
+        if (beforeMoveFlyingHooks != null) for (int i = beforeMoveFlyingHooks.length - 1; i >= 0; i--)
+            beforeMoveFlyingHooks[i].beforeMoveFlying(paramFloat1, paramFloat2, paramFloat3);
 
-        if (overrideMoveFlyingHooks != null)
-            overrideMoveFlyingHooks[overrideMoveFlyingHooks.length - 1].moveFlying(
-                    paramFloat1, paramFloat2, paramFloat3);
+        if (overrideMoveFlyingHooks != null) overrideMoveFlyingHooks[overrideMoveFlyingHooks.length - 1]
+                .moveFlying(paramFloat1, paramFloat2, paramFloat3);
         else player.localMoveFlying(paramFloat1, paramFloat2, paramFloat3);
 
-        if (afterMoveFlyingHooks != null)
-            for (int i = 0; i < afterMoveFlyingHooks.length; i++)
-                afterMoveFlyingHooks[i].afterMoveFlying(paramFloat1, paramFloat2, paramFloat3);
+        if (afterMoveFlyingHooks != null) for (int i = 0; i < afterMoveFlyingHooks.length; i++)
+            afterMoveFlyingHooks[i].afterMoveFlying(paramFloat1, paramFloat2, paramFloat3);
     }
 
     protected ClientPlayerBase GetOverwrittenMoveFlying(ClientPlayerBase overWriter) {
         if (overrideMoveFlyingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideMoveFlyingHooks.length; i++)
-            if (overrideMoveFlyingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideMoveFlyingHooks[i - 1];
+            if (overrideMoveFlyingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideMoveFlyingHooks[i - 1];
 
         return overWriter;
     }
@@ -7412,9 +7320,8 @@ public final class ClientPlayerAPI {
     }
 
     private void onDeath(net.minecraft.util.DamageSource paramDamageSource) {
-        if (beforeOnDeathHooks != null)
-            for (int i = beforeOnDeathHooks.length - 1; i >= 0; i--)
-                beforeOnDeathHooks[i].beforeOnDeath(paramDamageSource);
+        if (beforeOnDeathHooks != null) for (int i = beforeOnDeathHooks.length - 1; i >= 0; i--)
+            beforeOnDeathHooks[i].beforeOnDeath(paramDamageSource);
 
         if (overrideOnDeathHooks != null)
             overrideOnDeathHooks[overrideOnDeathHooks.length - 1].onDeath(paramDamageSource);
@@ -7428,9 +7335,8 @@ public final class ClientPlayerAPI {
         if (overrideOnDeathHooks == null) return overWriter;
 
         for (int i = 0; i < overrideOnDeathHooks.length; i++)
-            if (overrideOnDeathHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideOnDeathHooks[i - 1];
+            if (overrideOnDeathHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideOnDeathHooks[i - 1];
 
         return overWriter;
     }
@@ -7459,9 +7365,8 @@ public final class ClientPlayerAPI {
     }
 
     private void onLivingUpdate() {
-        if (beforeOnLivingUpdateHooks != null)
-            for (int i = beforeOnLivingUpdateHooks.length - 1; i >= 0; i--)
-                beforeOnLivingUpdateHooks[i].beforeOnLivingUpdate();
+        if (beforeOnLivingUpdateHooks != null) for (int i = beforeOnLivingUpdateHooks.length - 1; i >= 0; i--)
+            beforeOnLivingUpdateHooks[i].beforeOnLivingUpdate();
 
         if (overrideOnLivingUpdateHooks != null)
             overrideOnLivingUpdateHooks[overrideOnLivingUpdateHooks.length - 1].onLivingUpdate();
@@ -7475,9 +7380,8 @@ public final class ClientPlayerAPI {
         if (overrideOnLivingUpdateHooks == null) return overWriter;
 
         for (int i = 0; i < overrideOnLivingUpdateHooks.length; i++)
-            if (overrideOnLivingUpdateHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideOnLivingUpdateHooks[i - 1];
+            if (overrideOnLivingUpdateHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideOnLivingUpdateHooks[i - 1];
 
         return overWriter;
     }
@@ -7492,19 +7396,19 @@ public final class ClientPlayerAPI {
 
     public boolean isOnLivingUpdateModded;
 
-    private static final Map<String, String[]> allBaseBeforeOnLivingUpdateSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeOnLivingUpdateInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnLivingUpdateSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnLivingUpdateInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeOnLivingUpdateSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeOnLivingUpdateInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideOnLivingUpdateSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideOnLivingUpdateInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterOnLivingUpdateSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnLivingUpdateInferiors = new Hashtable<String, String[]>(0);
 
-    public static void onKillEntity(
-            IClientPlayerAPI target, net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
+    public static void onKillEntity(IClientPlayerAPI target,
+            net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isOnKillEntityModded)
             clientPlayerAPI.onKillEntity(paramEntityLivingBase);
@@ -7512,26 +7416,23 @@ public final class ClientPlayerAPI {
     }
 
     private void onKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
-        if (beforeOnKillEntityHooks != null)
-            for (int i = beforeOnKillEntityHooks.length - 1; i >= 0; i--)
-                beforeOnKillEntityHooks[i].beforeOnKillEntity(paramEntityLivingBase);
+        if (beforeOnKillEntityHooks != null) for (int i = beforeOnKillEntityHooks.length - 1; i >= 0; i--)
+            beforeOnKillEntityHooks[i].beforeOnKillEntity(paramEntityLivingBase);
 
         if (overrideOnKillEntityHooks != null)
             overrideOnKillEntityHooks[overrideOnKillEntityHooks.length - 1].onKillEntity(paramEntityLivingBase);
         else player.localOnKillEntity(paramEntityLivingBase);
 
-        if (afterOnKillEntityHooks != null)
-            for (int i = 0; i < afterOnKillEntityHooks.length; i++)
-                afterOnKillEntityHooks[i].afterOnKillEntity(paramEntityLivingBase);
+        if (afterOnKillEntityHooks != null) for (int i = 0; i < afterOnKillEntityHooks.length; i++)
+            afterOnKillEntityHooks[i].afterOnKillEntity(paramEntityLivingBase);
     }
 
     protected ClientPlayerBase GetOverwrittenOnKillEntity(ClientPlayerBase overWriter) {
         if (overrideOnKillEntityHooks == null) return overWriter;
 
         for (int i = 0; i < overrideOnKillEntityHooks.length; i++)
-            if (overrideOnKillEntityHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideOnKillEntityHooks[i - 1];
+            if (overrideOnKillEntityHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideOnKillEntityHooks[i - 1];
 
         return overWriter;
     }
@@ -7548,15 +7449,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeOnKillEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeOnKillEntityInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnKillEntitySuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnKillEntityInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideOnKillEntitySuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideOnKillEntityInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterOnKillEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnKillEntityInferiors = new Hashtable<String, String[]>(0);
 
-    public static void onStruckByLightning(
-            IClientPlayerAPI target, net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
+    public static void onStruckByLightning(IClientPlayerAPI target,
+            net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isOnStruckByLightningModded)
             clientPlayerAPI.onStruckByLightning(paramEntityLightningBolt);
@@ -7564,27 +7465,24 @@ public final class ClientPlayerAPI {
     }
 
     private void onStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
-        if (beforeOnStruckByLightningHooks != null)
-            for (int i = beforeOnStruckByLightningHooks.length - 1; i >= 0; i--)
-                beforeOnStruckByLightningHooks[i].beforeOnStruckByLightning(paramEntityLightningBolt);
+        if (beforeOnStruckByLightningHooks != null) for (int i = beforeOnStruckByLightningHooks.length - 1; i >= 0; i--)
+            beforeOnStruckByLightningHooks[i].beforeOnStruckByLightning(paramEntityLightningBolt);
 
         if (overrideOnStruckByLightningHooks != null)
-            overrideOnStruckByLightningHooks[overrideOnStruckByLightningHooks.length - 1].onStruckByLightning(
-                    paramEntityLightningBolt);
+            overrideOnStruckByLightningHooks[overrideOnStruckByLightningHooks.length - 1]
+                    .onStruckByLightning(paramEntityLightningBolt);
         else player.localOnStruckByLightning(paramEntityLightningBolt);
 
-        if (afterOnStruckByLightningHooks != null)
-            for (int i = 0; i < afterOnStruckByLightningHooks.length; i++)
-                afterOnStruckByLightningHooks[i].afterOnStruckByLightning(paramEntityLightningBolt);
+        if (afterOnStruckByLightningHooks != null) for (int i = 0; i < afterOnStruckByLightningHooks.length; i++)
+            afterOnStruckByLightningHooks[i].afterOnStruckByLightning(paramEntityLightningBolt);
     }
 
     protected ClientPlayerBase GetOverwrittenOnStruckByLightning(ClientPlayerBase overWriter) {
         if (overrideOnStruckByLightningHooks == null) return overWriter;
 
         for (int i = 0; i < overrideOnStruckByLightningHooks.length; i++)
-            if (overrideOnStruckByLightningHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideOnStruckByLightningHooks[i - 1];
+            if (overrideOnStruckByLightningHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideOnStruckByLightningHooks[i - 1];
 
         return overWriter;
     }
@@ -7599,18 +7497,18 @@ public final class ClientPlayerAPI {
 
     public boolean isOnStruckByLightningModded;
 
-    private static final Map<String, String[]> allBaseBeforeOnStruckByLightningSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeOnStruckByLightningInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnStruckByLightningSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideOnStruckByLightningInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterOnStruckByLightningSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterOnStruckByLightningInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeOnStruckByLightningSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeOnStruckByLightningInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideOnStruckByLightningSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideOnStruckByLightningInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterOnStruckByLightningSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterOnStruckByLightningInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void onUpdate(IClientPlayerAPI target) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -7633,9 +7531,8 @@ public final class ClientPlayerAPI {
         if (overrideOnUpdateHooks == null) return overWriter;
 
         for (int i = 0; i < overrideOnUpdateHooks.length; i++)
-            if (overrideOnUpdateHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideOnUpdateHooks[i - 1];
+            if (overrideOnUpdateHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideOnUpdateHooks[i - 1];
 
         return overWriter;
     }
@@ -7657,11 +7554,7 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterOnUpdateSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnUpdateInferiors = new Hashtable<String, String[]>(0);
 
-    public static void playStepSound(
-            IClientPlayerAPI target,
-            int paramInt1,
-            int paramInt2,
-            int paramInt3,
+    public static void playStepSound(IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3,
             net.minecraft.block.Block paramBlock) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isPlayStepSoundModded)
@@ -7670,27 +7563,23 @@ public final class ClientPlayerAPI {
     }
 
     private void playStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock) {
-        if (beforePlayStepSoundHooks != null)
-            for (int i = beforePlayStepSoundHooks.length - 1; i >= 0; i--)
-                beforePlayStepSoundHooks[i].beforePlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
+        if (beforePlayStepSoundHooks != null) for (int i = beforePlayStepSoundHooks.length - 1; i >= 0; i--)
+            beforePlayStepSoundHooks[i].beforePlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
 
-        if (overridePlayStepSoundHooks != null)
-            overridePlayStepSoundHooks[overridePlayStepSoundHooks.length - 1].playStepSound(
-                    paramInt1, paramInt2, paramInt3, paramBlock);
+        if (overridePlayStepSoundHooks != null) overridePlayStepSoundHooks[overridePlayStepSoundHooks.length - 1]
+                .playStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
         else player.localPlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
 
-        if (afterPlayStepSoundHooks != null)
-            for (int i = 0; i < afterPlayStepSoundHooks.length; i++)
-                afterPlayStepSoundHooks[i].afterPlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
+        if (afterPlayStepSoundHooks != null) for (int i = 0; i < afterPlayStepSoundHooks.length; i++)
+            afterPlayStepSoundHooks[i].afterPlayStepSound(paramInt1, paramInt2, paramInt3, paramBlock);
     }
 
     protected ClientPlayerBase GetOverwrittenPlayStepSound(ClientPlayerBase overWriter) {
         if (overridePlayStepSoundHooks == null) return overWriter;
 
         for (int i = 0; i < overridePlayStepSoundHooks.length; i++)
-            if (overridePlayStepSoundHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overridePlayStepSoundHooks[i - 1];
+            if (overridePlayStepSoundHooks[i] == overWriter) if (i == 0) return null;
+            else return overridePlayStepSoundHooks[i - 1];
 
         return overWriter;
     }
@@ -7707,15 +7596,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforePlayStepSoundSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforePlayStepSoundInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverridePlayStepSoundSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverridePlayStepSoundInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverridePlayStepSoundSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverridePlayStepSoundInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterPlayStepSoundSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterPlayStepSoundInferiors = new Hashtable<String, String[]>(0);
 
-    public static boolean pushOutOfBlocks(
-            IClientPlayerAPI target, double paramDouble1, double paramDouble2, double paramDouble3) {
+    public static boolean pushOutOfBlocks(IClientPlayerAPI target, double paramDouble1, double paramDouble2,
+            double paramDouble3) {
         boolean _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isPushOutOfBlocksModded)
@@ -7725,19 +7614,17 @@ public final class ClientPlayerAPI {
     }
 
     private boolean pushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3) {
-        if (beforePushOutOfBlocksHooks != null)
-            for (int i = beforePushOutOfBlocksHooks.length - 1; i >= 0; i--)
-                beforePushOutOfBlocksHooks[i].beforePushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
+        if (beforePushOutOfBlocksHooks != null) for (int i = beforePushOutOfBlocksHooks.length - 1; i >= 0; i--)
+            beforePushOutOfBlocksHooks[i].beforePushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
 
         boolean _result;
         if (overridePushOutOfBlocksHooks != null)
-            _result = overridePushOutOfBlocksHooks[overridePushOutOfBlocksHooks.length - 1].pushOutOfBlocks(
-                    paramDouble1, paramDouble2, paramDouble3);
+            _result = overridePushOutOfBlocksHooks[overridePushOutOfBlocksHooks.length - 1]
+                    .pushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
         else _result = player.localPushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
 
-        if (afterPushOutOfBlocksHooks != null)
-            for (int i = 0; i < afterPushOutOfBlocksHooks.length; i++)
-                afterPushOutOfBlocksHooks[i].afterPushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
+        if (afterPushOutOfBlocksHooks != null) for (int i = 0; i < afterPushOutOfBlocksHooks.length; i++)
+            afterPushOutOfBlocksHooks[i].afterPushOutOfBlocks(paramDouble1, paramDouble2, paramDouble3);
 
         return _result;
     }
@@ -7746,9 +7633,8 @@ public final class ClientPlayerAPI {
         if (overridePushOutOfBlocksHooks == null) return overWriter;
 
         for (int i = 0; i < overridePushOutOfBlocksHooks.length; i++)
-            if (overridePushOutOfBlocksHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overridePushOutOfBlocksHooks[i - 1];
+            if (overridePushOutOfBlocksHooks[i] == overWriter) if (i == 0) return null;
+            else return overridePushOutOfBlocksHooks[i - 1];
 
         return overWriter;
     }
@@ -7763,21 +7649,21 @@ public final class ClientPlayerAPI {
 
     public boolean isPushOutOfBlocksModded;
 
-    private static final Map<String, String[]> allBaseBeforePushOutOfBlocksSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforePushOutOfBlocksInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverridePushOutOfBlocksSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverridePushOutOfBlocksInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterPushOutOfBlocksSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterPushOutOfBlocksInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforePushOutOfBlocksSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforePushOutOfBlocksInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverridePushOutOfBlocksSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverridePushOutOfBlocksInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterPushOutOfBlocksSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterPushOutOfBlocksInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static net.minecraft.util.MovingObjectPosition rayTrace(
-            IClientPlayerAPI target, double paramDouble, float paramFloat) {
+    public static net.minecraft.util.MovingObjectPosition rayTrace(IClientPlayerAPI target, double paramDouble,
+            float paramFloat) {
         net.minecraft.util.MovingObjectPosition _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isRayTraceModded)
@@ -7787,18 +7673,16 @@ public final class ClientPlayerAPI {
     }
 
     private net.minecraft.util.MovingObjectPosition rayTrace(double paramDouble, float paramFloat) {
-        if (beforeRayTraceHooks != null)
-            for (int i = beforeRayTraceHooks.length - 1; i >= 0; i--)
-                beforeRayTraceHooks[i].beforeRayTrace(paramDouble, paramFloat);
+        if (beforeRayTraceHooks != null) for (int i = beforeRayTraceHooks.length - 1; i >= 0; i--)
+            beforeRayTraceHooks[i].beforeRayTrace(paramDouble, paramFloat);
 
         net.minecraft.util.MovingObjectPosition _result;
         if (overrideRayTraceHooks != null)
             _result = overrideRayTraceHooks[overrideRayTraceHooks.length - 1].rayTrace(paramDouble, paramFloat);
         else _result = player.localRayTrace(paramDouble, paramFloat);
 
-        if (afterRayTraceHooks != null)
-            for (int i = 0; i < afterRayTraceHooks.length; i++)
-                afterRayTraceHooks[i].afterRayTrace(paramDouble, paramFloat);
+        if (afterRayTraceHooks != null) for (int i = 0; i < afterRayTraceHooks.length; i++)
+            afterRayTraceHooks[i].afterRayTrace(paramDouble, paramFloat);
 
         return _result;
     }
@@ -7807,9 +7691,8 @@ public final class ClientPlayerAPI {
         if (overrideRayTraceHooks == null) return overWriter;
 
         for (int i = 0; i < overrideRayTraceHooks.length; i++)
-            if (overrideRayTraceHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideRayTraceHooks[i - 1];
+            if (overrideRayTraceHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideRayTraceHooks[i - 1];
 
         return overWriter;
     }
@@ -7831,8 +7714,8 @@ public final class ClientPlayerAPI {
     private static final Map<String, String[]> allBaseAfterRayTraceSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterRayTraceInferiors = new Hashtable<String, String[]>(0);
 
-    public static void readEntityFromNBT(
-            IClientPlayerAPI target, net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+    public static void readEntityFromNBT(IClientPlayerAPI target,
+            net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isReadEntityFromNBTModded)
             clientPlayerAPI.readEntityFromNBT(paramNBTTagCompound);
@@ -7840,27 +7723,24 @@ public final class ClientPlayerAPI {
     }
 
     private void readEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
-        if (beforeReadEntityFromNBTHooks != null)
-            for (int i = beforeReadEntityFromNBTHooks.length - 1; i >= 0; i--)
-                beforeReadEntityFromNBTHooks[i].beforeReadEntityFromNBT(paramNBTTagCompound);
+        if (beforeReadEntityFromNBTHooks != null) for (int i = beforeReadEntityFromNBTHooks.length - 1; i >= 0; i--)
+            beforeReadEntityFromNBTHooks[i].beforeReadEntityFromNBT(paramNBTTagCompound);
 
         if (overrideReadEntityFromNBTHooks != null)
-            overrideReadEntityFromNBTHooks[overrideReadEntityFromNBTHooks.length - 1].readEntityFromNBT(
-                    paramNBTTagCompound);
+            overrideReadEntityFromNBTHooks[overrideReadEntityFromNBTHooks.length - 1]
+                    .readEntityFromNBT(paramNBTTagCompound);
         else player.localReadEntityFromNBT(paramNBTTagCompound);
 
-        if (afterReadEntityFromNBTHooks != null)
-            for (int i = 0; i < afterReadEntityFromNBTHooks.length; i++)
-                afterReadEntityFromNBTHooks[i].afterReadEntityFromNBT(paramNBTTagCompound);
+        if (afterReadEntityFromNBTHooks != null) for (int i = 0; i < afterReadEntityFromNBTHooks.length; i++)
+            afterReadEntityFromNBTHooks[i].afterReadEntityFromNBT(paramNBTTagCompound);
     }
 
     protected ClientPlayerBase GetOverwrittenReadEntityFromNBT(ClientPlayerBase overWriter) {
         if (overrideReadEntityFromNBTHooks == null) return overWriter;
 
         for (int i = 0; i < overrideReadEntityFromNBTHooks.length; i++)
-            if (overrideReadEntityFromNBTHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideReadEntityFromNBTHooks[i - 1];
+            if (overrideReadEntityFromNBTHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideReadEntityFromNBTHooks[i - 1];
 
         return overWriter;
     }
@@ -7875,18 +7755,18 @@ public final class ClientPlayerAPI {
 
     public boolean isReadEntityFromNBTModded;
 
-    private static final Map<String, String[]> allBaseBeforeReadEntityFromNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeReadEntityFromNBTInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideReadEntityFromNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideReadEntityFromNBTInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterReadEntityFromNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterReadEntityFromNBTInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeReadEntityFromNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeReadEntityFromNBTInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideReadEntityFromNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideReadEntityFromNBTInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterReadEntityFromNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterReadEntityFromNBTInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void respawnPlayer(IClientPlayerAPI target) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -7895,9 +7775,8 @@ public final class ClientPlayerAPI {
     }
 
     private void respawnPlayer() {
-        if (beforeRespawnPlayerHooks != null)
-            for (int i = beforeRespawnPlayerHooks.length - 1; i >= 0; i--)
-                beforeRespawnPlayerHooks[i].beforeRespawnPlayer();
+        if (beforeRespawnPlayerHooks != null) for (int i = beforeRespawnPlayerHooks.length - 1; i >= 0; i--)
+            beforeRespawnPlayerHooks[i].beforeRespawnPlayer();
 
         if (overrideRespawnPlayerHooks != null)
             overrideRespawnPlayerHooks[overrideRespawnPlayerHooks.length - 1].respawnPlayer();
@@ -7911,9 +7790,8 @@ public final class ClientPlayerAPI {
         if (overrideRespawnPlayerHooks == null) return overWriter;
 
         for (int i = 0; i < overrideRespawnPlayerHooks.length; i++)
-            if (overrideRespawnPlayerHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideRespawnPlayerHooks[i - 1];
+            if (overrideRespawnPlayerHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideRespawnPlayerHooks[i - 1];
 
         return overWriter;
     }
@@ -7930,10 +7808,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeRespawnPlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeRespawnPlayerInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideRespawnPlayerSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideRespawnPlayerInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideRespawnPlayerSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideRespawnPlayerInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterRespawnPlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterRespawnPlayerInferiors = new Hashtable<String, String[]>(0);
 
@@ -7958,9 +7836,8 @@ public final class ClientPlayerAPI {
         if (overrideSetDeadHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSetDeadHooks.length; i++)
-            if (overrideSetDeadHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSetDeadHooks[i - 1];
+            if (overrideSetDeadHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSetDeadHooks[i - 1];
 
         return overWriter;
     }
@@ -7990,26 +7867,23 @@ public final class ClientPlayerAPI {
     }
 
     private void setPlayerSPHealth(float paramFloat) {
-        if (beforeSetPlayerSPHealthHooks != null)
-            for (int i = beforeSetPlayerSPHealthHooks.length - 1; i >= 0; i--)
-                beforeSetPlayerSPHealthHooks[i].beforeSetPlayerSPHealth(paramFloat);
+        if (beforeSetPlayerSPHealthHooks != null) for (int i = beforeSetPlayerSPHealthHooks.length - 1; i >= 0; i--)
+            beforeSetPlayerSPHealthHooks[i].beforeSetPlayerSPHealth(paramFloat);
 
         if (overrideSetPlayerSPHealthHooks != null)
             overrideSetPlayerSPHealthHooks[overrideSetPlayerSPHealthHooks.length - 1].setPlayerSPHealth(paramFloat);
         else player.localSetPlayerSPHealth(paramFloat);
 
-        if (afterSetPlayerSPHealthHooks != null)
-            for (int i = 0; i < afterSetPlayerSPHealthHooks.length; i++)
-                afterSetPlayerSPHealthHooks[i].afterSetPlayerSPHealth(paramFloat);
+        if (afterSetPlayerSPHealthHooks != null) for (int i = 0; i < afterSetPlayerSPHealthHooks.length; i++)
+            afterSetPlayerSPHealthHooks[i].afterSetPlayerSPHealth(paramFloat);
     }
 
     protected ClientPlayerBase GetOverwrittenSetPlayerSPHealth(ClientPlayerBase overWriter) {
         if (overrideSetPlayerSPHealthHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSetPlayerSPHealthHooks.length; i++)
-            if (overrideSetPlayerSPHealthHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSetPlayerSPHealthHooks[i - 1];
+            if (overrideSetPlayerSPHealthHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSetPlayerSPHealthHooks[i - 1];
 
         return overWriter;
     }
@@ -8024,57 +7898,49 @@ public final class ClientPlayerAPI {
 
     public boolean isSetPlayerSPHealthModded;
 
-    private static final Map<String, String[]> allBaseBeforeSetPlayerSPHealthSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeSetPlayerSPHealthInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetPlayerSPHealthSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetPlayerSPHealthInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterSetPlayerSPHealthSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterSetPlayerSPHealthInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeSetPlayerSPHealthSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeSetPlayerSPHealthInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSetPlayerSPHealthSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSetPlayerSPHealthInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterSetPlayerSPHealthSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterSetPlayerSPHealthInferiors = new Hashtable<String, String[]>(
+            0);
 
-    public static void setPositionAndRotation(
-            IClientPlayerAPI target,
-            double paramDouble1,
-            double paramDouble2,
-            double paramDouble3,
-            float paramFloat1,
-            float paramFloat2) {
+    public static void setPositionAndRotation(IClientPlayerAPI target, double paramDouble1, double paramDouble2,
+            double paramDouble3, float paramFloat1, float paramFloat2) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isSetPositionAndRotationModded)
             clientPlayerAPI.setPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
         else target.localSetPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
     }
 
-    private void setPositionAndRotation(
-            double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {
+    private void setPositionAndRotation(double paramDouble1, double paramDouble2, double paramDouble3,
+            float paramFloat1, float paramFloat2) {
         if (beforeSetPositionAndRotationHooks != null)
-            for (int i = beforeSetPositionAndRotationHooks.length - 1; i >= 0; i--)
-                beforeSetPositionAndRotationHooks[i].beforeSetPositionAndRotation(
-                        paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
+            for (int i = beforeSetPositionAndRotationHooks.length - 1; i >= 0; i--) beforeSetPositionAndRotationHooks[i]
+                    .beforeSetPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
 
         if (overrideSetPositionAndRotationHooks != null)
-            overrideSetPositionAndRotationHooks[overrideSetPositionAndRotationHooks.length - 1].setPositionAndRotation(
-                    paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
+            overrideSetPositionAndRotationHooks[overrideSetPositionAndRotationHooks.length - 1]
+                    .setPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
         else player.localSetPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
 
         if (afterSetPositionAndRotationHooks != null)
-            for (int i = 0; i < afterSetPositionAndRotationHooks.length; i++)
-                afterSetPositionAndRotationHooks[i].afterSetPositionAndRotation(
-                        paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
+            for (int i = 0; i < afterSetPositionAndRotationHooks.length; i++) afterSetPositionAndRotationHooks[i]
+                    .afterSetPositionAndRotation(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
     }
 
     protected ClientPlayerBase GetOverwrittenSetPositionAndRotation(ClientPlayerBase overWriter) {
         if (overrideSetPositionAndRotationHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSetPositionAndRotationHooks.length; i++)
-            if (overrideSetPositionAndRotationHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSetPositionAndRotationHooks[i - 1];
+            if (overrideSetPositionAndRotationHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSetPositionAndRotationHooks[i - 1];
 
         return overWriter;
     }
@@ -8089,18 +7955,18 @@ public final class ClientPlayerAPI {
 
     public boolean isSetPositionAndRotationModded;
 
-    private static final Map<String, String[]> allBaseBeforeSetPositionAndRotationSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeSetPositionAndRotationInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetPositionAndRotationSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetPositionAndRotationInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterSetPositionAndRotationSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterSetPositionAndRotationInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeSetPositionAndRotationSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeSetPositionAndRotationInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSetPositionAndRotationSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSetPositionAndRotationInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterSetPositionAndRotationSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterSetPositionAndRotationInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void setSneaking(IClientPlayerAPI target, boolean paramBoolean) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -8109,26 +7975,23 @@ public final class ClientPlayerAPI {
     }
 
     private void setSneaking(boolean paramBoolean) {
-        if (beforeSetSneakingHooks != null)
-            for (int i = beforeSetSneakingHooks.length - 1; i >= 0; i--)
-                beforeSetSneakingHooks[i].beforeSetSneaking(paramBoolean);
+        if (beforeSetSneakingHooks != null) for (int i = beforeSetSneakingHooks.length - 1; i >= 0; i--)
+            beforeSetSneakingHooks[i].beforeSetSneaking(paramBoolean);
 
         if (overrideSetSneakingHooks != null)
             overrideSetSneakingHooks[overrideSetSneakingHooks.length - 1].setSneaking(paramBoolean);
         else player.localSetSneaking(paramBoolean);
 
-        if (afterSetSneakingHooks != null)
-            for (int i = 0; i < afterSetSneakingHooks.length; i++)
-                afterSetSneakingHooks[i].afterSetSneaking(paramBoolean);
+        if (afterSetSneakingHooks != null) for (int i = 0; i < afterSetSneakingHooks.length; i++)
+            afterSetSneakingHooks[i].afterSetSneaking(paramBoolean);
     }
 
     protected ClientPlayerBase GetOverwrittenSetSneaking(ClientPlayerBase overWriter) {
         if (overrideSetSneakingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSetSneakingHooks.length; i++)
-            if (overrideSetSneakingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSetSneakingHooks[i - 1];
+            if (overrideSetSneakingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSetSneakingHooks[i - 1];
 
         return overWriter;
     }
@@ -8157,26 +8020,23 @@ public final class ClientPlayerAPI {
     }
 
     private void setSprinting(boolean paramBoolean) {
-        if (beforeSetSprintingHooks != null)
-            for (int i = beforeSetSprintingHooks.length - 1; i >= 0; i--)
-                beforeSetSprintingHooks[i].beforeSetSprinting(paramBoolean);
+        if (beforeSetSprintingHooks != null) for (int i = beforeSetSprintingHooks.length - 1; i >= 0; i--)
+            beforeSetSprintingHooks[i].beforeSetSprinting(paramBoolean);
 
         if (overrideSetSprintingHooks != null)
             overrideSetSprintingHooks[overrideSetSprintingHooks.length - 1].setSprinting(paramBoolean);
         else player.localSetSprinting(paramBoolean);
 
-        if (afterSetSprintingHooks != null)
-            for (int i = 0; i < afterSetSprintingHooks.length; i++)
-                afterSetSprintingHooks[i].afterSetSprinting(paramBoolean);
+        if (afterSetSprintingHooks != null) for (int i = 0; i < afterSetSprintingHooks.length; i++)
+            afterSetSprintingHooks[i].afterSetSprinting(paramBoolean);
     }
 
     protected ClientPlayerBase GetOverwrittenSetSprinting(ClientPlayerBase overWriter) {
         if (overrideSetSprintingHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSetSprintingHooks.length; i++)
-            if (overrideSetSprintingHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSetSprintingHooks[i - 1];
+            if (overrideSetSprintingHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSetSprintingHooks[i - 1];
 
         return overWriter;
     }
@@ -8193,15 +8053,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeSetSprintingSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeSetSprintingInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetSprintingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSetSprintingInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideSetSprintingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSetSprintingInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterSetSprintingSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterSetSprintingInferiors = new Hashtable<String, String[]>(0);
 
-    public static net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(
-            IClientPlayerAPI target, int paramInt1, int paramInt2, int paramInt3) {
+    public static net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(IClientPlayerAPI target,
+            int paramInt1, int paramInt2, int paramInt3) {
         net.minecraft.entity.player.EntityPlayer.EnumStatus _result;
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isSleepInBedAtModded)
@@ -8210,21 +8070,18 @@ public final class ClientPlayerAPI {
         return _result;
     }
 
-    private net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(
-            int paramInt1, int paramInt2, int paramInt3) {
-        if (beforeSleepInBedAtHooks != null)
-            for (int i = beforeSleepInBedAtHooks.length - 1; i >= 0; i--)
-                beforeSleepInBedAtHooks[i].beforeSleepInBedAt(paramInt1, paramInt2, paramInt3);
+    private net.minecraft.entity.player.EntityPlayer.EnumStatus sleepInBedAt(int paramInt1, int paramInt2,
+            int paramInt3) {
+        if (beforeSleepInBedAtHooks != null) for (int i = beforeSleepInBedAtHooks.length - 1; i >= 0; i--)
+            beforeSleepInBedAtHooks[i].beforeSleepInBedAt(paramInt1, paramInt2, paramInt3);
 
         net.minecraft.entity.player.EntityPlayer.EnumStatus _result;
-        if (overrideSleepInBedAtHooks != null)
-            _result = overrideSleepInBedAtHooks[overrideSleepInBedAtHooks.length - 1].sleepInBedAt(
-                    paramInt1, paramInt2, paramInt3);
+        if (overrideSleepInBedAtHooks != null) _result = overrideSleepInBedAtHooks[overrideSleepInBedAtHooks.length - 1]
+                .sleepInBedAt(paramInt1, paramInt2, paramInt3);
         else _result = player.localSleepInBedAt(paramInt1, paramInt2, paramInt3);
 
-        if (afterSleepInBedAtHooks != null)
-            for (int i = 0; i < afterSleepInBedAtHooks.length; i++)
-                afterSleepInBedAtHooks[i].afterSleepInBedAt(paramInt1, paramInt2, paramInt3);
+        if (afterSleepInBedAtHooks != null) for (int i = 0; i < afterSleepInBedAtHooks.length; i++)
+            afterSleepInBedAtHooks[i].afterSleepInBedAt(paramInt1, paramInt2, paramInt3);
 
         return _result;
     }
@@ -8233,9 +8090,8 @@ public final class ClientPlayerAPI {
         if (overrideSleepInBedAtHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSleepInBedAtHooks.length; i++)
-            if (overrideSleepInBedAtHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSleepInBedAtHooks[i - 1];
+            if (overrideSleepInBedAtHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSleepInBedAtHooks[i - 1];
 
         return overWriter;
     }
@@ -8252,10 +8108,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeSleepInBedAtSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeSleepInBedAtInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSleepInBedAtSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideSleepInBedAtInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideSleepInBedAtSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideSleepInBedAtInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterSleepInBedAtSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterSleepInBedAtInferiors = new Hashtable<String, String[]>(0);
 
@@ -8280,9 +8136,8 @@ public final class ClientPlayerAPI {
         if (overrideSwingItemHooks == null) return overWriter;
 
         for (int i = 0; i < overrideSwingItemHooks.length; i++)
-            if (overrideSwingItemHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideSwingItemHooks[i - 1];
+            if (overrideSwingItemHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideSwingItemHooks[i - 1];
 
         return overWriter;
     }
@@ -8330,9 +8185,8 @@ public final class ClientPlayerAPI {
         if (overrideUpdateEntityActionStateHooks == null) return overWriter;
 
         for (int i = 0; i < overrideUpdateEntityActionStateHooks.length; i++)
-            if (overrideUpdateEntityActionStateHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideUpdateEntityActionStateHooks[i - 1];
+            if (overrideUpdateEntityActionStateHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideUpdateEntityActionStateHooks[i - 1];
 
         return overWriter;
     }
@@ -8347,18 +8201,18 @@ public final class ClientPlayerAPI {
 
     public boolean isUpdateEntityActionStateModded;
 
-    private static final Map<String, String[]> allBaseBeforeUpdateEntityActionStateSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeUpdateEntityActionStateInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideUpdateEntityActionStateSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideUpdateEntityActionStateInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterUpdateEntityActionStateSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterUpdateEntityActionStateInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeUpdateEntityActionStateSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeUpdateEntityActionStateInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideUpdateEntityActionStateSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideUpdateEntityActionStateInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterUpdateEntityActionStateSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterUpdateEntityActionStateInferiors = new Hashtable<String, String[]>(
+            0);
 
     public static void updateRidden(IClientPlayerAPI target) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
@@ -8367,9 +8221,8 @@ public final class ClientPlayerAPI {
     }
 
     private void updateRidden() {
-        if (beforeUpdateRiddenHooks != null)
-            for (int i = beforeUpdateRiddenHooks.length - 1; i >= 0; i--)
-                beforeUpdateRiddenHooks[i].beforeUpdateRidden();
+        if (beforeUpdateRiddenHooks != null) for (int i = beforeUpdateRiddenHooks.length - 1; i >= 0; i--)
+            beforeUpdateRiddenHooks[i].beforeUpdateRidden();
 
         if (overrideUpdateRiddenHooks != null)
             overrideUpdateRiddenHooks[overrideUpdateRiddenHooks.length - 1].updateRidden();
@@ -8383,9 +8236,8 @@ public final class ClientPlayerAPI {
         if (overrideUpdateRiddenHooks == null) return overWriter;
 
         for (int i = 0; i < overrideUpdateRiddenHooks.length; i++)
-            if (overrideUpdateRiddenHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideUpdateRiddenHooks[i - 1];
+            if (overrideUpdateRiddenHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideUpdateRiddenHooks[i - 1];
 
         return overWriter;
     }
@@ -8402,15 +8254,15 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeUpdateRiddenSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeUpdateRiddenInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideUpdateRiddenSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideUpdateRiddenInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideUpdateRiddenSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideUpdateRiddenInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterUpdateRiddenSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterUpdateRiddenInferiors = new Hashtable<String, String[]>(0);
 
-    public static void wakeUpPlayer(
-            IClientPlayerAPI target, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3) {
+    public static void wakeUpPlayer(IClientPlayerAPI target, boolean paramBoolean1, boolean paramBoolean2,
+            boolean paramBoolean3) {
         ClientPlayerAPI clientPlayerAPI = target.getClientPlayerAPI();
         if (clientPlayerAPI != null && clientPlayerAPI.isWakeUpPlayerModded)
             clientPlayerAPI.wakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
@@ -8418,27 +8270,23 @@ public final class ClientPlayerAPI {
     }
 
     private void wakeUpPlayer(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3) {
-        if (beforeWakeUpPlayerHooks != null)
-            for (int i = beforeWakeUpPlayerHooks.length - 1; i >= 0; i--)
-                beforeWakeUpPlayerHooks[i].beforeWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
+        if (beforeWakeUpPlayerHooks != null) for (int i = beforeWakeUpPlayerHooks.length - 1; i >= 0; i--)
+            beforeWakeUpPlayerHooks[i].beforeWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
 
-        if (overrideWakeUpPlayerHooks != null)
-            overrideWakeUpPlayerHooks[overrideWakeUpPlayerHooks.length - 1].wakeUpPlayer(
-                    paramBoolean1, paramBoolean2, paramBoolean3);
+        if (overrideWakeUpPlayerHooks != null) overrideWakeUpPlayerHooks[overrideWakeUpPlayerHooks.length - 1]
+                .wakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
         else player.localWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
 
-        if (afterWakeUpPlayerHooks != null)
-            for (int i = 0; i < afterWakeUpPlayerHooks.length; i++)
-                afterWakeUpPlayerHooks[i].afterWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
+        if (afterWakeUpPlayerHooks != null) for (int i = 0; i < afterWakeUpPlayerHooks.length; i++)
+            afterWakeUpPlayerHooks[i].afterWakeUpPlayer(paramBoolean1, paramBoolean2, paramBoolean3);
     }
 
     protected ClientPlayerBase GetOverwrittenWakeUpPlayer(ClientPlayerBase overWriter) {
         if (overrideWakeUpPlayerHooks == null) return overWriter;
 
         for (int i = 0; i < overrideWakeUpPlayerHooks.length; i++)
-            if (overrideWakeUpPlayerHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideWakeUpPlayerHooks[i - 1];
+            if (overrideWakeUpPlayerHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideWakeUpPlayerHooks[i - 1];
 
         return overWriter;
     }
@@ -8455,10 +8303,10 @@ public final class ClientPlayerAPI {
 
     private static final Map<String, String[]> allBaseBeforeWakeUpPlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseBeforeWakeUpPlayerInferiors = new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideWakeUpPlayerSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideWakeUpPlayerInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseOverrideWakeUpPlayerSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideWakeUpPlayerInferiors = new Hashtable<String, String[]>(
+            0);
     private static final Map<String, String[]> allBaseAfterWakeUpPlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterWakeUpPlayerInferiors = new Hashtable<String, String[]>(0);
 
@@ -8470,27 +8318,24 @@ public final class ClientPlayerAPI {
     }
 
     private void writeEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
-        if (beforeWriteEntityToNBTHooks != null)
-            for (int i = beforeWriteEntityToNBTHooks.length - 1; i >= 0; i--)
-                beforeWriteEntityToNBTHooks[i].beforeWriteEntityToNBT(paramNBTTagCompound);
+        if (beforeWriteEntityToNBTHooks != null) for (int i = beforeWriteEntityToNBTHooks.length - 1; i >= 0; i--)
+            beforeWriteEntityToNBTHooks[i].beforeWriteEntityToNBT(paramNBTTagCompound);
 
         if (overrideWriteEntityToNBTHooks != null)
-            overrideWriteEntityToNBTHooks[overrideWriteEntityToNBTHooks.length - 1].writeEntityToNBT(
-                    paramNBTTagCompound);
+            overrideWriteEntityToNBTHooks[overrideWriteEntityToNBTHooks.length - 1]
+                    .writeEntityToNBT(paramNBTTagCompound);
         else player.localWriteEntityToNBT(paramNBTTagCompound);
 
-        if (afterWriteEntityToNBTHooks != null)
-            for (int i = 0; i < afterWriteEntityToNBTHooks.length; i++)
-                afterWriteEntityToNBTHooks[i].afterWriteEntityToNBT(paramNBTTagCompound);
+        if (afterWriteEntityToNBTHooks != null) for (int i = 0; i < afterWriteEntityToNBTHooks.length; i++)
+            afterWriteEntityToNBTHooks[i].afterWriteEntityToNBT(paramNBTTagCompound);
     }
 
     protected ClientPlayerBase GetOverwrittenWriteEntityToNBT(ClientPlayerBase overWriter) {
         if (overrideWriteEntityToNBTHooks == null) return overWriter;
 
         for (int i = 0; i < overrideWriteEntityToNBTHooks.length; i++)
-            if (overrideWriteEntityToNBTHooks[i] == overWriter)
-                if (i == 0) return null;
-                else return overrideWriteEntityToNBTHooks[i - 1];
+            if (overrideWriteEntityToNBTHooks[i] == overWriter) if (i == 0) return null;
+            else return overrideWriteEntityToNBTHooks[i - 1];
 
         return overWriter;
     }
@@ -8505,18 +8350,18 @@ public final class ClientPlayerAPI {
 
     public boolean isWriteEntityToNBTModded;
 
-    private static final Map<String, String[]> allBaseBeforeWriteEntityToNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeWriteEntityToNBTInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideWriteEntityToNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseOverrideWriteEntityToNBTInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterWriteEntityToNBTSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterWriteEntityToNBTInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeWriteEntityToNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeWriteEntityToNBTInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideWriteEntityToNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseOverrideWriteEntityToNBTInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterWriteEntityToNBTSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterWriteEntityToNBTInferiors = new Hashtable<String, String[]>(
+            0);
 
     protected final IClientPlayerAPI player;
 
@@ -8524,15 +8369,11 @@ public final class ClientPlayerAPI {
     private static final Map<String, String> keysToVirtualIds = new HashMap<String, String>();
     private static final Set<Class<?>> dynamicTypes = new HashSet<Class<?>>();
 
-    private static final Map<Class<?>, Map<String, Method>> virtualDynamicHookMethods =
-            new HashMap<Class<?>, Map<String, Method>>();
+    private static final Map<Class<?>, Map<String, Method>> virtualDynamicHookMethods = new HashMap<Class<?>, Map<String, Method>>();
 
-    private static final Map<Class<?>, Map<String, Method>> beforeDynamicHookMethods =
-            new HashMap<Class<?>, Map<String, Method>>();
-    private static final Map<Class<?>, Map<String, Method>> overrideDynamicHookMethods =
-            new HashMap<Class<?>, Map<String, Method>>();
-    private static final Map<Class<?>, Map<String, Method>> afterDynamicHookMethods =
-            new HashMap<Class<?>, Map<String, Method>>();
+    private static final Map<Class<?>, Map<String, Method>> beforeDynamicHookMethods = new HashMap<Class<?>, Map<String, Method>>();
+    private static final Map<Class<?>, Map<String, Method>> overrideDynamicHookMethods = new HashMap<Class<?>, Map<String, Method>>();
+    private static final Map<Class<?>, Map<String, Method>> afterDynamicHookMethods = new HashMap<Class<?>, Map<String, Method>>();
 
     private static final List<String> beforeLocalConstructingHookTypes = new LinkedList<String>();
     private static final List<String> afterLocalConstructingHookTypes = new LinkedList<String>();
@@ -8551,27 +8392,27 @@ public final class ClientPlayerAPI {
     private static final Map<String, Constructor<?>> allBaseConstructors = new Hashtable<String, Constructor<?>>();
     private static final Set<String> unmodifiableAllIds = Collections.unmodifiableSet(allBaseConstructors.keySet());
 
-    private static final Map<String, String[]> allBaseBeforeLocalConstructingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseBeforeLocalConstructingInferiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterLocalConstructingSuperiors =
-            new Hashtable<String, String[]>(0);
-    private static final Map<String, String[]> allBaseAfterLocalConstructingInferiors =
-            new Hashtable<String, String[]>(0);
+    private static final Map<String, String[]> allBaseBeforeLocalConstructingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseBeforeLocalConstructingInferiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterLocalConstructingSuperiors = new Hashtable<String, String[]>(
+            0);
+    private static final Map<String, String[]> allBaseAfterLocalConstructingInferiors = new Hashtable<String, String[]>(
+            0);
 
-    private static final Map<String, Map<String, String[]>> allBaseBeforeDynamicSuperiors =
-            new Hashtable<String, Map<String, String[]>>(0);
-    private static final Map<String, Map<String, String[]>> allBaseBeforeDynamicInferiors =
-            new Hashtable<String, Map<String, String[]>>(0);
-    private static final Map<String, Map<String, String[]>> allBaseOverrideDynamicSuperiors =
-            new Hashtable<String, Map<String, String[]>>(0);
-    private static final Map<String, Map<String, String[]>> allBaseOverrideDynamicInferiors =
-            new Hashtable<String, Map<String, String[]>>(0);
-    private static final Map<String, Map<String, String[]>> allBaseAfterDynamicSuperiors =
-            new Hashtable<String, Map<String, String[]>>(0);
-    private static final Map<String, Map<String, String[]>> allBaseAfterDynamicInferiors =
-            new Hashtable<String, Map<String, String[]>>(0);
+    private static final Map<String, Map<String, String[]>> allBaseBeforeDynamicSuperiors = new Hashtable<String, Map<String, String[]>>(
+            0);
+    private static final Map<String, Map<String, String[]>> allBaseBeforeDynamicInferiors = new Hashtable<String, Map<String, String[]>>(
+            0);
+    private static final Map<String, Map<String, String[]>> allBaseOverrideDynamicSuperiors = new Hashtable<String, Map<String, String[]>>(
+            0);
+    private static final Map<String, Map<String, String[]>> allBaseOverrideDynamicInferiors = new Hashtable<String, Map<String, String[]>>(
+            0);
+    private static final Map<String, Map<String, String[]>> allBaseAfterDynamicSuperiors = new Hashtable<String, Map<String, String[]>>(
+            0);
+    private static final Map<String, Map<String, String[]>> allBaseAfterDynamicInferiors = new Hashtable<String, Map<String, String[]>>(
+            0);
 
     private static boolean initialized = false;
 }

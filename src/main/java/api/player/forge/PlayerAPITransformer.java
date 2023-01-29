@@ -18,11 +18,13 @@
 
 package api.player.forge;
 
-import api.player.client.*;
-import api.player.server.*;
 import net.minecraft.launchwrapper.*;
 
+import api.player.client.*;
+import api.player.server.*;
+
 public class PlayerAPITransformer implements IClassTransformer {
+
     public byte[] transform(String name, String transformedName, byte[] bytes) {
         if (transformedName.equals(ClientPlayerClassVisitor.targetClassName))
             return ClientPlayerClassVisitor.transform(bytes, PlayerAPIPlugin.isObfuscated);

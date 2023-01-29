@@ -18,18 +18,20 @@
 
 package api.player.forge;
 
-import cpw.mods.fml.relauncher.*;
 import java.util.*;
+
+import cpw.mods.fml.relauncher.*;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions("api.player.forge.*")
 public class PlayerAPIPlugin implements IFMLLoadingPlugin {
+
     public static String Version = "GRADLETOKEN_VERSION";
 
     public static boolean isObfuscated;
 
     public String[] getASMTransformerClass() {
-        return new String[] {"api.player.forge.PlayerAPITransformer"};
+        return new String[] { "api.player.forge.PlayerAPITransformer" };
     }
 
     public String getModContainerClass() {

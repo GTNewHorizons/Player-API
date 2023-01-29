@@ -21,6 +21,7 @@ package api.player.server;
 import java.util.*;
 
 public final class ServerPlayerBaseSorting {
+
     private String[] beforeLocalConstructingSuperiors = null;
     private String[] beforeLocalConstructingInferiors = null;
     private String[] afterLocalConstructingSuperiors = null;
