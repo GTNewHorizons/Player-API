@@ -18,10 +18,10 @@
 
 package api.player.forge;
 
-import net.minecraft.launchwrapper.*;
+import net.minecraft.launchwrapper.IClassTransformer;
 
-import api.player.client.*;
-import api.player.server.*;
+import api.player.client.ClientPlayerClassVisitor;
+import api.player.server.ServerPlayerClassVisitor;
 
 public class PlayerAPITransformer implements IClassTransformer {
 

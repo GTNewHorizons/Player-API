@@ -18,10 +18,13 @@
 
 package api.player.forge;
 
-import java.util.*;
+import java.util.Arrays;
 
-import com.google.common.eventbus.*;
-import cpw.mods.fml.common.*;
+import com.google.common.eventbus.EventBus;
+
+import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.ModMetadata;
 
 public class PlayerAPIContainer extends DummyModContainer {
 

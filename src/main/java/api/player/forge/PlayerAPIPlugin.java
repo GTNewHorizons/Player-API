@@ -18,10 +18,10 @@
 
 package api.player.forge;
 
-import java.util.*;
+import java.util.Map;
 
 import api.player.Tags;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions("api.player.forge.*")
