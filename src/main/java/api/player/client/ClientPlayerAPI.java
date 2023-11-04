@@ -33,7 +33,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class ClientPlayerAPI {
 
@@ -41,11 +43,10 @@ public final class ClientPlayerAPI {
     private static final Class<?>[] Classes = new Class[] { ClientPlayerAPI.class, String.class };
 
     private static boolean isCreated;
-    private static final Logger logger = Logger.getLogger("ClientPlayerAPI");
+    private static final Logger logger = LogManager.getLogger("ClientPlayerAPI");
 
     private static void log(String text) {
-        System.out.println(text);
-        logger.fine(text);
+        logger.debug(text);
     }
 
     public static void register(String id, Class<?> baseClass) {
@@ -103,9 +104,7 @@ public final class ClientPlayerAPI {
                         targetClassFileName,
                         stringClassName);
 
-                for (String errorMessagePart : errorMessageParts) logger.severe(errorMessagePart);
-
-                for (String errorMessagePart : errorMessageParts) System.err.println(errorMessagePart);
+                for (String errorMessagePart : errorMessageParts) logger.error(errorMessagePart);
 
                 String errorMessage = "\n\n";
                 for (String errorMessagePart : errorMessageParts) errorMessage += "\t" + errorMessagePart + "\n";
@@ -1954,8 +1953,7 @@ public final class ClientPlayerAPI {
         for (IClientPlayerAPI instance : getAllInstancesList())
             instance.getClientPlayerAPI().attachClientPlayerBase(id);
 
-        System.out.println("Client Player: registered " + id);
-        logger.fine("Client Player: registered class '" + baseClass.getName() + "' with id '" + id + "'");
+        logger.debug("Client Player: registered class '" + baseClass.getName() + "' with id '" + id + "'");
 
         initialized = false;
     }
