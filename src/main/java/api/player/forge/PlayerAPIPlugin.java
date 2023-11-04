@@ -20,13 +20,14 @@ package api.player.forge;
 
 import java.util.*;
 
+import api.player.Tags;
 import cpw.mods.fml.relauncher.*;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions("api.player.forge.*")
 public class PlayerAPIPlugin implements IFMLLoadingPlugin {
 
-    public static String Version = "GRADLETOKEN_VERSION";
+    public static String Version = Tags.VERSION;
 
     public static boolean isObfuscated;
 
