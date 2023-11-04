@@ -18,9 +18,11 @@
 
 package api.player.client;
 
+import net.minecraft.client.entity.EntityPlayerSP;
+
 public interface IClientPlayerAPI extends IClientPlayer {
 
     ClientPlayerAPI getClientPlayerAPI();
 
-    net.minecraft.client.entity.EntityPlayerSP getEntityPlayerSP();
+    EntityPlayerSP getEntityPlayerSP();
 }

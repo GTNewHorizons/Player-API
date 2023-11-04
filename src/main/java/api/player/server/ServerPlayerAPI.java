@@ -34,8 +34,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ItemInWorldManager;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.DamageSource;
+import net.minecraft.world.WorldServer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.mojang.authlib.GameProfile;
+
+import api.player.forge.PlayerAPIPlugin;
 
 public final class ServerPlayerAPI {
 
@@ -67,19 +89,18 @@ public final class ServerPlayerAPI {
     private static void register(Class<?> baseClass, String id, ServerPlayerBaseSorting baseSorting) {
         if (!isCreated) {
             try {
-                Method mandatory = net.minecraft.entity.player.EntityPlayerMP.class
-                        .getMethod("getServerPlayerBase", String.class);
+                Method mandatory = EntityPlayerMP.class.getMethod("getServerPlayerBase", String.class);
                 if (mandatory.getReturnType() != ServerPlayerBase.class) throw new NoSuchMethodException(
                         ServerPlayerBase.class.getName() + " "
-                                + net.minecraft.entity.player.EntityPlayerMP.class.getName()
+                                + EntityPlayerMP.class.getName()
                                 + ".getServerPlayerBase("
                                 + String.class.getName()
                                 + ")");
             } catch (NoSuchMethodException exception) {
                 String[] errorMessageParts = new String[] { "========================================",
-                        "The API \"Server Player\" version " + api.player.forge.PlayerAPIPlugin.Version
+                        "The API \"Server Player\" version " + PlayerAPIPlugin.Version
                                 + " of the mod \"Player API Core "
-                                + api.player.forge.PlayerAPIPlugin.Version
+                                + PlayerAPIPlugin.Version
                                 + "\" can not be created!",
                         "----------------------------------------",
                         "Mandatory member method \"{0} getServerPlayerBase({3})\" not found in class \"{1}\".",
@@ -93,7 +114,7 @@ public final class ServerPlayerAPI {
                         "========================================" };
 
                 String baseEntityPlayerMPClassName = ServerPlayerBase.class.getName();
-                String targetClassName = net.minecraft.entity.player.EntityPlayerMP.class.getName();
+                String targetClassName = EntityPlayerMP.class.getName();
                 String targetClassFileName = targetClassName.replace(".", File.separator);
                 String stringClassName = String.class.getName();
 
@@ -112,7 +133,7 @@ public final class ServerPlayerAPI {
                 throw new RuntimeException(errorMessage, exception);
             }
 
-            log("Server Player " + api.player.forge.PlayerAPIPlugin.Version + " Created");
+            log("Server Player " + PlayerAPIPlugin.Version + " Created");
             isCreated = true;
         }
 
@@ -834,19 +855,19 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeLocalConstructingHookTypes,
                 "beforeLocalConstructing",
-                net.minecraft.server.MinecraftServer.class,
-                net.minecraft.world.WorldServer.class,
-                com.mojang.authlib.GameProfile.class,
-                net.minecraft.server.management.ItemInWorldManager.class);
+                MinecraftServer.class,
+                WorldServer.class,
+                GameProfile.class,
+                ItemInWorldManager.class);
         addMethod(
                 id,
                 baseClass,
                 afterLocalConstructingHookTypes,
                 "afterLocalConstructing",
-                net.minecraft.server.MinecraftServer.class,
-                net.minecraft.world.WorldServer.class,
-                com.mojang.authlib.GameProfile.class,
-                net.minecraft.server.management.ItemInWorldManager.class);
+                MinecraftServer.class,
+                WorldServer.class,
+                GameProfile.class,
+                ItemInWorldManager.class);
 
         addMethod(id, baseClass, beforeAddExhaustionHookTypes, "beforeAddExhaustion", float.class);
         addMethod(id, baseClass, overrideAddExhaustionHookTypes, "addExhaustion", float.class);
@@ -890,21 +911,21 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeAttackEntityFromHookTypes,
                 "beforeAttackEntityFrom",
-                net.minecraft.util.DamageSource.class,
+                DamageSource.class,
                 float.class);
         addMethod(
                 id,
                 baseClass,
                 overrideAttackEntityFromHookTypes,
                 "attackEntityFrom",
-                net.minecraft.util.DamageSource.class,
+                DamageSource.class,
                 float.class);
         addMethod(
                 id,
                 baseClass,
                 afterAttackEntityFromHookTypes,
                 "afterAttackEntityFrom",
-                net.minecraft.util.DamageSource.class,
+                DamageSource.class,
                 float.class);
 
         addMethod(
@@ -912,37 +933,27 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeAttackTargetEntityWithCurrentItemHookTypes,
                 "beforeAttackTargetEntityWithCurrentItem",
-                net.minecraft.entity.Entity.class);
+                Entity.class);
         addMethod(
                 id,
                 baseClass,
                 overrideAttackTargetEntityWithCurrentItemHookTypes,
                 "attackTargetEntityWithCurrentItem",
-                net.minecraft.entity.Entity.class);
+                Entity.class);
         addMethod(
                 id,
                 baseClass,
                 afterAttackTargetEntityWithCurrentItemHookTypes,
                 "afterAttackTargetEntityWithCurrentItem",
-                net.minecraft.entity.Entity.class);
+                Entity.class);
 
         addMethod(id, baseClass, beforeCanBreatheUnderwaterHookTypes, "beforeCanBreatheUnderwater");
         addMethod(id, baseClass, overrideCanBreatheUnderwaterHookTypes, "canBreatheUnderwater");
         addMethod(id, baseClass, afterCanBreatheUnderwaterHookTypes, "afterCanBreatheUnderwater");
 
-        addMethod(
-                id,
-                baseClass,
-                beforeCanHarvestBlockHookTypes,
-                "beforeCanHarvestBlock",
-                net.minecraft.block.Block.class);
-        addMethod(id, baseClass, overrideCanHarvestBlockHookTypes, "canHarvestBlock", net.minecraft.block.Block.class);
-        addMethod(
-                id,
-                baseClass,
-                afterCanHarvestBlockHookTypes,
-                "afterCanHarvestBlock",
-                net.minecraft.block.Block.class);
+        addMethod(id, baseClass, beforeCanHarvestBlockHookTypes, "beforeCanHarvestBlock", Block.class);
+        addMethod(id, baseClass, overrideCanHarvestBlockHookTypes, "canHarvestBlock", Block.class);
+        addMethod(id, baseClass, afterCanHarvestBlockHookTypes, "afterCanHarvestBlock", Block.class);
 
         addMethod(
                 id,
@@ -953,7 +964,7 @@ public final class ServerPlayerAPI {
                 int.class,
                 int.class,
                 int.class,
-                net.minecraft.item.ItemStack.class);
+                ItemStack.class);
         addMethod(
                 id,
                 baseClass,
@@ -963,7 +974,7 @@ public final class ServerPlayerAPI {
                 int.class,
                 int.class,
                 int.class,
-                net.minecraft.item.ItemStack.class);
+                ItemStack.class);
         addMethod(
                 id,
                 baseClass,
@@ -973,112 +984,46 @@ public final class ServerPlayerAPI {
                 int.class,
                 int.class,
                 int.class,
-                net.minecraft.item.ItemStack.class);
+                ItemStack.class);
 
         addMethod(id, baseClass, beforeCanTriggerWalkingHookTypes, "beforeCanTriggerWalking");
         addMethod(id, baseClass, overrideCanTriggerWalkingHookTypes, "canTriggerWalking");
         addMethod(id, baseClass, afterCanTriggerWalkingHookTypes, "afterCanTriggerWalking");
 
-        addMethod(
-                id,
-                baseClass,
-                beforeClonePlayerHookTypes,
-                "beforeClonePlayer",
-                net.minecraft.entity.player.EntityPlayer.class,
-                boolean.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideClonePlayerHookTypes,
-                "clonePlayer",
-                net.minecraft.entity.player.EntityPlayer.class,
-                boolean.class);
-        addMethod(
-                id,
-                baseClass,
-                afterClonePlayerHookTypes,
-                "afterClonePlayer",
-                net.minecraft.entity.player.EntityPlayer.class,
-                boolean.class);
+        addMethod(id, baseClass, beforeClonePlayerHookTypes, "beforeClonePlayer", EntityPlayer.class, boolean.class);
+        addMethod(id, baseClass, overrideClonePlayerHookTypes, "clonePlayer", EntityPlayer.class, boolean.class);
+        addMethod(id, baseClass, afterClonePlayerHookTypes, "afterClonePlayer", EntityPlayer.class, boolean.class);
 
-        addMethod(
-                id,
-                baseClass,
-                beforeDamageEntityHookTypes,
-                "beforeDamageEntity",
-                net.minecraft.util.DamageSource.class,
-                float.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideDamageEntityHookTypes,
-                "damageEntity",
-                net.minecraft.util.DamageSource.class,
-                float.class);
-        addMethod(
-                id,
-                baseClass,
-                afterDamageEntityHookTypes,
-                "afterDamageEntity",
-                net.minecraft.util.DamageSource.class,
-                float.class);
+        addMethod(id, baseClass, beforeDamageEntityHookTypes, "beforeDamageEntity", DamageSource.class, float.class);
+        addMethod(id, baseClass, overrideDamageEntityHookTypes, "damageEntity", DamageSource.class, float.class);
+        addMethod(id, baseClass, afterDamageEntityHookTypes, "afterDamageEntity", DamageSource.class, float.class);
 
-        addMethod(
-                id,
-                baseClass,
-                beforeDisplayGUIChestHookTypes,
-                "beforeDisplayGUIChest",
-                net.minecraft.inventory.IInventory.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideDisplayGUIChestHookTypes,
-                "displayGUIChest",
-                net.minecraft.inventory.IInventory.class);
-        addMethod(
-                id,
-                baseClass,
-                afterDisplayGUIChestHookTypes,
-                "afterDisplayGUIChest",
-                net.minecraft.inventory.IInventory.class);
+        addMethod(id, baseClass, beforeDisplayGUIChestHookTypes, "beforeDisplayGUIChest", IInventory.class);
+        addMethod(id, baseClass, overrideDisplayGUIChestHookTypes, "displayGUIChest", IInventory.class);
+        addMethod(id, baseClass, afterDisplayGUIChestHookTypes, "afterDisplayGUIChest", IInventory.class);
 
         addMethod(
                 id,
                 baseClass,
                 beforeDisplayGUIDispenserHookTypes,
                 "beforeDisplayGUIDispenser",
-                net.minecraft.tileentity.TileEntityDispenser.class);
+                TileEntityDispenser.class);
         addMethod(
                 id,
                 baseClass,
                 overrideDisplayGUIDispenserHookTypes,
                 "displayGUIDispenser",
-                net.minecraft.tileentity.TileEntityDispenser.class);
+                TileEntityDispenser.class);
         addMethod(
                 id,
                 baseClass,
                 afterDisplayGUIDispenserHookTypes,
                 "afterDisplayGUIDispenser",
-                net.minecraft.tileentity.TileEntityDispenser.class);
+                TileEntityDispenser.class);
 
-        addMethod(
-                id,
-                baseClass,
-                beforeDisplayGUIFurnaceHookTypes,
-                "beforeDisplayGUIFurnace",
-                net.minecraft.tileentity.TileEntityFurnace.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideDisplayGUIFurnaceHookTypes,
-                "displayGUIFurnace",
-                net.minecraft.tileentity.TileEntityFurnace.class);
-        addMethod(
-                id,
-                baseClass,
-                afterDisplayGUIFurnaceHookTypes,
-                "afterDisplayGUIFurnace",
-                net.minecraft.tileentity.TileEntityFurnace.class);
+        addMethod(id, baseClass, beforeDisplayGUIFurnaceHookTypes, "beforeDisplayGUIFurnace", TileEntityFurnace.class);
+        addMethod(id, baseClass, overrideDisplayGUIFurnaceHookTypes, "displayGUIFurnace", TileEntityFurnace.class);
+        addMethod(id, baseClass, afterDisplayGUIFurnaceHookTypes, "afterDisplayGUIFurnace", TileEntityFurnace.class);
 
         addMethod(
                 id,
@@ -1109,27 +1054,9 @@ public final class ServerPlayerAPI {
         addMethod(id, baseClass, overrideDropOneItemHookTypes, "dropOneItem", boolean.class);
         addMethod(id, baseClass, afterDropOneItemHookTypes, "afterDropOneItem", boolean.class);
 
-        addMethod(
-                id,
-                baseClass,
-                beforeDropPlayerItemHookTypes,
-                "beforeDropPlayerItem",
-                net.minecraft.item.ItemStack.class,
-                boolean.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideDropPlayerItemHookTypes,
-                "dropPlayerItem",
-                net.minecraft.item.ItemStack.class,
-                boolean.class);
-        addMethod(
-                id,
-                baseClass,
-                afterDropPlayerItemHookTypes,
-                "afterDropPlayerItem",
-                net.minecraft.item.ItemStack.class,
-                boolean.class);
+        addMethod(id, baseClass, beforeDropPlayerItemHookTypes, "beforeDropPlayerItem", ItemStack.class, boolean.class);
+        addMethod(id, baseClass, overrideDropPlayerItemHookTypes, "dropPlayerItem", ItemStack.class, boolean.class);
+        addMethod(id, baseClass, afterDropPlayerItemHookTypes, "afterDropPlayerItem", ItemStack.class, boolean.class);
 
         addMethod(id, baseClass, beforeFallHookTypes, "beforeFall", float.class);
         addMethod(id, baseClass, overrideFallHookTypes, "fall", float.class);
@@ -1144,21 +1071,21 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeGetCurrentPlayerStrVsBlockHookTypes,
                 "beforeGetCurrentPlayerStrVsBlock",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class);
         addMethod(
                 id,
                 baseClass,
                 overrideGetCurrentPlayerStrVsBlockHookTypes,
                 "getCurrentPlayerStrVsBlock",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class);
         addMethod(
                 id,
                 baseClass,
                 afterGetCurrentPlayerStrVsBlockHookTypes,
                 "afterGetCurrentPlayerStrVsBlock",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class);
 
         addMethod(
@@ -1166,7 +1093,7 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeGetCurrentPlayerStrVsBlockForgeHookTypes,
                 "beforeGetCurrentPlayerStrVsBlockForge",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class,
                 int.class);
         addMethod(
@@ -1174,7 +1101,7 @@ public final class ServerPlayerAPI {
                 baseClass,
                 overrideGetCurrentPlayerStrVsBlockForgeHookTypes,
                 "getCurrentPlayerStrVsBlockForge",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class,
                 int.class);
         addMethod(
@@ -1182,7 +1109,7 @@ public final class ServerPlayerAPI {
                 baseClass,
                 afterGetCurrentPlayerStrVsBlockForgeHookTypes,
                 "afterGetCurrentPlayerStrVsBlockForge",
-                net.minecraft.block.Block.class,
+                Block.class,
                 boolean.class,
                 int.class);
 
@@ -1231,24 +1158,9 @@ public final class ServerPlayerAPI {
         addMethod(id, baseClass, overrideIsInWaterHookTypes, "isInWater");
         addMethod(id, baseClass, afterIsInWaterHookTypes, "afterIsInWater");
 
-        addMethod(
-                id,
-                baseClass,
-                beforeIsInsideOfMaterialHookTypes,
-                "beforeIsInsideOfMaterial",
-                net.minecraft.block.material.Material.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideIsInsideOfMaterialHookTypes,
-                "isInsideOfMaterial",
-                net.minecraft.block.material.Material.class);
-        addMethod(
-                id,
-                baseClass,
-                afterIsInsideOfMaterialHookTypes,
-                "afterIsInsideOfMaterial",
-                net.minecraft.block.material.Material.class);
+        addMethod(id, baseClass, beforeIsInsideOfMaterialHookTypes, "beforeIsInsideOfMaterial", Material.class);
+        addMethod(id, baseClass, overrideIsInsideOfMaterialHookTypes, "isInsideOfMaterial", Material.class);
+        addMethod(id, baseClass, afterIsInsideOfMaterialHookTypes, "afterIsInsideOfMaterial", Material.class);
 
         addMethod(id, baseClass, beforeIsOnLadderHookTypes, "beforeIsOnLadder");
         addMethod(id, baseClass, overrideIsOnLadderHookTypes, "isOnLadder");
@@ -1271,7 +1183,7 @@ public final class ServerPlayerAPI {
                 baseClass,
                 beforeKnockBackHookTypes,
                 "beforeKnockBack",
-                net.minecraft.entity.Entity.class,
+                Entity.class,
                 float.class,
                 double.class,
                 double.class);
@@ -1280,7 +1192,7 @@ public final class ServerPlayerAPI {
                 baseClass,
                 overrideKnockBackHookTypes,
                 "knockBack",
-                net.minecraft.entity.Entity.class,
+                Entity.class,
                 float.class,
                 double.class,
                 double.class);
@@ -1289,14 +1201,14 @@ public final class ServerPlayerAPI {
                 baseClass,
                 afterKnockBackHookTypes,
                 "afterKnockBack",
-                net.minecraft.entity.Entity.class,
+                Entity.class,
                 float.class,
                 double.class,
                 double.class);
 
-        addMethod(id, baseClass, beforeMountEntityHookTypes, "beforeMountEntity", net.minecraft.entity.Entity.class);
-        addMethod(id, baseClass, overrideMountEntityHookTypes, "mountEntity", net.minecraft.entity.Entity.class);
-        addMethod(id, baseClass, afterMountEntityHookTypes, "afterMountEntity", net.minecraft.entity.Entity.class);
+        addMethod(id, baseClass, beforeMountEntityHookTypes, "beforeMountEntity", Entity.class);
+        addMethod(id, baseClass, overrideMountEntityHookTypes, "mountEntity", Entity.class);
+        addMethod(id, baseClass, afterMountEntityHookTypes, "afterMountEntity", Entity.class);
 
         addMethod(
                 id,
@@ -1335,51 +1247,36 @@ public final class ServerPlayerAPI {
         addMethod(id, baseClass, overrideMoveFlyingHookTypes, "moveFlying", float.class, float.class, float.class);
         addMethod(id, baseClass, afterMoveFlyingHookTypes, "afterMoveFlying", float.class, float.class, float.class);
 
-        addMethod(id, baseClass, beforeOnDeathHookTypes, "beforeOnDeath", net.minecraft.util.DamageSource.class);
-        addMethod(id, baseClass, overrideOnDeathHookTypes, "onDeath", net.minecraft.util.DamageSource.class);
-        addMethod(id, baseClass, afterOnDeathHookTypes, "afterOnDeath", net.minecraft.util.DamageSource.class);
+        addMethod(id, baseClass, beforeOnDeathHookTypes, "beforeOnDeath", DamageSource.class);
+        addMethod(id, baseClass, overrideOnDeathHookTypes, "onDeath", DamageSource.class);
+        addMethod(id, baseClass, afterOnDeathHookTypes, "afterOnDeath", DamageSource.class);
 
         addMethod(id, baseClass, beforeOnLivingUpdateHookTypes, "beforeOnLivingUpdate");
         addMethod(id, baseClass, overrideOnLivingUpdateHookTypes, "onLivingUpdate");
         addMethod(id, baseClass, afterOnLivingUpdateHookTypes, "afterOnLivingUpdate");
 
-        addMethod(
-                id,
-                baseClass,
-                beforeOnKillEntityHookTypes,
-                "beforeOnKillEntity",
-                net.minecraft.entity.EntityLivingBase.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideOnKillEntityHookTypes,
-                "onKillEntity",
-                net.minecraft.entity.EntityLivingBase.class);
-        addMethod(
-                id,
-                baseClass,
-                afterOnKillEntityHookTypes,
-                "afterOnKillEntity",
-                net.minecraft.entity.EntityLivingBase.class);
+        addMethod(id, baseClass, beforeOnKillEntityHookTypes, "beforeOnKillEntity", EntityLivingBase.class);
+        addMethod(id, baseClass, overrideOnKillEntityHookTypes, "onKillEntity", EntityLivingBase.class);
+        addMethod(id, baseClass, afterOnKillEntityHookTypes, "afterOnKillEntity", EntityLivingBase.class);
 
         addMethod(
                 id,
                 baseClass,
                 beforeOnStruckByLightningHookTypes,
                 "beforeOnStruckByLightning",
-                net.minecraft.entity.effect.EntityLightningBolt.class);
+                EntityLightningBolt.class);
         addMethod(
                 id,
                 baseClass,
                 overrideOnStruckByLightningHookTypes,
                 "onStruckByLightning",
-                net.minecraft.entity.effect.EntityLightningBolt.class);
+                EntityLightningBolt.class);
         addMethod(
                 id,
                 baseClass,
                 afterOnStruckByLightningHookTypes,
                 "afterOnStruckByLightning",
-                net.minecraft.entity.effect.EntityLightningBolt.class);
+                EntityLightningBolt.class);
 
         addMethod(id, baseClass, beforeOnUpdateHookTypes, "beforeOnUpdate");
         addMethod(id, baseClass, overrideOnUpdateHookTypes, "onUpdate");
@@ -1389,24 +1286,9 @@ public final class ServerPlayerAPI {
         addMethod(id, baseClass, overrideOnUpdateEntityHookTypes, "onUpdateEntity");
         addMethod(id, baseClass, afterOnUpdateEntityHookTypes, "afterOnUpdateEntity");
 
-        addMethod(
-                id,
-                baseClass,
-                beforeReadEntityFromNBTHookTypes,
-                "beforeReadEntityFromNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideReadEntityFromNBTHookTypes,
-                "readEntityFromNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
-        addMethod(
-                id,
-                baseClass,
-                afterReadEntityFromNBTHookTypes,
-                "afterReadEntityFromNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
+        addMethod(id, baseClass, beforeReadEntityFromNBTHookTypes, "beforeReadEntityFromNBT", NBTTagCompound.class);
+        addMethod(id, baseClass, overrideReadEntityFromNBTHookTypes, "readEntityFromNBT", NBTTagCompound.class);
+        addMethod(id, baseClass, afterReadEntityFromNBTHookTypes, "afterReadEntityFromNBT", NBTTagCompound.class);
 
         addMethod(id, baseClass, beforeSetDeadHookTypes, "beforeSetDead");
         addMethod(id, baseClass, overrideSetDeadHookTypes, "setDead");
@@ -1507,24 +1389,9 @@ public final class ServerPlayerAPI {
                 boolean.class,
                 boolean.class);
 
-        addMethod(
-                id,
-                baseClass,
-                beforeWriteEntityToNBTHookTypes,
-                "beforeWriteEntityToNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
-        addMethod(
-                id,
-                baseClass,
-                overrideWriteEntityToNBTHookTypes,
-                "writeEntityToNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
-        addMethod(
-                id,
-                baseClass,
-                afterWriteEntityToNBTHookTypes,
-                "afterWriteEntityToNBT",
-                net.minecraft.nbt.NBTTagCompound.class);
+        addMethod(id, baseClass, beforeWriteEntityToNBTHookTypes, "beforeWriteEntityToNBT", NBTTagCompound.class);
+        addMethod(id, baseClass, overrideWriteEntityToNBTHookTypes, "writeEntityToNBT", NBTTagCompound.class);
+        addMethod(id, baseClass, afterWriteEntityToNBTHookTypes, "afterWriteEntityToNBT", NBTTagCompound.class);
 
         addDynamicMethods(id, baseClass);
 
@@ -3228,19 +3095,18 @@ public final class ServerPlayerAPI {
         List<IServerPlayerAPI> result = new ArrayList<IServerPlayerAPI>();
         Object entityPlayerList;
         try {
-            Object minecraftServer = net.minecraft.server.MinecraftServer.class.getMethod("func_71276_C").invoke(null);
+            Object minecraftServer = MinecraftServer.class.getMethod("func_71276_C").invoke(null);
             Object serverConfigurationManager = minecraftServer != null
-                    ? net.minecraft.server.MinecraftServer.class.getMethod("func_71203_ab").invoke(minecraftServer)
+                    ? MinecraftServer.class.getMethod("func_71203_ab").invoke(minecraftServer)
                     : null;
             entityPlayerList = serverConfigurationManager != null
                     ? serverConfigurationManager.getClass().getField("field_72404_b").get(serverConfigurationManager)
                     : null;
         } catch (Exception obfuscatedException) {
             try {
-                Object minecraftServer = net.minecraft.server.MinecraftServer.class.getMethod("getServer").invoke(null);
+                Object minecraftServer = MinecraftServer.class.getMethod("getServer").invoke(null);
                 Object serverConfigurationManager = minecraftServer != null
-                        ? net.minecraft.server.MinecraftServer.class.getMethod("getConfigurationManager")
-                                .invoke(minecraftServer)
+                        ? MinecraftServer.class.getMethod("getConfigurationManager").invoke(minecraftServer)
                         : null;
                 entityPlayerList = serverConfigurationManager != null ? serverConfigurationManager.getClass()
                         .getField("playerEntityList").get(serverConfigurationManager) : null;
@@ -3253,15 +3119,13 @@ public final class ServerPlayerAPI {
         return result;
     }
 
-    public static net.minecraft.entity.player.EntityPlayerMP[] getAllInstances() {
+    public static EntityPlayerMP[] getAllInstances() {
         List<IServerPlayerAPI> allInstances = getAllInstancesList();
-        return allInstances.toArray(new net.minecraft.entity.player.EntityPlayerMP[allInstances.size()]);
+        return allInstances.toArray(new EntityPlayerMP[allInstances.size()]);
     }
 
-    public static void beforeLocalConstructing(IServerPlayerAPI serverPlayer,
-            net.minecraft.server.MinecraftServer paramMinecraftServer, net.minecraft.world.WorldServer paramWorldServer,
-            com.mojang.authlib.GameProfile paramGameProfile,
-            net.minecraft.server.management.ItemInWorldManager paramItemInWorldManager) {
+    public static void beforeLocalConstructing(IServerPlayerAPI serverPlayer, MinecraftServer paramMinecraftServer,
+            WorldServer paramWorldServer, GameProfile paramGameProfile, ItemInWorldManager paramItemInWorldManager) {
         ServerPlayerAPI serverPlayerAPI = serverPlayer.getServerPlayerAPI();
         if (serverPlayerAPI != null) serverPlayerAPI.load();
 
@@ -3272,10 +3136,8 @@ public final class ServerPlayerAPI {
                 paramItemInWorldManager);
     }
 
-    public static void afterLocalConstructing(IServerPlayerAPI serverPlayer,
-            net.minecraft.server.MinecraftServer paramMinecraftServer, net.minecraft.world.WorldServer paramWorldServer,
-            com.mojang.authlib.GameProfile paramGameProfile,
-            net.minecraft.server.management.ItemInWorldManager paramItemInWorldManager) {
+    public static void afterLocalConstructing(IServerPlayerAPI serverPlayer, MinecraftServer paramMinecraftServer,
+            WorldServer paramWorldServer, GameProfile paramGameProfile, ItemInWorldManager paramItemInWorldManager) {
         ServerPlayerAPI serverPlayerAPI = serverPlayer.getServerPlayerAPI();
         if (serverPlayerAPI != null) serverPlayerAPI.afterLocalConstructing(
                 paramMinecraftServer,
@@ -3744,9 +3606,8 @@ public final class ServerPlayerAPI {
         return result;
     }
 
-    private void beforeLocalConstructing(net.minecraft.server.MinecraftServer paramMinecraftServer,
-            net.minecraft.world.WorldServer paramWorldServer, com.mojang.authlib.GameProfile paramGameProfile,
-            net.minecraft.server.management.ItemInWorldManager paramItemInWorldManager) {
+    private void beforeLocalConstructing(MinecraftServer paramMinecraftServer, WorldServer paramWorldServer,
+            GameProfile paramGameProfile, ItemInWorldManager paramItemInWorldManager) {
         if (beforeLocalConstructingHooks != null) for (int i = beforeLocalConstructingHooks.length - 1; i >= 0; i--)
             beforeLocalConstructingHooks[i].beforeLocalConstructing(
                     paramMinecraftServer,
@@ -3756,9 +3617,8 @@ public final class ServerPlayerAPI {
         beforeLocalConstructingHooks = null;
     }
 
-    private void afterLocalConstructing(net.minecraft.server.MinecraftServer paramMinecraftServer,
-            net.minecraft.world.WorldServer paramWorldServer, com.mojang.authlib.GameProfile paramGameProfile,
-            net.minecraft.server.management.ItemInWorldManager paramItemInWorldManager) {
+    private void afterLocalConstructing(MinecraftServer paramMinecraftServer, WorldServer paramWorldServer,
+            GameProfile paramGameProfile, ItemInWorldManager paramItemInWorldManager) {
         if (afterLocalConstructingHooks != null) for (int i = 0; i < afterLocalConstructingHooks.length; i++)
             afterLocalConstructingHooks[i].afterLocalConstructing(
                     paramMinecraftServer,
@@ -4040,8 +3900,7 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterAddMovementStatInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static boolean attackEntityFrom(IServerPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource,
-            float paramFloat) {
+    public static boolean attackEntityFrom(IServerPlayerAPI target, DamageSource paramDamageSource, float paramFloat) {
         boolean _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isAttackEntityFromModded)
@@ -4050,7 +3909,7 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private boolean attackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+    private boolean attackEntityFrom(DamageSource paramDamageSource, float paramFloat) {
         if (beforeAttackEntityFromHooks != null) for (int i = beforeAttackEntityFromHooks.length - 1; i >= 0; i--)
             beforeAttackEntityFromHooks[i].beforeAttackEntityFrom(paramDamageSource, paramFloat);
 
@@ -4099,15 +3958,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterAttackEntityFromInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static void attackTargetEntityWithCurrentItem(IServerPlayerAPI target,
-            net.minecraft.entity.Entity paramEntity) {
+    public static void attackTargetEntityWithCurrentItem(IServerPlayerAPI target, Entity paramEntity) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isAttackTargetEntityWithCurrentItemModded)
             serverPlayerAPI.attackTargetEntityWithCurrentItem(paramEntity);
         else target.localAttackTargetEntityWithCurrentItem(paramEntity);
     }
 
-    private void attackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity) {
+    private void attackTargetEntityWithCurrentItem(Entity paramEntity) {
         if (beforeAttackTargetEntityWithCurrentItemHooks != null)
             for (int i = beforeAttackTargetEntityWithCurrentItemHooks.length - 1; i >= 0; i--)
                 beforeAttackTargetEntityWithCurrentItemHooks[i].beforeAttackTargetEntityWithCurrentItem(paramEntity);
@@ -4214,7 +4072,7 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterCanBreatheUnderwaterInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static boolean canHarvestBlock(IServerPlayerAPI target, net.minecraft.block.Block paramBlock) {
+    public static boolean canHarvestBlock(IServerPlayerAPI target, Block paramBlock) {
         boolean _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isCanHarvestBlockModded)
@@ -4223,7 +4081,7 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private boolean canHarvestBlock(net.minecraft.block.Block paramBlock) {
+    private boolean canHarvestBlock(Block paramBlock) {
         if (beforeCanHarvestBlockHooks != null) for (int i = beforeCanHarvestBlockHooks.length - 1; i >= 0; i--)
             beforeCanHarvestBlockHooks[i].beforeCanHarvestBlock(paramBlock);
 
@@ -4272,7 +4130,7 @@ public final class ServerPlayerAPI {
             0);
 
     public static boolean canPlayerEdit(IServerPlayerAPI target, int paramInt1, int paramInt2, int paramInt3,
-            int paramInt4, net.minecraft.item.ItemStack paramItemStack) {
+            int paramInt4, ItemStack paramItemStack) {
         boolean _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isCanPlayerEditModded)
@@ -4282,7 +4140,7 @@ public final class ServerPlayerAPI {
     }
 
     private boolean canPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
-            net.minecraft.item.ItemStack paramItemStack) {
+            ItemStack paramItemStack) {
         if (beforeCanPlayerEditHooks != null) for (int i = beforeCanPlayerEditHooks.length - 1; i >= 0; i--)
             beforeCanPlayerEditHooks[i].beforeCanPlayerEdit(paramInt1, paramInt2, paramInt3, paramInt4, paramItemStack);
 
@@ -4384,15 +4242,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterCanTriggerWalkingInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static void clonePlayer(IServerPlayerAPI target, net.minecraft.entity.player.EntityPlayer paramEntityPlayer,
-            boolean paramBoolean) {
+    public static void clonePlayer(IServerPlayerAPI target, EntityPlayer paramEntityPlayer, boolean paramBoolean) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isClonePlayerModded)
             serverPlayerAPI.clonePlayer(paramEntityPlayer, paramBoolean);
         else target.localClonePlayer(paramEntityPlayer, paramBoolean);
     }
 
-    private void clonePlayer(net.minecraft.entity.player.EntityPlayer paramEntityPlayer, boolean paramBoolean) {
+    private void clonePlayer(EntityPlayer paramEntityPlayer, boolean paramBoolean) {
         if (beforeClonePlayerHooks != null) for (int i = beforeClonePlayerHooks.length - 1; i >= 0; i--)
             beforeClonePlayerHooks[i].beforeClonePlayer(paramEntityPlayer, paramBoolean);
 
@@ -4431,15 +4288,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterClonePlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterClonePlayerInferiors = new Hashtable<String, String[]>(0);
 
-    public static void damageEntity(IServerPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource,
-            float paramFloat) {
+    public static void damageEntity(IServerPlayerAPI target, DamageSource paramDamageSource, float paramFloat) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDamageEntityModded)
             serverPlayerAPI.damageEntity(paramDamageSource, paramFloat);
         else target.localDamageEntity(paramDamageSource, paramFloat);
     }
 
-    private void damageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat) {
+    private void damageEntity(DamageSource paramDamageSource, float paramFloat) {
         if (beforeDamageEntityHooks != null) for (int i = beforeDamageEntityHooks.length - 1; i >= 0; i--)
             beforeDamageEntityHooks[i].beforeDamageEntity(paramDamageSource, paramFloat);
 
@@ -4480,14 +4336,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDamageEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterDamageEntityInferiors = new Hashtable<String, String[]>(0);
 
-    public static void displayGUIChest(IServerPlayerAPI target, net.minecraft.inventory.IInventory paramIInventory) {
+    public static void displayGUIChest(IServerPlayerAPI target, IInventory paramIInventory) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDisplayGUIChestModded)
             serverPlayerAPI.displayGUIChest(paramIInventory);
         else target.localDisplayGUIChest(paramIInventory);
     }
 
-    private void displayGUIChest(net.minecraft.inventory.IInventory paramIInventory) {
+    private void displayGUIChest(IInventory paramIInventory) {
         if (beforeDisplayGUIChestHooks != null) for (int i = beforeDisplayGUIChestHooks.length - 1; i >= 0; i--)
             beforeDisplayGUIChestHooks[i].beforeDisplayGUIChest(paramIInventory);
 
@@ -4532,15 +4388,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDisplayGUIChestInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static void displayGUIDispenser(IServerPlayerAPI target,
-            net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
+    public static void displayGUIDispenser(IServerPlayerAPI target, TileEntityDispenser paramTileEntityDispenser) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDisplayGUIDispenserModded)
             serverPlayerAPI.displayGUIDispenser(paramTileEntityDispenser);
         else target.localDisplayGUIDispenser(paramTileEntityDispenser);
     }
 
-    private void displayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser) {
+    private void displayGUIDispenser(TileEntityDispenser paramTileEntityDispenser) {
         if (beforeDisplayGUIDispenserHooks != null) for (int i = beforeDisplayGUIDispenserHooks.length - 1; i >= 0; i--)
             beforeDisplayGUIDispenserHooks[i].beforeDisplayGUIDispenser(paramTileEntityDispenser);
 
@@ -4586,15 +4441,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDisplayGUIDispenserInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static void displayGUIFurnace(IServerPlayerAPI target,
-            net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
+    public static void displayGUIFurnace(IServerPlayerAPI target, TileEntityFurnace paramTileEntityFurnace) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDisplayGUIFurnaceModded)
             serverPlayerAPI.displayGUIFurnace(paramTileEntityFurnace);
         else target.localDisplayGUIFurnace(paramTileEntityFurnace);
     }
 
-    private void displayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace) {
+    private void displayGUIFurnace(TileEntityFurnace paramTileEntityFurnace) {
         if (beforeDisplayGUIFurnaceHooks != null) for (int i = beforeDisplayGUIFurnaceHooks.length - 1; i >= 0; i--)
             beforeDisplayGUIFurnaceHooks[i].beforeDisplayGUIFurnace(paramTileEntityFurnace);
 
@@ -4693,8 +4547,8 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDisplayGUIWorkbenchInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static net.minecraft.entity.item.EntityItem dropOneItem(IServerPlayerAPI target, boolean paramBoolean) {
-        net.minecraft.entity.item.EntityItem _result;
+    public static EntityItem dropOneItem(IServerPlayerAPI target, boolean paramBoolean) {
+        EntityItem _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDropOneItemModded)
             _result = serverPlayerAPI.dropOneItem(paramBoolean);
@@ -4702,11 +4556,11 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private net.minecraft.entity.item.EntityItem dropOneItem(boolean paramBoolean) {
+    private EntityItem dropOneItem(boolean paramBoolean) {
         if (beforeDropOneItemHooks != null) for (int i = beforeDropOneItemHooks.length - 1; i >= 0; i--)
             beforeDropOneItemHooks[i].beforeDropOneItem(paramBoolean);
 
-        net.minecraft.entity.item.EntityItem _result;
+        EntityItem _result;
         if (overrideDropOneItemHooks != null)
             _result = overrideDropOneItemHooks[overrideDropOneItemHooks.length - 1].dropOneItem(paramBoolean);
         else _result = player.localDropOneItem(paramBoolean);
@@ -4744,9 +4598,8 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterDropOneItemSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterDropOneItemInferiors = new Hashtable<String, String[]>(0);
 
-    public static net.minecraft.entity.item.EntityItem dropPlayerItem(IServerPlayerAPI target,
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean) {
-        net.minecraft.entity.item.EntityItem _result;
+    public static EntityItem dropPlayerItem(IServerPlayerAPI target, ItemStack paramItemStack, boolean paramBoolean) {
+        EntityItem _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isDropPlayerItemModded)
             _result = serverPlayerAPI.dropPlayerItem(paramItemStack, paramBoolean);
@@ -4754,12 +4607,11 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private net.minecraft.entity.item.EntityItem dropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean) {
+    private EntityItem dropPlayerItem(ItemStack paramItemStack, boolean paramBoolean) {
         if (beforeDropPlayerItemHooks != null) for (int i = beforeDropPlayerItemHooks.length - 1; i >= 0; i--)
             beforeDropPlayerItemHooks[i].beforeDropPlayerItem(paramItemStack, paramBoolean);
 
-        net.minecraft.entity.item.EntityItem _result;
+        EntityItem _result;
         if (overrideDropPlayerItemHooks != null)
             _result = overrideDropPlayerItemHooks[overrideDropPlayerItemHooks.length - 1]
                     .dropPlayerItem(paramItemStack, paramBoolean);
@@ -4901,8 +4753,7 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterGetAIMoveSpeedSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterGetAIMoveSpeedInferiors = new Hashtable<String, String[]>(0);
 
-    public static float getCurrentPlayerStrVsBlock(IServerPlayerAPI target, net.minecraft.block.Block paramBlock,
-            boolean paramBoolean) {
+    public static float getCurrentPlayerStrVsBlock(IServerPlayerAPI target, Block paramBlock, boolean paramBoolean) {
         float _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isGetCurrentPlayerStrVsBlockModded)
@@ -4911,7 +4762,7 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private float getCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean) {
+    private float getCurrentPlayerStrVsBlock(Block paramBlock, boolean paramBoolean) {
         if (beforeGetCurrentPlayerStrVsBlockHooks != null)
             for (int i = beforeGetCurrentPlayerStrVsBlockHooks.length - 1; i >= 0; i--)
                 beforeGetCurrentPlayerStrVsBlockHooks[i].beforeGetCurrentPlayerStrVsBlock(paramBlock, paramBoolean);
@@ -4962,8 +4813,8 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterGetCurrentPlayerStrVsBlockInferiors = new Hashtable<String, String[]>(
             0);
 
-    public static float getCurrentPlayerStrVsBlockForge(IServerPlayerAPI target, net.minecraft.block.Block paramBlock,
-            boolean paramBoolean, int paramInt) {
+    public static float getCurrentPlayerStrVsBlockForge(IServerPlayerAPI target, Block paramBlock, boolean paramBoolean,
+            int paramInt) {
         float _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isGetCurrentPlayerStrVsBlockForgeModded)
@@ -4972,8 +4823,7 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private float getCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
-            int paramInt) {
+    private float getCurrentPlayerStrVsBlockForge(Block paramBlock, boolean paramBoolean, int paramInt) {
         if (beforeGetCurrentPlayerStrVsBlockForgeHooks != null)
             for (int i = beforeGetCurrentPlayerStrVsBlockForgeHooks.length - 1; i >= 0; i--)
                 beforeGetCurrentPlayerStrVsBlockForgeHooks[i]
@@ -5340,8 +5190,7 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterIsInWaterSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterIsInWaterInferiors = new Hashtable<String, String[]>(0);
 
-    public static boolean isInsideOfMaterial(IServerPlayerAPI target,
-            net.minecraft.block.material.Material paramMaterial) {
+    public static boolean isInsideOfMaterial(IServerPlayerAPI target, Material paramMaterial) {
         boolean _result;
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isIsInsideOfMaterialModded)
@@ -5350,7 +5199,7 @@ public final class ServerPlayerAPI {
         return _result;
     }
 
-    private boolean isInsideOfMaterial(net.minecraft.block.material.Material paramMaterial) {
+    private boolean isInsideOfMaterial(Material paramMaterial) {
         if (beforeIsInsideOfMaterialHooks != null) for (int i = beforeIsInsideOfMaterialHooks.length - 1; i >= 0; i--)
             beforeIsInsideOfMaterialHooks[i].beforeIsInsideOfMaterial(paramMaterial);
 
@@ -5599,16 +5448,15 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterJumpSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterJumpInferiors = new Hashtable<String, String[]>(0);
 
-    public static void knockBack(IServerPlayerAPI target, net.minecraft.entity.Entity paramEntity, float paramFloat,
-            double paramDouble1, double paramDouble2) {
+    public static void knockBack(IServerPlayerAPI target, Entity paramEntity, float paramFloat, double paramDouble1,
+            double paramDouble2) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isKnockBackModded)
             serverPlayerAPI.knockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
         else target.localKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
     }
 
-    private void knockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
-            double paramDouble2) {
+    private void knockBack(Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2) {
         if (beforeKnockBackHooks != null) for (int i = beforeKnockBackHooks.length - 1; i >= 0; i--)
             beforeKnockBackHooks[i].beforeKnockBack(paramEntity, paramFloat, paramDouble1, paramDouble2);
 
@@ -5647,13 +5495,13 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterKnockBackSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterKnockBackInferiors = new Hashtable<String, String[]>(0);
 
-    public static void mountEntity(IServerPlayerAPI target, net.minecraft.entity.Entity paramEntity) {
+    public static void mountEntity(IServerPlayerAPI target, Entity paramEntity) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isMountEntityModded) serverPlayerAPI.mountEntity(paramEntity);
         else target.localMountEntity(paramEntity);
     }
 
-    private void mountEntity(net.minecraft.entity.Entity paramEntity) {
+    private void mountEntity(Entity paramEntity) {
         if (beforeMountEntityHooks != null) for (int i = beforeMountEntityHooks.length - 1; i >= 0; i--)
             beforeMountEntityHooks[i].beforeMountEntity(paramEntity);
 
@@ -5839,13 +5687,13 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterMoveFlyingSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterMoveFlyingInferiors = new Hashtable<String, String[]>(0);
 
-    public static void onDeath(IServerPlayerAPI target, net.minecraft.util.DamageSource paramDamageSource) {
+    public static void onDeath(IServerPlayerAPI target, DamageSource paramDamageSource) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isOnDeathModded) serverPlayerAPI.onDeath(paramDamageSource);
         else target.localOnDeath(paramDamageSource);
     }
 
-    private void onDeath(net.minecraft.util.DamageSource paramDamageSource) {
+    private void onDeath(DamageSource paramDamageSource) {
         if (beforeOnDeathHooks != null) for (int i = beforeOnDeathHooks.length - 1; i >= 0; i--)
             beforeOnDeathHooks[i].beforeOnDeath(paramDamageSource);
 
@@ -5933,15 +5781,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterOnLivingUpdateSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnLivingUpdateInferiors = new Hashtable<String, String[]>(0);
 
-    public static void onKillEntity(IServerPlayerAPI target,
-            net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
+    public static void onKillEntity(IServerPlayerAPI target, EntityLivingBase paramEntityLivingBase) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isOnKillEntityModded)
             serverPlayerAPI.onKillEntity(paramEntityLivingBase);
         else target.localOnKillEntity(paramEntityLivingBase);
     }
 
-    private void onKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase) {
+    private void onKillEntity(EntityLivingBase paramEntityLivingBase) {
         if (beforeOnKillEntityHooks != null) for (int i = beforeOnKillEntityHooks.length - 1; i >= 0; i--)
             beforeOnKillEntityHooks[i].beforeOnKillEntity(paramEntityLivingBase);
 
@@ -5982,15 +5829,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterOnKillEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnKillEntityInferiors = new Hashtable<String, String[]>(0);
 
-    public static void onStruckByLightning(IServerPlayerAPI target,
-            net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
+    public static void onStruckByLightning(IServerPlayerAPI target, EntityLightningBolt paramEntityLightningBolt) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isOnStruckByLightningModded)
             serverPlayerAPI.onStruckByLightning(paramEntityLightningBolt);
         else target.localOnStruckByLightning(paramEntityLightningBolt);
     }
 
-    private void onStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt) {
+    private void onStruckByLightning(EntityLightningBolt paramEntityLightningBolt) {
         if (beforeOnStruckByLightningHooks != null) for (int i = beforeOnStruckByLightningHooks.length - 1; i >= 0; i--)
             beforeOnStruckByLightningHooks[i].beforeOnStruckByLightning(paramEntityLightningBolt);
 
@@ -6129,15 +5975,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterOnUpdateEntitySuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterOnUpdateEntityInferiors = new Hashtable<String, String[]>(0);
 
-    public static void readEntityFromNBT(IServerPlayerAPI target,
-            net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+    public static void readEntityFromNBT(IServerPlayerAPI target, NBTTagCompound paramNBTTagCompound) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isReadEntityFromNBTModded)
             serverPlayerAPI.readEntityFromNBT(paramNBTTagCompound);
         else target.localReadEntityFromNBT(paramNBTTagCompound);
     }
 
-    private void readEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+    private void readEntityFromNBT(NBTTagCompound paramNBTTagCompound) {
         if (beforeReadEntityFromNBTHooks != null) for (int i = beforeReadEntityFromNBTHooks.length - 1; i >= 0; i--)
             beforeReadEntityFromNBTHooks[i].beforeReadEntityFromNBT(paramNBTTagCompound);
 
@@ -6670,14 +6515,14 @@ public final class ServerPlayerAPI {
     private static final Map<String, String[]> allBaseAfterWakeUpPlayerSuperiors = new Hashtable<String, String[]>(0);
     private static final Map<String, String[]> allBaseAfterWakeUpPlayerInferiors = new Hashtable<String, String[]>(0);
 
-    public static void writeEntityToNBT(IServerPlayerAPI target, net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+    public static void writeEntityToNBT(IServerPlayerAPI target, NBTTagCompound paramNBTTagCompound) {
         ServerPlayerAPI serverPlayerAPI = target.getServerPlayerAPI();
         if (serverPlayerAPI != null && serverPlayerAPI.isWriteEntityToNBTModded)
             serverPlayerAPI.writeEntityToNBT(paramNBTTagCompound);
         else target.localWriteEntityToNBT(paramNBTTagCompound);
     }
 
-    private void writeEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound) {
+    private void writeEntityToNBT(NBTTagCompound paramNBTTagCompound) {
         if (beforeWriteEntityToNBTHooks != null) for (int i = beforeWriteEntityToNBTHooks.length - 1; i >= 0; i--)
             beforeWriteEntityToNBTHooks[i].beforeWriteEntityToNBT(paramNBTTagCompound);
 

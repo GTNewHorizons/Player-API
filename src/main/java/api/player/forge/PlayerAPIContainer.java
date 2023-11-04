@@ -43,7 +43,7 @@ public class PlayerAPIContainer extends DummyModContainer {
         meta.name = "Player API";
         meta.version = PlayerAPIPlugin.Version;
         meta.description = "Player API for Minecraft Forge";
-        meta.url = "http://www.minecraftforum.net/topic/738498-";
+        meta.url = "https://www.minecraftforum.net/topic/738498-";
         meta.authorList = Arrays.asList(new String[] { "Divisor" });
 
         return meta;
