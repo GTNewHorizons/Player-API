@@ -18,11 +18,44 @@
 
 package api.player.client;
 
+import java.util.Set;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.DataWatcher;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatBase;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.FoodStats;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MouseFilter;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
+
 public interface IClientPlayer {
 
     ClientPlayerBase getClientPlayerBase(String baseId);
 
-    java.util.Set<String> getClientPlayerBaseIds();
+    Set<String> getClientPlayerBaseIds();
 
     Object dynamic(String key, Object[] parameters);
 
@@ -38,23 +71,23 @@ public interface IClientPlayer {
 
     void localAddMovementStat(double paramDouble1, double paramDouble2, double paramDouble3);
 
-    void realAddStat(net.minecraft.stats.StatBase paramStatBase, int paramInt);
+    void realAddStat(StatBase paramStatBase, int paramInt);
 
-    void superAddStat(net.minecraft.stats.StatBase paramStatBase, int paramInt);
+    void superAddStat(StatBase paramStatBase, int paramInt);
 
-    void localAddStat(net.minecraft.stats.StatBase paramStatBase, int paramInt);
+    void localAddStat(StatBase paramStatBase, int paramInt);
 
-    boolean realAttackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    boolean realAttackEntityFrom(DamageSource paramDamageSource, float paramFloat);
 
-    boolean superAttackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    boolean superAttackEntityFrom(DamageSource paramDamageSource, float paramFloat);
 
-    boolean localAttackEntityFrom(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    boolean localAttackEntityFrom(DamageSource paramDamageSource, float paramFloat);
 
-    void realAttackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity);
+    void realAttackTargetEntityWithCurrentItem(Entity paramEntity);
 
-    void superAttackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity);
+    void superAttackTargetEntityWithCurrentItem(Entity paramEntity);
 
-    void localAttackTargetEntityWithCurrentItem(net.minecraft.entity.Entity paramEntity);
+    void localAttackTargetEntityWithCurrentItem(Entity paramEntity);
 
     boolean realCanBreatheUnderwater();
 
@@ -62,20 +95,17 @@ public interface IClientPlayer {
 
     boolean localCanBreatheUnderwater();
 
-    boolean realCanHarvestBlock(net.minecraft.block.Block paramBlock);
+    boolean realCanHarvestBlock(Block paramBlock);
 
-    boolean superCanHarvestBlock(net.minecraft.block.Block paramBlock);
+    boolean superCanHarvestBlock(Block paramBlock);
 
-    boolean localCanHarvestBlock(net.minecraft.block.Block paramBlock);
+    boolean localCanHarvestBlock(Block paramBlock);
 
-    boolean realCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
-            net.minecraft.item.ItemStack paramItemStack);
+    boolean realCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4, ItemStack paramItemStack);
 
-    boolean superCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
-            net.minecraft.item.ItemStack paramItemStack);
+    boolean superCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4, ItemStack paramItemStack);
 
-    boolean localCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
-            net.minecraft.item.ItemStack paramItemStack);
+    boolean localCanPlayerEdit(int paramInt1, int paramInt2, int paramInt3, int paramInt4, ItemStack paramItemStack);
 
     boolean realCanTriggerWalking();
 
@@ -89,35 +119,35 @@ public interface IClientPlayer {
 
     void localCloseScreen();
 
-    void realDamageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    void realDamageEntity(DamageSource paramDamageSource, float paramFloat);
 
-    void superDamageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    void superDamageEntity(DamageSource paramDamageSource, float paramFloat);
 
-    void localDamageEntity(net.minecraft.util.DamageSource paramDamageSource, float paramFloat);
+    void localDamageEntity(DamageSource paramDamageSource, float paramFloat);
 
-    void realDisplayGUIBrewingStand(net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand);
+    void realDisplayGUIBrewingStand(TileEntityBrewingStand paramTileEntityBrewingStand);
 
-    void superDisplayGUIBrewingStand(net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand);
+    void superDisplayGUIBrewingStand(TileEntityBrewingStand paramTileEntityBrewingStand);
 
-    void localDisplayGUIBrewingStand(net.minecraft.tileentity.TileEntityBrewingStand paramTileEntityBrewingStand);
+    void localDisplayGUIBrewingStand(TileEntityBrewingStand paramTileEntityBrewingStand);
 
-    void realDisplayGUIChest(net.minecraft.inventory.IInventory paramIInventory);
+    void realDisplayGUIChest(IInventory paramIInventory);
 
-    void superDisplayGUIChest(net.minecraft.inventory.IInventory paramIInventory);
+    void superDisplayGUIChest(IInventory paramIInventory);
 
-    void localDisplayGUIChest(net.minecraft.inventory.IInventory paramIInventory);
+    void localDisplayGUIChest(IInventory paramIInventory);
 
-    void realDisplayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser);
+    void realDisplayGUIDispenser(TileEntityDispenser paramTileEntityDispenser);
 
-    void superDisplayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser);
+    void superDisplayGUIDispenser(TileEntityDispenser paramTileEntityDispenser);
 
-    void localDisplayGUIDispenser(net.minecraft.tileentity.TileEntityDispenser paramTileEntityDispenser);
+    void localDisplayGUIDispenser(TileEntityDispenser paramTileEntityDispenser);
 
-    void realDisplayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity);
+    void realDisplayGUIEditSign(TileEntity paramTileEntity);
 
-    void superDisplayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity);
+    void superDisplayGUIEditSign(TileEntity paramTileEntity);
 
-    void localDisplayGUIEditSign(net.minecraft.tileentity.TileEntity paramTileEntity);
+    void localDisplayGUIEditSign(TileEntity paramTileEntity);
 
     void realDisplayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString);
 
@@ -125,11 +155,11 @@ public interface IClientPlayer {
 
     void localDisplayGUIEnchantment(int paramInt1, int paramInt2, int paramInt3, String paramString);
 
-    void realDisplayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace);
+    void realDisplayGUIFurnace(TileEntityFurnace paramTileEntityFurnace);
 
-    void superDisplayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace);
+    void superDisplayGUIFurnace(TileEntityFurnace paramTileEntityFurnace);
 
-    void localDisplayGUIFurnace(net.minecraft.tileentity.TileEntityFurnace paramTileEntityFurnace);
+    void localDisplayGUIFurnace(TileEntityFurnace paramTileEntityFurnace);
 
     void realDisplayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3);
 
@@ -137,29 +167,26 @@ public interface IClientPlayer {
 
     void localDisplayGUIWorkbench(int paramInt1, int paramInt2, int paramInt3);
 
-    net.minecraft.entity.item.EntityItem realDropOneItem(boolean paramBoolean);
+    EntityItem realDropOneItem(boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem superDropOneItem(boolean paramBoolean);
+    EntityItem superDropOneItem(boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem localDropOneItem(boolean paramBoolean);
+    EntityItem localDropOneItem(boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem realDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean);
+    EntityItem realDropPlayerItem(ItemStack paramItemStack, boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem superDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean);
+    EntityItem superDropPlayerItem(ItemStack paramItemStack, boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem localDropPlayerItem(net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean);
+    EntityItem localDropPlayerItem(ItemStack paramItemStack, boolean paramBoolean);
 
-    net.minecraft.entity.item.EntityItem realDropPlayerItemWithRandomChoice(net.minecraft.item.ItemStack paramItemStack,
-            boolean paramBoolean1, boolean paramBoolean2);
+    EntityItem realDropPlayerItemWithRandomChoice(ItemStack paramItemStack, boolean paramBoolean1,
+            boolean paramBoolean2);
 
-    net.minecraft.entity.item.EntityItem superDropPlayerItemWithRandomChoice(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2);
+    EntityItem superDropPlayerItemWithRandomChoice(ItemStack paramItemStack, boolean paramBoolean1,
+            boolean paramBoolean2);
 
-    net.minecraft.entity.item.EntityItem localDropPlayerItemWithRandomChoice(
-            net.minecraft.item.ItemStack paramItemStack, boolean paramBoolean1, boolean paramBoolean2);
+    EntityItem localDropPlayerItemWithRandomChoice(ItemStack paramItemStack, boolean paramBoolean1,
+            boolean paramBoolean2);
 
     void realFall(float paramFloat);
 
@@ -191,19 +218,17 @@ public interface IClientPlayer {
 
     int localGetBrightnessForRender(float paramFloat);
 
-    float realGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean);
+    float realGetCurrentPlayerStrVsBlock(Block paramBlock, boolean paramBoolean);
 
-    float superGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean);
+    float superGetCurrentPlayerStrVsBlock(Block paramBlock, boolean paramBoolean);
 
-    float localGetCurrentPlayerStrVsBlock(net.minecraft.block.Block paramBlock, boolean paramBoolean);
+    float localGetCurrentPlayerStrVsBlock(Block paramBlock, boolean paramBoolean);
 
-    float realGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean, int paramInt);
+    float realGetCurrentPlayerStrVsBlockForge(Block paramBlock, boolean paramBoolean, int paramInt);
 
-    float superGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
-            int paramInt);
+    float superGetCurrentPlayerStrVsBlockForge(Block paramBlock, boolean paramBoolean, int paramInt);
 
-    float localGetCurrentPlayerStrVsBlockForge(net.minecraft.block.Block paramBlock, boolean paramBoolean,
-            int paramInt);
+    float localGetCurrentPlayerStrVsBlockForge(Block paramBlock, boolean paramBoolean, int paramInt);
 
     double realGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -211,27 +236,27 @@ public interface IClientPlayer {
 
     double localGetDistanceSq(double paramDouble1, double paramDouble2, double paramDouble3);
 
-    double realGetDistanceSqToEntity(net.minecraft.entity.Entity paramEntity);
+    double realGetDistanceSqToEntity(Entity paramEntity);
 
-    double superGetDistanceSqToEntity(net.minecraft.entity.Entity paramEntity);
+    double superGetDistanceSqToEntity(Entity paramEntity);
 
-    double localGetDistanceSqToEntity(net.minecraft.entity.Entity paramEntity);
+    double localGetDistanceSqToEntity(Entity paramEntity);
 
     float realGetFOVMultiplier();
 
     float localGetFOVMultiplier();
 
-    java.lang.String realGetHurtSound();
+    String realGetHurtSound();
 
-    java.lang.String superGetHurtSound();
+    String superGetHurtSound();
 
-    java.lang.String localGetHurtSound();
+    String localGetHurtSound();
 
-    net.minecraft.util.IIcon realGetItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt);
+    IIcon realGetItemIcon(ItemStack paramItemStack, int paramInt);
 
-    net.minecraft.util.IIcon superGetItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt);
+    IIcon superGetItemIcon(ItemStack paramItemStack, int paramInt);
 
-    net.minecraft.util.IIcon localGetItemIcon(net.minecraft.item.ItemStack paramItemStack, int paramInt);
+    IIcon localGetItemIcon(ItemStack paramItemStack, int paramInt);
 
     int realGetSleepTimer();
 
@@ -269,11 +294,11 @@ public interface IClientPlayer {
 
     boolean localIsInWater();
 
-    boolean realIsInsideOfMaterial(net.minecraft.block.material.Material paramMaterial);
+    boolean realIsInsideOfMaterial(Material paramMaterial);
 
-    boolean superIsInsideOfMaterial(net.minecraft.block.material.Material paramMaterial);
+    boolean superIsInsideOfMaterial(Material paramMaterial);
 
-    boolean localIsInsideOfMaterial(net.minecraft.block.material.Material paramMaterial);
+    boolean localIsInsideOfMaterial(Material paramMaterial);
 
     boolean realIsOnLadder();
 
@@ -305,14 +330,11 @@ public interface IClientPlayer {
 
     void localJump();
 
-    void realKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
-            double paramDouble2);
+    void realKnockBack(Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
 
-    void superKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
-            double paramDouble2);
+    void superKnockBack(Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
 
-    void localKnockBack(net.minecraft.entity.Entity paramEntity, float paramFloat, double paramDouble1,
-            double paramDouble2);
+    void localKnockBack(Entity paramEntity, float paramFloat, double paramDouble1, double paramDouble2);
 
     void realMoveEntity(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -332,11 +354,11 @@ public interface IClientPlayer {
 
     void localMoveFlying(float paramFloat1, float paramFloat2, float paramFloat3);
 
-    void realOnDeath(net.minecraft.util.DamageSource paramDamageSource);
+    void realOnDeath(DamageSource paramDamageSource);
 
-    void superOnDeath(net.minecraft.util.DamageSource paramDamageSource);
+    void superOnDeath(DamageSource paramDamageSource);
 
-    void localOnDeath(net.minecraft.util.DamageSource paramDamageSource);
+    void localOnDeath(DamageSource paramDamageSource);
 
     void realOnLivingUpdate();
 
@@ -344,17 +366,17 @@ public interface IClientPlayer {
 
     void localOnLivingUpdate();
 
-    void realOnKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase);
+    void realOnKillEntity(EntityLivingBase paramEntityLivingBase);
 
-    void superOnKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase);
+    void superOnKillEntity(EntityLivingBase paramEntityLivingBase);
 
-    void localOnKillEntity(net.minecraft.entity.EntityLivingBase paramEntityLivingBase);
+    void localOnKillEntity(EntityLivingBase paramEntityLivingBase);
 
-    void realOnStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt);
+    void realOnStruckByLightning(EntityLightningBolt paramEntityLightningBolt);
 
-    void superOnStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt);
+    void superOnStruckByLightning(EntityLightningBolt paramEntityLightningBolt);
 
-    void localOnStruckByLightning(net.minecraft.entity.effect.EntityLightningBolt paramEntityLightningBolt);
+    void localOnStruckByLightning(EntityLightningBolt paramEntityLightningBolt);
 
     void realOnUpdate();
 
@@ -362,11 +384,11 @@ public interface IClientPlayer {
 
     void localOnUpdate();
 
-    void realPlayStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock);
+    void realPlayStepSound(int paramInt1, int paramInt2, int paramInt3, Block paramBlock);
 
-    void superPlayStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock);
+    void superPlayStepSound(int paramInt1, int paramInt2, int paramInt3, Block paramBlock);
 
-    void localPlayStepSound(int paramInt1, int paramInt2, int paramInt3, net.minecraft.block.Block paramBlock);
+    void localPlayStepSound(int paramInt1, int paramInt2, int paramInt3, Block paramBlock);
 
     boolean realPushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3);
 
@@ -374,17 +396,17 @@ public interface IClientPlayer {
 
     boolean localPushOutOfBlocks(double paramDouble1, double paramDouble2, double paramDouble3);
 
-    net.minecraft.util.MovingObjectPosition realRayTrace(double paramDouble, float paramFloat);
+    MovingObjectPosition realRayTrace(double paramDouble, float paramFloat);
 
-    net.minecraft.util.MovingObjectPosition superRayTrace(double paramDouble, float paramFloat);
+    MovingObjectPosition superRayTrace(double paramDouble, float paramFloat);
 
-    net.minecraft.util.MovingObjectPosition localRayTrace(double paramDouble, float paramFloat);
+    MovingObjectPosition localRayTrace(double paramDouble, float paramFloat);
 
-    void realReadEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void realReadEntityFromNBT(NBTTagCompound paramNBTTagCompound);
 
-    void superReadEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void superReadEntityFromNBT(NBTTagCompound paramNBTTagCompound);
 
-    void localReadEntityFromNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void localReadEntityFromNBT(NBTTagCompound paramNBTTagCompound);
 
     void realRespawnPlayer();
 
@@ -423,11 +445,11 @@ public interface IClientPlayer {
 
     void localSetSprinting(boolean paramBoolean);
 
-    net.minecraft.entity.player.EntityPlayer.EnumStatus realSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
+    EntityPlayer.EnumStatus realSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
 
-    net.minecraft.entity.player.EntityPlayer.EnumStatus superSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
+    EntityPlayer.EnumStatus superSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
 
-    net.minecraft.entity.player.EntityPlayer.EnumStatus localSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
+    EntityPlayer.EnumStatus localSleepInBedAt(int paramInt1, int paramInt2, int paramInt3);
 
     void realSwingItem();
 
@@ -453,11 +475,11 @@ public interface IClientPlayer {
 
     void localWakeUpPlayer(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3);
 
-    void realWriteEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void realWriteEntityToNBT(NBTTagCompound paramNBTTagCompound);
 
-    void superWriteEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void superWriteEntityToNBT(NBTTagCompound paramNBTTagCompound);
 
-    void localWriteEntityToNBT(net.minecraft.nbt.NBTTagCompound paramNBTTagCompound);
+    void localWriteEntityToNBT(NBTTagCompound paramNBTTagCompound);
 
     boolean getAddedToChunkField();
 
@@ -475,11 +497,11 @@ public interface IClientPlayer {
 
     void setAttackedAtYawField(float attackedAtYaw);
 
-    net.minecraft.entity.player.EntityPlayer getAttackingPlayerField();
+    EntityPlayer getAttackingPlayerField();
 
-    void setAttackingPlayerField(net.minecraft.entity.player.EntityPlayer attackingPlayer);
+    void setAttackingPlayerField(EntityPlayer attackingPlayer);
 
-    net.minecraft.util.AxisAlignedBB getBoundingBoxField();
+    AxisAlignedBB getBoundingBoxField();
 
     float getCameraPitchField();
 
@@ -489,9 +511,9 @@ public interface IClientPlayer {
 
     void setCameraYawField(float cameraYaw);
 
-    net.minecraft.entity.player.PlayerCapabilities getCapabilitiesField();
+    PlayerCapabilities getCapabilitiesField();
 
-    void setCapabilitiesField(net.minecraft.entity.player.PlayerCapabilities capabilities);
+    void setCapabilitiesField(PlayerCapabilities capabilities);
 
     int getChunkCoordXField();
 
@@ -505,9 +527,9 @@ public interface IClientPlayer {
 
     void setChunkCoordZField(int chunkCoordZ);
 
-    net.minecraft.entity.DataWatcher getDataWatcherField();
+    DataWatcher getDataWatcherField();
 
-    void setDataWatcherField(net.minecraft.entity.DataWatcher dataWatcher);
+    void setDataWatcherField(DataWatcher dataWatcher);
 
     boolean getDeadField();
 
@@ -625,33 +647,33 @@ public interface IClientPlayer {
 
     void setField_71097_bOField(double field_71097_bO);
 
-    net.minecraft.util.MouseFilter getField_71160_ciField();
+    MouseFilter getField_71160_ciField();
 
-    void setField_71160_ciField(net.minecraft.util.MouseFilter field_71160_ci);
+    void setField_71160_ciField(MouseFilter field_71160_ci);
 
-    net.minecraft.util.MouseFilter getField_71161_cjField();
+    MouseFilter getField_71161_cjField();
 
-    void setField_71161_cjField(net.minecraft.util.MouseFilter field_71161_cj);
+    void setField_71161_cjField(MouseFilter field_71161_cj);
 
-    net.minecraft.util.MouseFilter getField_71162_chField();
+    MouseFilter getField_71162_chField();
 
-    void setField_71162_chField(net.minecraft.util.MouseFilter field_71162_ch);
+    void setField_71162_chField(MouseFilter field_71162_ch);
 
     int getFireResistanceField();
 
     void setFireResistanceField(int fireResistance);
 
-    net.minecraft.entity.projectile.EntityFishHook getFishEntityField();
+    EntityFishHook getFishEntityField();
 
-    void setFishEntityField(net.minecraft.entity.projectile.EntityFishHook fishEntity);
+    void setFishEntityField(EntityFishHook fishEntity);
 
     int getFlyToggleTimerField();
 
     void setFlyToggleTimerField(int flyToggleTimer);
 
-    net.minecraft.util.FoodStats getFoodStatsField();
+    FoodStats getFoodStatsField();
 
-    void setFoodStatsField(net.minecraft.util.FoodStats foodStats);
+    void setFoodStatsField(FoodStats foodStats);
 
     boolean getForceSpawnField();
 
@@ -689,13 +711,13 @@ public interface IClientPlayer {
 
     void setInWaterField(boolean inWater);
 
-    net.minecraft.entity.player.InventoryPlayer getInventoryField();
+    InventoryPlayer getInventoryField();
 
-    void setInventoryField(net.minecraft.entity.player.InventoryPlayer inventory);
+    void setInventoryField(InventoryPlayer inventory);
 
-    net.minecraft.inventory.Container getInventoryContainerField();
+    Container getInventoryContainerField();
 
-    void setInventoryContainerField(net.minecraft.inventory.Container inventoryContainer);
+    void setInventoryContainerField(Container inventoryContainer);
 
     boolean getIsAirBorneField();
 
@@ -769,9 +791,9 @@ public interface IClientPlayer {
 
     void setMaxHurtTimeField(int maxHurtTime);
 
-    net.minecraft.client.Minecraft getMcField();
+    Minecraft getMcField();
 
-    void setMcField(net.minecraft.client.Minecraft mc);
+    void setMcField(Minecraft mc);
 
     double getMotionXField();
 
@@ -793,13 +815,13 @@ public interface IClientPlayer {
 
     void setMoveStrafingField(float moveStrafing);
 
-    net.minecraft.util.MovementInput getMovementInputField();
+    MovementInput getMovementInputField();
 
-    void setMovementInputField(net.minecraft.util.MovementInput movementInput);
+    void setMovementInputField(MovementInput movementInput);
 
-    net.minecraft.entity.Entity.EnumEntitySize getMyEntitySizeField();
+    Entity.EnumEntitySize getMyEntitySizeField();
 
-    void setMyEntitySizeField(net.minecraft.entity.Entity.EnumEntitySize myEntitySize);
+    void setMyEntitySizeField(Entity.EnumEntitySize myEntitySize);
 
     int getNewPosRotationIncrementsField();
 
@@ -833,13 +855,13 @@ public interface IClientPlayer {
 
     void setOnGroundField(boolean onGround);
 
-    net.minecraft.inventory.Container getOpenContainerField();
+    Container getOpenContainerField();
 
-    void setOpenContainerField(net.minecraft.inventory.Container openContainer);
+    void setOpenContainerField(Container openContainer);
 
-    net.minecraft.util.ChunkCoordinates getPlayerLocationField();
+    ChunkCoordinates getPlayerLocationField();
 
-    void setPlayerLocationField(net.minecraft.util.ChunkCoordinates playerLocation);
+    void setPlayerLocationField(ChunkCoordinates playerLocation);
 
     int getPortalCounterField();
 
@@ -953,13 +975,13 @@ public interface IClientPlayer {
 
     void setRenderYawOffsetField(float renderYawOffset);
 
-    net.minecraft.entity.Entity getRiddenByEntityField();
+    Entity getRiddenByEntityField();
 
-    void setRiddenByEntityField(net.minecraft.entity.Entity riddenByEntity);
+    void setRiddenByEntityField(Entity riddenByEntity);
 
-    net.minecraft.entity.Entity getRidingEntityField();
+    Entity getRidingEntityField();
 
-    void setRidingEntityField(net.minecraft.entity.Entity ridingEntity);
+    void setRidingEntityField(Entity ridingEntity);
 
     float getRotationPitchField();
 
@@ -1045,9 +1067,9 @@ public interface IClientPlayer {
 
     void setWidthField(float width);
 
-    net.minecraft.world.World getWorldObjField();
+    World getWorldObjField();
 
-    void setWorldObjField(net.minecraft.world.World worldObj);
+    void setWorldObjField(World worldObj);
 
     int getXpCooldownField();
 

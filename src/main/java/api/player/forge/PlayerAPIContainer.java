@@ -18,10 +18,13 @@
 
 package api.player.forge;
 
-import java.util.*;
+import java.util.Arrays;
 
-import com.google.common.eventbus.*;
-import cpw.mods.fml.common.*;
+import com.google.common.eventbus.EventBus;
+
+import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.ModMetadata;
 
 public class PlayerAPIContainer extends DummyModContainer {
 
@@ -40,7 +43,7 @@ public class PlayerAPIContainer extends DummyModContainer {
         meta.name = "Player API";
         meta.version = PlayerAPIPlugin.Version;
         meta.description = "Player API for Minecraft Forge";
-        meta.url = "http://www.minecraftforum.net/topic/738498-";
+        meta.url = "https://www.minecraftforum.net/topic/738498-";
         meta.authorList = Arrays.asList(new String[] { "Divisor" });
 
         return meta;

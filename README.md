@@ -9,4 +9,4 @@ while minimizing conflicts between mods.
 
 ### Credit
 
-Player API was made by Divisor and can be found on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/player-api) and on the [Minecraft Forum](https://web.archive.org/web/20170914045249/http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1277996-player-api) (via Wayback Machine).
+Player API was made by Divisor and can be found on [CurseForge](https://web.archive.org/web/20221202092845/https://www.curseforge.com/minecraft/mc-mods/player-api) and on the [Minecraft Forum](https://web.archive.org/web/20170914045249/http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1277996-player-api) (both via Wayback Machine).
